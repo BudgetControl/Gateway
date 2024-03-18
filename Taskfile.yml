@@ -1,0 +1,25 @@
+version: '3'
+dotenv:
+  - ".env"
+tasks:
+  build:prod:
+    desc: Build production enviroment
+    cmds:
+      - docker-compose up -d
+      - docker container cp bin/apache/api.budgetcontrol.cloud.conf budgetcontrol-gateway:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-gateway service apache2 restart
+      - docker container exec budgetcontrol-gateway php artisan migrate
+  build:dev:
+    desc: Build production enviroment
+    cmds:
+      - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+      - docker container cp bin/apache/dev-api.budgetcontrol.cloud.conf budgetcontrol-gateway:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-gateway service apache2 restart
+      - docker container exec budgetcontrol-gateway php artisan migrate
+  build:local:
+    desc: Build production enviroment
+    cmds:
+      - docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+      - docker container cp bin/apache/api.budgetcontrol.lan.conf budgetcontrol-gateway:/etc/apache2/sites-available/budgetcontrol.cloud.conf
+      - docker container exec budgetcontrol-gateway service apache2 restart
+      - docker container exec budgetcontrol-gateway php artisan migrate
