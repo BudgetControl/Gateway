@@ -13,7 +13,7 @@ class JwtService
     public static function decodeToken(string $token): array
     {
         $config = config('app');
-        $decoded = JWT::decode($token, new Key($config['key'], 'HS256'));
+        $decoded = JWT::decode($token, new Key(base64_decode($config['key']), 'HS256'));
         return (array) $decoded;
     }
 
@@ -24,7 +24,7 @@ class JwtService
     public static function encodeToken(array $data): string
     {
         $config = config('app');
-        $token = JWT::encode($data, $config['key'], 'HS256');
+        $token = JWT::encode($data, base64_decode($config['key']), 'HS256');
         return $token;
     }
 

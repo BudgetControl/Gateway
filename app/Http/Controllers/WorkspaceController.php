@@ -11,9 +11,8 @@ class WorkspaceController extends Controller
 {
     public function list(Request $request): JsonResponse
     {
-        $userId = $request->token['userId'];
-        $config = config('routes');
-        $basePath = $config['workspace'];
+        $userId = $request->token['id'];
+        $basePath = $this->routes['workspace'];
         $response = Http::get("$basePath/$userId/list");
         $data = $response->json();
         
@@ -31,9 +30,8 @@ class WorkspaceController extends Controller
 
     public function last(Request $request): JsonResponse
     {
-        $config = config('routes');
-        $userId = $request->token['userId'];
-        $basePath = $config['workspace'];
+        $userId = $request->token['id'];
+        $basePath = $this->routes['workspace'];
         $response = Http::get("$basePath/$userId/last");
         $data = $response->json();
         
@@ -52,9 +50,8 @@ class WorkspaceController extends Controller
     public function create(Request $request): JsonResponse
     {
         $this->validate($request);
-        $userId = $request->token['userId'];
-        $config = config('routes');
-        $basePath = $config['workspace'];
+        $userId = $request->token['id'];
+        $basePath = $this->routes['workspace'];
         $response = Http::post("$basePath/$userId/add", $request->all());
         $data = $response->json();
         
@@ -73,9 +70,8 @@ class WorkspaceController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $this->validate($request);
-        $userId = $request->token['userId'];
-        $config = config('routes');
-        $basePath = $config['workspace'];
+        $userId = $request->token['id'];
+        $basePath = $this->routes['workspace'];
 
         $response = Http::put("$basePath/$userId/update/$id", $request->all());
         $data = $response->json();
@@ -94,9 +90,8 @@ class WorkspaceController extends Controller
 
     public function show(Request $request, $id): Response
     {
-        $userId = $request->token['userId'];
-        $config = config('routes');
-        $basePath = $config['workspace'];
+        $userId = $request->token['id'];
+        $basePath = $this->routes['workspace'];
         $response = Http::get("$basePath/$userId/$id");
         $data = $response->json();
         
@@ -110,10 +105,8 @@ class WorkspaceController extends Controller
         }
 
         // encode response with JWT
-        $encoded = JwtService::encodeToken($data);
-        return new Response(json_encode($data),$statusCode,[
+        return new Response($data,$statusCode,[
             'Content-Type' => 'application/json',
-            'X-BC-Token' => $encoded
         ]);
     }
 

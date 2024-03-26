@@ -1,5 +1,7 @@
-# CakePHP 3
-
+.vscode/*
+.idea/*
+.DS_Store
+/.htaccess
 /vendor/*
 /config/app.php
 

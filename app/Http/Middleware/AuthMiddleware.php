@@ -20,7 +20,11 @@ class AuthMiddleware
         $token = $request->header('X-BC-Token');
         $authToken = $request->header('Authorization');
 
-        if (JwtService::isValidToken($token) === false || empty($authToken)) {
+        if(empty($token) || empty($authToken)) {
+            return response('Unauthorized', 401);
+        }
+
+        if (JwtService::isValidToken($token) === false) {
             return response('Unauthorized', 401);
         }
 
