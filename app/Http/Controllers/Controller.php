@@ -19,15 +19,32 @@ abstract class Controller
 
     public function getRoutes(Request $request): JsonResponse
     {
-
-        $path = 'http://budgetcontrol-core/' . request()->path() . (request()->getQueryString() ? '?' . request()->getQueryString() : '');
+        $path = 'http://budgetcontrol-core/' . request()->path() . (request()->getQueryString() ? '?' . request()->getQueryString() : '?');
+        $path .= '&auth=' . $request->header('Authorization');
+        $method = request()->method();
 
         //mapping the path
         if(strpos($path, '/auth') !== false) {
             $path = str_replace('/api', '', $path);
         }
 
-        $response = \Illuminate\Support\Facades\Http::get($path);
+        switch ($method) {
+            case 'GET':
+                $response = Http::get($path);
+                break;
+            case 'POST':
+                $response = Http::post($path, $request->all());
+                break;
+            case 'PUT':
+                $response = Http::put($path, $request->all());
+                break;
+            case 'DELETE':
+                $response = Http::delete($path);
+                break;
+            default:
+                return response()->json(['message' => 'Method not allowed'], 405);
+        }
+        
         $data = $response->json();
 
         if ($response->status() == 401) {

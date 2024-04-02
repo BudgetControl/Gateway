@@ -110,6 +110,25 @@ class WorkspaceController extends Controller
         ]);
     }
 
+    public function activate(Request $request, $id): JsonResponse
+    {
+        $userId = $request->token['id'];
+        $basePath = $this->routes['workspace'];
+        $response = Http::patch("$basePath/$userId/$id/activate");
+        $data = $response->json();
+        
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();
+        } else {
+            // Handle the error
+            $statusCode = $response->status();
+            // Handle the error based on the status code
+        }
+
+        return response()->json($data, $statusCode);
+    }
+
     /**
      * validate the request
      * @throws \Illuminate\Validation\ValidationException

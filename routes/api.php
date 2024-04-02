@@ -24,7 +24,22 @@ Route::group(['middleware' => [\App\Http\Middleware\AuthMiddleware::class]], fun
     Route::get('/stats/total', '\App\Http\Controllers\StatsController@total');
     Route::get('/stats/wallets', '\App\Http\Controllers\StatsController@wallets');
     Route::get('/stats/health', '\App\Http\Controllers\StatsController@health');
-    Route::get('/stats/total-planned', '\App\Http\Controllers\StatsController@totalPlanned');
+    Route::get('/stats/total/planned', '\App\Http\Controllers\StatsController@totalPlanned');
+
+    // ########### STATS CHART ###########
+    Route::get('/stats/chart/line/incoming-expenses', '\App\Http\Controllers\ChartsController@incomingExpensesLineByDate');
+    Route::get('/stats/chart/bar/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryBarByDate');
+    Route::get('/stats/chart/bar/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryBarByDate');
+    Route::get('/stats/chart/table/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryTableByDate');
+    Route::get('/stats/chart/table/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryTableByDate');
+    Route::get('/stats/chart/bar/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelBarByDate');
+
+    //# ########### STATS BUDGETS ###########
+    Route::get('/stats/budgets', '\App\Http\Controllers\BudgetController@budgetsList');
+    Route::get('/stats/budget/{id}', '\App\Http\Controllers\BudgetController@budgetsShow');
+    Route::post('/stats/budget/create', '\App\Http\Controllers\BudgetController@budgetsCreate');
+    Route::put('/stats/budget/update/{id}', '\App\Http\Controllers\BudgetController@budgetsUpdate');
+    Route::delete('/stats/budget/delete/{id}', '\App\Http\Controllers\BudgetController@budgetsDelete');
 });
 
 Route::get('/auth/user-info', '\App\Http\Controllers\AuthController@getUserInfo');
