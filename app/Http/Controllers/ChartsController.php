@@ -150,4 +150,28 @@ class ChartsController extends Controller {
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
+
+    public function expensesLabelApplePieByDate(Request $request): Response
+    {
+        //get workspace uuid form headers
+        $body = $request->all();
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = Http::get("$basePath/$wsid/chart/apple-pie/expenses/label?".$request->getQueryString());
+        $data = $response->json();
+        
+        if(json_encode($data) === null) {
+            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+        }
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();
+        } else {
+            // Handle the error
+            $statusCode = $response->status();
+            // Handle the error based on the status code
+        }
+
+        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
 }

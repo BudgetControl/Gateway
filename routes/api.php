@@ -33,6 +33,7 @@ Route::group(['middleware' => [\App\Http\Middleware\AuthMiddleware::class]], fun
     Route::get('/stats/chart/table/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryTableByDate');
     Route::get('/stats/chart/table/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryTableByDate');
     Route::get('/stats/chart/bar/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelBarByDate');
+    Route::get('/stats/chart/apple-pie/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelApplePieByDate');
 
     //# ########### STATS BUDGETS ###########
     Route::get('/stats/budgets', '\App\Http\Controllers\BudgetController@budgetsList');
