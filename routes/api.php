@@ -44,4 +44,5 @@ Route::group(['middleware' => [\App\Http\Middleware\AuthMiddleware::class]], fun
 });
 
 Route::get('/auth/user-info', '\App\Http\Controllers\AuthController@getUserInfo');
+Route::get('/auth/logout', '\App\Http\Controllers\AuthController@logout');
 Route::any('/{any}','\App\Http\Controllers\WorkspaceController@getRoutes')->where('any', '.*');

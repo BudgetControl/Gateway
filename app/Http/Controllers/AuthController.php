@@ -57,4 +57,12 @@ class AuthController extends Controller
 
         return response()->json($response, 200, ['X-BC-Token' => $decoded]);
     }
+
+    public function logout(Request $request)
+    {   
+        $basePath = $this->routes['auth'];
+        $response = Http::get("$basePath/logout");
+
+        return response()->json("", 200);
+    }
 }
