@@ -158,7 +158,7 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $queryString = $request->getQueryString();
-        $response = Http::post("$basePath/reset-passowrd", $request->all());
+        $response = Http::post("$basePath/reset-password", $request->all());
         if ($response->status() !== 200) {
             Log::error('Error: ', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
