@@ -1,5 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+require_once __DIR__ . '/microservice/authtentication.php';
 
-Route::any('/{any}','\App\Http\Controllers\WorkspaceController@getRoutes')->where('any', '.*');
+\Illuminate\Support\Facades\Route::any('/{any}','\App\Http\Controllers\WorkspaceController@getRoutes')->where('any', '.*');
