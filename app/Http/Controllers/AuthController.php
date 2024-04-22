@@ -105,10 +105,10 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function resetPassword(Request $request)
+    public function resetPassword(Request $request, $token)
     {
         $basePath = $this->routes['auth'];
-        $response = Http::post("$basePath/reset-password", $request->all());
+        $response = Http::put("$basePath/reset-password/$token", $request->all());
         if ($response->status() !== 200) {
             Log::error('Error: ', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
@@ -121,18 +121,6 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/verify-email", $request->all());
-        if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
-            return response()->json(['message' => 'An error occurred'], 401);
-        }
-
-        return $response;
-    }
-
-    public function resetPasswordWithToken(Request $request, $token)
-    {
-        $basePath = $this->routes['auth'];
-        $response = Http::put("$basePath/reset-password/$token", $request->all());
         if ($response->status() !== 200) {
             Log::error('Error: ', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
@@ -158,6 +146,19 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $queryString = $request->getQueryString();
         $response = Http::get("$basePath/authenticate/token/$provider?$queryString");
+        if ($response->status() !== 200) {
+            Log::error('Error: ', ['response' => $response->json()]);
+            return response()->json(['message' => 'An error occurred'], 401);
+        }
+
+        return $response;
+    }
+
+    public function sendResetPasswordMail(Request $request, $provider)
+    {
+        $basePath = $this->routes['auth'];
+        $queryString = $request->getQueryString();
+        $response = Http::post("$basePath/reset-passowrd", $request->all());
         if ($response->status() !== 200) {
             Log::error('Error: ', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
