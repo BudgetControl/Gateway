@@ -154,7 +154,7 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function sendResetPasswordMail(Request $request, $provider)
+    public function sendResetPasswordMail(Request $request)
     {
         $basePath = $this->routes['auth'];
         $queryString = $request->getQueryString();
