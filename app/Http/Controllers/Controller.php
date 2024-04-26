@@ -90,6 +90,7 @@ abstract class Controller
             return response()->json(['message' => 'Internal server error'], 500);
         }
 
-        return response()->json($response->getBody()->getContents(), $response->getStatusCode());
+        $jsonResponse = json_decode($response->getBody()->getContents(), true);
+        return response()->json($jsonResponse, $response->getStatusCode());
     }
 }
