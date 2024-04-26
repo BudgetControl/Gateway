@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,6 @@ abstract class Controller
     public function getRoutes(Request $request): JsonResponse
     {
         $path = 'http://budgetcontrol-core/' . request()->path() . (request()->getQueryString() ? '?' . request()->getQueryString() : '?');
-        $path .= '&auth=' . $request->header('Authorization');
         $method = request()->method();
 
         //mapping the path
@@ -28,38 +28,40 @@ abstract class Controller
             $path = str_replace('/api', '', $path);
         }
 
+        $client = new Request();
+        $client->headers->set('Authorization', $request->getHeader('Authorization'));
+        $client->headers->set('X-Bc-Token', $request->getHeader('X-Bc-Token'));
+
         switch ($method) {
             case 'GET':
-                $response = Http::get($path);
+                $response = $client->get($path);
                 break;
             case 'POST':
-                $response = Http::post($path, $request->all());
+                $response = $client->post($path, $request->all());
                 break;
             case 'PUT':
-                $response = Http::put($path, $request->all());
+                $response = $client->put($path, $request->all());
                 break;
             case 'DELETE':
-                $response = Http::delete($path);
+                $response = $client->delete($path);
                 break;
             default:
                 return response()->json(['message' => 'Method not allowed'], 405);
         }
         
-        $data = $response->json();
-
-        if ($response->status() == 401) {
+        if ($response->getStatusCode() == 401) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        if($response->status() == 404) {
+        if($response->getStatusCode() == 404) {
             return response()->json(['message' => 'Not found'], 404);
         }
 
-        if($response->status() == 500) {
+        if($response->getStatusCode() == 500) {
             Log::error('Internal server error', ['response' => $response]);
             return response()->json(['message' => 'Internal server error'], 500);
         }
 
-        return response()->json($data);
+        return response()->json($response->getBody()->getContents(), $response->getStatusCode());
     }
 }
