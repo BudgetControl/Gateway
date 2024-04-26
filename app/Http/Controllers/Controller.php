@@ -28,26 +28,54 @@ abstract class Controller
             $path = str_replace('/api', '', $path);
         }
 
-        $client = new Request();
-        $client->headers->set('Authorization', $request->getHeader('Authorization'));
-        $client->headers->set('X-Bc-Token', $request->getHeader('X-Bc-Token'));
+        $xBcToken = $request->header('X-Bc-Token');
+        $authorization = $request->header('Authorization');
+
+        $client = new Client();
 
         switch ($method) {
             case 'GET':
-                $response = $client->get($path);
+                $response = $client->request('GET', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ]
+                ]);
                 break;
             case 'POST':
-                $response = $client->post($path, $request->all());
+                $response = $client->request('POST', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ],
+                    'json' => [
+                        $request->all()
+                    ]
+                ]);
                 break;
             case 'PUT':
-                $response = $client->put($path, $request->all());
+                $response = $client->request('PUT', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ],
+                    'json' => [
+                        $request->all()
+                    ]
+                ]);
                 break;
             case 'DELETE':
-                $response = $client->delete($path);
+                $response = $client->request('DELETE', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ]
+                ]);
                 break;
             default:
                 return response()->json(['message' => 'Method not allowed'], 405);
         }
+
         
         if ($response->getStatusCode() == 401) {
             return response()->json(['message' => 'Unauthorized'], 401);
