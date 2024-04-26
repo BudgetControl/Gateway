@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,6 @@ abstract class Controller
     public function getRoutes(Request $request): JsonResponse
     {
         $path = 'http://budgetcontrol-core/' . request()->path() . (request()->getQueryString() ? '?' . request()->getQueryString() : '?');
-        $path .= '&auth=' . $request->header('Authorization');
         $method = request()->method();
 
         //mapping the path
@@ -28,38 +28,67 @@ abstract class Controller
             $path = str_replace('/api', '', $path);
         }
 
+        $xBcToken = $request->header('X-Bc-Token');
+        $authorization = $request->header('Authorization');
+
+        $client = new Client();
+
         switch ($method) {
             case 'GET':
-                $response = Http::get($path);
+                $response = $client->request('GET', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ]
+                ]);
                 break;
             case 'POST':
-                $response = Http::post($path, $request->all());
+                $response = $client->request('POST', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ],
+                    'json' => $request->all()
+                    
+                ]);
                 break;
             case 'PUT':
-                $response = Http::put($path, $request->all());
+                $response = $client->request('PUT', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ],
+                    'json' => $request->all()
+                    
+                ]);
                 break;
             case 'DELETE':
-                $response = Http::delete($path);
+                $response = $client->request('DELETE', $path, [
+                    'headers' => [
+                        'X-Bc-Token' => $xBcToken,
+                        'Authorization' => $authorization
+                    ]
+                ]);
                 break;
             default:
                 return response()->json(['message' => 'Method not allowed'], 405);
         }
-        
-        $data = $response->json();
 
-        if ($response->status() == 401) {
+        
+        if ($response->getStatusCode() == 401) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        if($response->status() == 404) {
+        if($response->getStatusCode() == 404) {
             return response()->json(['message' => 'Not found'], 404);
         }
 
-        if($response->status() == 500) {
+        if($response->getStatusCode() == 500) {
             Log::error('Internal server error', ['response' => $response]);
             return response()->json(['message' => 'Internal server error'], 500);
         }
 
-        return response()->json($data);
+        $jsonResponse = json_decode($response->getBody()->getContents(), true);
+        return response()->json($jsonResponse, $response->getStatusCode());
     }
 }
