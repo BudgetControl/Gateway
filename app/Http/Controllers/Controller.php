@@ -48,9 +48,8 @@ abstract class Controller
                         'X-Bc-Token' => $xBcToken,
                         'Authorization' => $authorization
                     ],
-                    'json' => [
-                        $request->all()
-                    ]
+                    'json' => $request->all()
+                    
                 ]);
                 break;
             case 'PUT':
@@ -59,9 +58,8 @@ abstract class Controller
                         'X-Bc-Token' => $xBcToken,
                         'Authorization' => $authorization
                     ],
-                    'json' => [
-                        $request->all()
-                    ]
+                    'json' => $request->all()
+                    
                 ]);
                 break;
             case 'DELETE':
