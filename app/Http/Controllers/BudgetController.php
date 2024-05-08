@@ -12,7 +12,7 @@ class BudgetController extends Controller {
         //get workspace uuid form headers
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::get("$basePath/$wsid");
         $data = $response->json();
         
@@ -35,7 +35,7 @@ class BudgetController extends Controller {
     {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::get("$basePath/$wsid/$uuid");
         $data = $response->json();
         
@@ -58,7 +58,7 @@ class BudgetController extends Controller {
     {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::post("$basePath/$wsid", $body);
         $data = $response->json();
         
@@ -81,7 +81,7 @@ class BudgetController extends Controller {
     {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::put("$basePath/$wsid/$uuid", $body);
         $data = $response->json();
         
@@ -104,7 +104,7 @@ class BudgetController extends Controller {
     {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::delete("$basePath/$wsid/$uuid");
         $data = $response->json();
         
@@ -127,7 +127,7 @@ class BudgetController extends Controller {
     {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::get("$basePath/$wsid/$uuid/expired");
         $data = $response->json();
         
@@ -150,7 +150,7 @@ class BudgetController extends Controller {
     {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::get("$basePath/$wsid/$uuid/exceeded");
         $data = $response->json();
         
@@ -173,7 +173,7 @@ class BudgetController extends Controller {
     {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['budgets'];
+        $basePath = $this->routes['budget'];
         $response = Http::get("$basePath/$wsid/$uuid/status");
         $data = $response->json();
         
