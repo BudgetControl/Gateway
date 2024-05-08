@@ -1,4 +1,5 @@
 <?php
+\Illuminate\Support\Facades\Route::group(['middleware' => [\App\Http\Middleware\AuthMiddleware::class]], function () {
 
 //# ########### STATS BUDGETS ###########
 \Illuminate\Support\Facades\Route::get('/budgets', '\App\Http\Controllers\BudgetController@list');
@@ -9,3 +10,5 @@
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/expired', '\App\Http\Controllers\BudgetController@expired');
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/exceeded', '\App\Http\Controllers\BudgetController@exceeded');
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/status', '\App\Http\Controllers\BudgetController@status');
+
+});
