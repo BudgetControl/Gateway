@@ -10,5 +10,8 @@
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/expired', '\App\Http\Controllers\BudgetController@expired');
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/exceeded', '\App\Http\Controllers\BudgetController@exceeded');
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/status', '\App\Http\Controllers\BudgetController@status');
+\Illuminate\Support\Facades\Route::get('/budget/{uuid}/stats', '\App\Http\Controllers\BudgetController@budgetStats');
+\Illuminate\Support\Facades\Route::get('/budgets/stats', '\App\Http\Controllers\BudgetController@budgetStats');
+
 
 });
