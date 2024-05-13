@@ -18,11 +18,4 @@
     \Illuminate\Support\Facades\Route::get('/stats/chart/table/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryTableByDate');
     \Illuminate\Support\Facades\Route::get('/stats/chart/bar/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelBarByDate');
     \Illuminate\Support\Facades\Route::get('/stats/chart/apple-pie/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelApplePieByDate');
-
-    //# ########### STATS BUDGETS ###########
-    \Illuminate\Support\Facades\Route::get('/stats/budgets', '\App\Http\Controllers\BudgetController@budgetsList');
-    \Illuminate\Support\Facades\Route::get('/stats/budget/{id}', '\App\Http\Controllers\BudgetController@budgetsShow');
-    \Illuminate\Support\Facades\Route::post('/stats/budget/create', '\App\Http\Controllers\BudgetController@budgetsCreate');
-    \Illuminate\Support\Facades\Route::put('/stats/budget/update/{id}', '\App\Http\Controllers\BudgetController@budgetsUpdate');
-    \Illuminate\Support\Facades\Route::delete('/stats/budget/delete/{id}', '\App\Http\Controllers\BudgetController@budgetsDelete');
 });
