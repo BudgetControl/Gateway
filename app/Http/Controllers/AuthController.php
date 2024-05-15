@@ -40,12 +40,13 @@ class AuthController extends Controller
     public function getUserInfo(Request $request)
     {   
         $token = $request->bearerToken();
+        $wsUuid = $request->header('X-WS');
         if (!$token) {
             return response()->json(['message' => 'You are not authenticated'], 401);
         }
 
         $basePath = $this->routes['auth'];
-        $response = Http::withToken($token)->get("$basePath/user-info");
+        $response = Http::withToken($token)->withHeader('X-WS',$wsUuid)->get("$basePath/user-info");
         if ($response->status() !== 200) {
             Log::error('Error: ', ['response' => $response->json()]);
             return response()->json(['message' => 'You are not authenticated'], 401);
@@ -157,11 +158,22 @@ class AuthController extends Controller
     public function sendResetPasswordMail(Request $request)
     {
         $basePath = $this->routes['auth'];
-        $queryString = $request->getQueryString();
         $response = Http::post("$basePath/reset-password", $request->all());
         if ($response->status() !== 200) {
             Log::error('Error: ', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
+        }
+
+        return $response;
+    }
+
+    public function getUserInfoByEmail(Request $request, $uuid)
+    {
+        $basePath = $this->routes['auth'];
+        $response = Http::get("$basePath/user-info/by-email/$uuid");
+        if ($response->status() !== 200) {
+            Log::error('Error: ', ['response' => $response->json()]);
+            return response()->json(['message' => 'An error occurred'], $response->status());
         }
 
         return $response;

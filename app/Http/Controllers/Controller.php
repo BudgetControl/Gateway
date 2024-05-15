@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -90,5 +91,16 @@ abstract class Controller
 
         $jsonResponse = json_decode($response->getBody()->getContents(), true);
         return response()->json($jsonResponse, $response->getStatusCode());
+    }
+
+    /**
+     * Get the user ID based on the provided UUID.
+     *
+     * @param string $uuid The UUID of the user.
+     * @return int The user ID.
+     */
+    public function userId(string $uuid): int
+    {
+        return User::where('uuid', $uuid)->first()->id;
     }
 }

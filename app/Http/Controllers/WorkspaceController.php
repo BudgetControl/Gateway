@@ -11,7 +11,7 @@ class WorkspaceController extends Controller
 {
     public function list(Request $request): JsonResponse
     {
-        $userId = $request->token['id'];
+        $userId = $this->userId($request->token['uuid']);
         $basePath = $this->routes['workspace'];
         $response = Http::get("$basePath/$userId/list");
         $data = $response->json();
@@ -28,9 +28,28 @@ class WorkspaceController extends Controller
         return response()->json($data, $statusCode);
     }
 
+    public function listByUser(Request $request): JsonResponse
+    {
+        $userId = $this->userId($request->token['uuid']);
+        $basePath = $this->routes['workspace'];
+        $response = Http::get("$basePath/$userId/by-user/list");
+        $data = $response->json();
+        
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();
+        } else {
+            // Handle the error
+            $statusCode = $response->status();
+            // Handle the error based on the status code
+        }
+
+        return response()->json($data, $statusCode);
+    }
+
     public function last(Request $request): JsonResponse
     {
-        $userId = $request->token['id'];
+        $userId = $this->userId($request->token['uuid']);
         $basePath = $this->routes['workspace'];
         $response = Http::get("$basePath/$userId/last");
         $data = $response->json();
@@ -50,7 +69,7 @@ class WorkspaceController extends Controller
     public function create(Request $request): JsonResponse
     {
         $this->validate($request);
-        $userId = $request->token['id'];
+        $userId = $this->userId($request->token['uuid']);
         $basePath = $this->routes['workspace'];
         $response = Http::post("$basePath/$userId/add", $request->all());
         $data = $response->json();
@@ -70,7 +89,7 @@ class WorkspaceController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $this->validate($request);
-        $userId = $request->token['id'];
+        $userId = $this->userId($request->token['uuid']);
         $basePath = $this->routes['workspace'];
 
         $response = Http::put("$basePath/$userId/update/$id", $request->all());
@@ -90,7 +109,7 @@ class WorkspaceController extends Controller
 
     public function show(Request $request, $id): Response
     {
-        $userId = $request->token['id'];
+        $userId = $this->userId($request->token['uuid']);
         $basePath = $this->routes['workspace'];
         $response = Http::get("$basePath/$userId/$id");
         $data = $response->json();
@@ -112,7 +131,7 @@ class WorkspaceController extends Controller
 
     public function activate(Request $request, $id): JsonResponse
     {
-        $userId = $request->token['id'];
+        $userId = $this->userId($request->token['uuid']);
         $basePath = $this->routes['workspace'];
         $response = Http::patch("$basePath/$userId/$id/activate");
         $data = $response->json();
@@ -141,4 +160,5 @@ class WorkspaceController extends Controller
         ]);
         
     }
+    
 }
