@@ -127,6 +127,15 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'betterstack' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => Logtail\Monolog\LogtailHandler::class,
+            'handler_with' => [
+                'sourceToken' => env('LOGTAIL_API_KEY'),
+            ],
+        ],
+
     ],
 
 ];
