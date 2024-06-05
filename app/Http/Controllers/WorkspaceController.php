@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class WorkspaceController extends Controller
 {
@@ -21,6 +22,7 @@ class WorkspaceController extends Controller
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on workspace list', ['response' => $response->json()]);
             $statusCode = $response->status();
             // Handle the error based on the status code
         }
@@ -40,6 +42,7 @@ class WorkspaceController extends Controller
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on workspace list by user', ['response' => $response->json()]);
             $statusCode = $response->status();
             // Handle the error based on the status code
         }
@@ -59,6 +62,7 @@ class WorkspaceController extends Controller
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on workspace last', ['response' => $response->json()]);
             $statusCode = $response->status();
             // Handle the error based on the status code
         }
@@ -79,6 +83,7 @@ class WorkspaceController extends Controller
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on workspace create', ['response' => $response->json()]);
             $statusCode = $response->status();
             // Handle the error based on the status code
         }
@@ -100,6 +105,7 @@ class WorkspaceController extends Controller
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on workspace update', ['response' => $response->json()]);
             $statusCode = $response->status();
             // Handle the error based on the status code
         }
@@ -119,6 +125,7 @@ class WorkspaceController extends Controller
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on workspace show', ['response' => $response->json()]);
             $statusCode = $response->status();
             // Handle the error based on the status code
         }
@@ -141,6 +148,7 @@ class WorkspaceController extends Controller
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on workspace activate', ['response' => $response->json()]);
             $statusCode = $response->status();
             // Handle the error based on the status code
         }

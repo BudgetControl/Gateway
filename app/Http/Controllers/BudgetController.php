@@ -6,6 +6,7 @@ use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class BudgetController extends Controller
 {
@@ -20,6 +21,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget list', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -43,6 +45,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget show', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -66,6 +69,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget create', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -89,6 +93,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget update', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -112,6 +117,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget delete', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -135,6 +141,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget expired', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -158,6 +165,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget exceeded', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -181,6 +189,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget status', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -204,6 +213,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budget stats', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -227,6 +237,7 @@ class BudgetController extends Controller
         $data = $response->json();
 
         if (json_encode($data) === null) {
+            Log::error('Error: on budgets stats', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response

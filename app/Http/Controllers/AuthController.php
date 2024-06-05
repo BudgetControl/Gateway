@@ -25,7 +25,7 @@ class AuthController extends Controller
         // check if is valid token and if not refresh the token
         $response = Http::withToken($token)->get("$basePath/check");
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on check', ['response' => $response->json()]);
             return response()->json(['message' => 'You are not authenticated'], 401);
         }
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::withToken($token)->withHeader('X-WS',$wsUuid)->get("$basePath/user-info");
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on get user info', ['response' => $response->json()]);
             return response()->json(['message' => 'You are not authenticated'], 401);
         }
 
@@ -64,7 +64,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {   
         $basePath = $this->routes['auth'];
-        $response = Http::get("$basePath/logout");
+        Http::get("$basePath/logout");
 
         return response()->json("", 200);
     }
@@ -75,7 +75,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/sign-up", $request->all());
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on sign up', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -87,7 +87,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::get("$basePath/confirm/$token");
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: confirm token', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -99,7 +99,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/authenticate", $request->all());
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on authenticate', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -111,7 +111,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::put("$basePath/reset-password/$token", $request->all());
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: reset password', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -123,7 +123,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/verify-email", $request->all());
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on send verify email', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -135,7 +135,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::get("$basePath/authenticate/$provider");
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on authenticate provider '.$provider, ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -148,7 +148,7 @@ class AuthController extends Controller
         $queryString = $request->getQueryString();
         $response = Http::get("$basePath/authenticate/token/$provider?$queryString");
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on provider token '.$provider, ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -160,7 +160,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/reset-password", $request->all());
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on send reset password mail', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
@@ -172,7 +172,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::get("$basePath/user-info/by-email/$uuid");
         if ($response->status() !== 200) {
-            Log::error('Error: ', ['response' => $response->json()]);
+            Log::error('Error: on get user info by email ', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], $response->status());
         }
 

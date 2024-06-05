@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class StatsController extends Controller {
 
@@ -17,6 +18,7 @@ class StatsController extends Controller {
         $data = $response->json();
         
         if(json_encode($data) === null) {
+            Log::error('Error: on incoming', ['response' => $response->json()]);
             return response(["An error occurred"], 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -41,6 +43,7 @@ class StatsController extends Controller {
         $data = $response->json();
         
         if(json_encode($data) === null) {
+            Log::error('Error: on expenses', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -65,6 +68,7 @@ class StatsController extends Controller {
         $data = $response->json();
         
         if(json_encode($data) === null) {
+            Log::error('Error: on total', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -89,6 +93,7 @@ class StatsController extends Controller {
         $data = $response->json();
         
         if(json_encode($data) === null) {
+            Log::error('Error: on wallets', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -113,6 +118,7 @@ class StatsController extends Controller {
         $data = $response->json();
         
         if(json_encode($data) === null) {
+            Log::error('Error: on health', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -137,6 +143,7 @@ class StatsController extends Controller {
         $data = $response->json();
         
         if(json_encode($data) === null) {
+            Log::error('Error: on total planned', ['response' => $response->json()]);
             return response("An error occurred", 500, ['Content-Type' => 'application/json']);
         }
         // Process the response
