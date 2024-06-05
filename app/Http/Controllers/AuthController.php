@@ -49,7 +49,7 @@ class AuthController extends Controller
         $response = Http::withToken($token)->withHeader('X-WS',$wsUuid)->get("$basePath/user-info");
         if ($response->status() !== 200) {
             Log::error('Error: on get user info', ['response' => $response->json()]);
-            return response()->json(['message' => 'You are not authenticated'], 401);
+            return response()->json(['message' => 'Something went wrong, you are not authenticated'], 401);
         }
 
         $decoded = JwtService::encodeToken($response->json());
