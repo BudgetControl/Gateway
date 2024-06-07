@@ -21,7 +21,8 @@ abstract class Controller
 
     public function getRoutes(Request $request): JsonResponse
     {
-        $path = 'http://budgetcontrol-core/' . request()->path() . (request()->getQueryString() ? '?' . request()->getQueryString() : '?');
+        $basePath = $this->routes['core'];
+        $path = $basePath. "/" . request()->path() . (request()->getQueryString() ? '?' . request()->getQueryString() : '?');
         $method = request()->method();
 
         //mapping the path
