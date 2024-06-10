@@ -74,7 +74,7 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/sign-up", $request->all());
-        if ($response->status() !== 200) {
+        if ($response->status() !== 201) {
             Log::error('Error: on sign up', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
