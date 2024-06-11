@@ -35,46 +35,52 @@ abstract class Controller
 
         $client = new Client();
 
-        switch ($method) {
-            case 'GET':
-                $response = $client->request('GET', $path, [
-                    'headers' => [
-                        'X-Bc-Token' => $xBcToken,
-                        'Authorization' => $authorization
-                    ]
-                ]);
-                break;
-            case 'POST':
-                $response = $client->request('POST', $path, [
-                    'headers' => [
-                        'X-Bc-Token' => $xBcToken,
-                        'Authorization' => $authorization
-                    ],
-                    'json' => $request->all()
-                    
-                ]);
-                break;
-            case 'PUT':
-                $response = $client->request('PUT', $path, [
-                    'headers' => [
-                        'X-Bc-Token' => $xBcToken,
-                        'Authorization' => $authorization
-                    ],
-                    'json' => $request->all()
-                    
-                ]);
-                break;
-            case 'DELETE':
-                $response = $client->request('DELETE', $path, [
-                    'headers' => [
-                        'X-Bc-Token' => $xBcToken,
-                        'Authorization' => $authorization
-                    ]
-                ]);
-                break;
-            default:
-                return response()->json(['message' => 'Method not allowed'], 405);
+        try {
+            switch ($method) {
+                case 'GET':
+                    $response = $client->request('GET', $path, [
+                        'headers' => [
+                            'X-Bc-Token' => $xBcToken,
+                            'Authorization' => $authorization
+                        ]
+                    ]);
+                    break;
+                case 'POST':
+                    $response = $client->request('POST', $path, [
+                        'headers' => [
+                            'X-Bc-Token' => $xBcToken,
+                            'Authorization' => $authorization
+                        ],
+                        'json' => $request->all()
+                        
+                    ]);
+                    break;
+                case 'PUT':
+                    $response = $client->request('PUT', $path, [
+                        'headers' => [
+                            'X-Bc-Token' => $xBcToken,
+                            'Authorization' => $authorization
+                        ],
+                        'json' => $request->all()
+                        
+                    ]);
+                    break;
+                case 'DELETE':
+                    $response = $client->request('DELETE', $path, [
+                        'headers' => [
+                            'X-Bc-Token' => $xBcToken,
+                            'Authorization' => $authorization
+                        ]
+                    ]);
+                    break;
+                default:
+                    return response()->json(['message' => 'Method not allowed'], 405);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error while calling the API', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Something went wrong'], $e->getCode());
         }
+      
 
         
         if ($response->getStatusCode() == 401) {
