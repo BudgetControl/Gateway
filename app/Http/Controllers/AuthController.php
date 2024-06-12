@@ -178,4 +178,28 @@ class AuthController extends Controller
 
         return $response;
     }
+
+    public function deleteAllUserData(Request $request)
+    {
+        $userUuid = $request->header('X-User');
+        $response = Http::delete($this->routes['auth'] . "/user/delete-data/$userUuid");
+        if ($response->status() !== 200) {
+            Log::error('Error: on delete all user data', ['response' => $response->json()]);
+            return response()->json(['message' => 'An error occurred'], $response->status());
+        }
+
+        return $response;
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $userUuid = $request->header('X-User');
+        $response = Http::delete($this->routes['auth'] . "/user/$userUuid");
+        if ($response->status() !== 200) {
+            Log::error('Error: on delete all user data', ['response' => $response->json()]);
+            return response()->json(['message' => 'An error occurred'], $response->status());
+        }
+
+        return $response;
+    }
 }

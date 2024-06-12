@@ -15,3 +15,6 @@ use Illuminate\Support\Facades\\Illuminate\Support\Facades\Route;
 \Illuminate\Support\Facades\Route::get('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 \Illuminate\Support\Facades\Route::get('/auth/user-info/by-email/{email}', [\App\Http\Controllers\AuthController::class, 'getUserInfoByEmail'])->middleware(\App\Http\Middleware\AuthMiddleware::class);
 
+
+\Illuminate\Support\Facades\Route::delete('/auth/user/delete-data', [\App\Http\Controllers\AuthController::class, 'deleteAllUserData'])->middleware(\App\Http\Middleware\AuthMiddleware::class);
+\Illuminate\Support\Facades\Route::delete('/auth/user', [\App\Http\Controllers\AuthController::class, 'deleteUser'])->middleware(\App\Http\Middleware\AuthMiddleware::class);
