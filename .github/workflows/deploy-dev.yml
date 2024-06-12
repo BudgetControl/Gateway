@@ -3,7 +3,7 @@ name: Deploy application
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -22,8 +22,8 @@ jobs:
           with:
               username: ${{ secrets.SFTP_USER }} 
               server: ${{ secrets.SFTP_HOST }} 
-              ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }} 
               password: ${{ secrets.SFTP_PASSWORD }} 
+              port:  ${{ secrets.SFTP_PORT }}
               local_path: '.'
               remote_path: '/var/www/budgetcontrol/Core/microservices/Gateway'
               sftpArgs: '-o ConnectTimeout=5'
@@ -34,6 +34,6 @@ jobs:
             host: ${{ secrets.SFTP_HOST }}
             username: ${{ secrets.SFTP_USER }}
             password: ${{ secrets.SFTP_PASSWORD }}
-            port: 22
+            port:  ${{ secrets.SFTP_PORT }}
             script: docker exec budgetcontrol-ms-gateway composer install
   

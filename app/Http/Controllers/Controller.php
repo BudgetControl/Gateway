@@ -81,8 +81,6 @@ abstract class Controller
             return response()->json(['message' => 'Something went wrong'], $e->getCode());
         }
       
-
-        
         if ($response->getStatusCode() == 401) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
@@ -109,5 +107,26 @@ abstract class Controller
     public function userId(string $uuid): int
     {
         return User::where('uuid', $uuid)->first()->id;
+    }
+
+    /**
+     * Monitor the request and return a response.
+     *
+     * @param Request $request The incoming request.
+     * @return Response The response to the request.
+     */
+    public function monitor(Request $request, $ms): Response
+    {
+        $client = new Client();
+        $path = $this->routes[$ms];
+
+        try {
+            $client->request('GET', $path . "/monitor");
+        } catch (\Exception $e) {
+            Log::error('Error while calling the API', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Something went wrong'], $e->getCode());
+        }
+        
+        return response([], 200, ['Content-Type' => 'application/json']);
     }
 }
