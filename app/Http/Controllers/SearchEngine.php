@@ -30,7 +30,7 @@ class SearchEngine extends Controller
         } else {
             // Handle the error
             $statusCode = $response->status();
-            Log::warning('Warning: on search enging find method', ['response' => $response->json()]);
+            Log::error('Error: on search enging find method', ['response' => $response->json()]);
             return response("Ops an error occurred", $statusCode, ['Content-Type' => 'application/json']);
         }
 
