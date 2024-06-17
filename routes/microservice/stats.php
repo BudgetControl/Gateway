@@ -9,6 +9,7 @@
     \Illuminate\Support\Facades\Route::get('/stats/wallets', '\App\Http\Controllers\StatsController@wallets');
     \Illuminate\Support\Facades\Route::get('/stats/health', '\App\Http\Controllers\StatsController@health');
     \Illuminate\Support\Facades\Route::get('/stats/total/planned', '\App\Http\Controllers\StatsController@totalPlanned');
+    \Illuminate\Support\Facades\Route::post('/stats/entries', '\App\Http\Controllers\StatsController@entries');
 
     // ########### STATS CHART ###########
     \Illuminate\Support\Facades\Route::get('/stats/chart/line/incoming-expenses', '\App\Http\Controllers\ChartsController@incomingExpensesLineByDate');
