@@ -167,13 +167,43 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function getUserInfoByEmail(Request $request, $uuid)
+    public function getUserInfoByEmail(Request $request, $email)
     {
         $basePath = $this->routes['auth'];
-        $response = Http::get("$basePath/user-info/by-email/$uuid");
+        $response = Http::get("$basePath/user-info/by-email/$email");
         if ($response->status() !== 200) {
             Log::error('Error: on get user info by email ', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], $response->status());
+        }
+
+        return $response;
+    }
+
+    public function deleteData(Request $request)
+    {   
+        $body = $request->all();
+        $uuid = $body['token']['uuid'];
+
+        $basePath = $this->routes['auth'];
+        $response = Http::delete("$basePath/delete-data/$uuid");
+        if ($response->status() !== 200) {
+            Log::error('Error: on delete data', ['response' => $response->json()]);
+            return response()->json(['message' => 'An error occurred'], 401);
+        }
+
+        return $response;
+    }
+
+    public function delete(Request $request)
+    {   
+        $body = $request->all();
+        $uuid = $body['token']['uuid'];
+
+        $basePath = $this->routes['auth'];
+        $response = Http::delete("$basePath/$uuid");
+        if ($response->status() !== 200) {
+            Log::error('Error: on delete data', ['response' => $response->json()]);
+            return response()->json(['message' => 'An error occurred'], 401);
         }
 
         return $response;
