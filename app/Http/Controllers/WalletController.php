@@ -14,7 +14,8 @@ class WalletController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['wallet'];
-        $response = Http::get("$basePath/$wsid/list");
+        $queryParams = $request->query();
+        $response = Http::get("$basePath/$wsid/list?".http_build_query($queryParams));
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -86,7 +87,7 @@ class WalletController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['wallet'];
-        $response = Http::get("$basePath/$wsid/update/$uuid");
+        $response = Http::put("$basePath/$wsid/update/$uuid", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -110,7 +111,7 @@ class WalletController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['wallet'];
-        $response = Http::get("$basePath/$wsid/$uuid");
+        $response = Http::delete("$basePath/$wsid/$uuid");
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -134,7 +135,7 @@ class WalletController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['wallet'];
-        $response = Http::get("$basePath/$wsid/restore/$uuid");
+        $response = Http::patch("$basePath/$wsid/restore/$uuid", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -158,7 +159,7 @@ class WalletController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['wallet'];
-        $response = Http::get("$basePath/$wsid/sorting/$uuid");
+        $response = Http::patch("$basePath/$wsid/sorting/$uuid", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
