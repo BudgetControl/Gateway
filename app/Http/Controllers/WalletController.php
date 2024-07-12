@@ -63,7 +63,7 @@ class WalletController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['wallet'];
-        $response = Http::get("$basePath/$wsid/create");
+        $response = Http::post("$basePath/$wsid/create", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
