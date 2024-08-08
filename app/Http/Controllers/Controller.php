@@ -129,4 +129,11 @@ abstract class Controller
         
         return response([], 200, ['Content-Type' => 'application/json']);
     }
+
+    protected function getQueryParams(Request $request): string
+    {
+        $queryParams = $request->query();
+        unset($queryParams['token']);
+        return "?".http_build_query($queryParams);
+    }
 }

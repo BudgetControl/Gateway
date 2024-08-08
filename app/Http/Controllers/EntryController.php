@@ -17,9 +17,12 @@ class EntryController extends Controller {
     {
         //get workspace uuid form headers
         $body = $request->all();
+        $queryParams = $this->getQueryParams($request);
+
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
-        $response = Http::get("$basePath/".$this->entryType."$wsid");
+
+        $response = Http::get("$basePath/".$this->entryType."$wsid".$queryParams);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -42,9 +45,11 @@ class EntryController extends Controller {
     {
         //get workspace uuid form headers
         $body = $request->all();
+        $queryParams = $this->getQueryParams($request);
+
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
-        $response = Http::get("$basePath/$wsid/".$this->entryType."$uuid");
+        $response = Http::get("$basePath/$wsid/".$this->entryType."$uuid".$queryParams);
         $data = $response->json();
 
         if (json_encode($data) === null) {
