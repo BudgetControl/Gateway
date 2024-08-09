@@ -9,3 +9,4 @@ require_once __DIR__ . '/microservice/wallet.php';
 require_once __DIR__ . '/microservice/entry.php';
 
 \Illuminate\Support\Facades\Route::get('/monitor/{ms}','\App\Http\Controllers\BaseController@monitor');
+\Illuminate\Support\Facades\Route::any('/{any}','\App\Http\Controllers\WorkspaceController@getRoutes')->where('any', '.*');

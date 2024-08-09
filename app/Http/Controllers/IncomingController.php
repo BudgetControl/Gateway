@@ -5,6 +5,6 @@ namespace App\Http\Controllers;
 
 class IncomingController extends EntryController {
 
-    protected string $entryType = "income/";
+    protected string $entryType = "/income";
 
 }

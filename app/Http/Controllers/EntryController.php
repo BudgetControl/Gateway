@@ -22,7 +22,7 @@ class EntryController extends Controller {
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
 
-        $response = Http::get("$basePath/".$this->entryType."$wsid".$queryParams);
+        $response = Http::get("$basePath".$this->entryType."/$wsid".$queryParams);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -49,7 +49,7 @@ class EntryController extends Controller {
 
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
-        $response = Http::get("$basePath/$wsid/".$this->entryType."$uuid".$queryParams);
+        $response = Http::get("$basePath/$wsid".$this->entryType."/$uuid".$queryParams);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -68,13 +68,13 @@ class EntryController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function create(Request $request, $uuid): Response
+    public function create(Request $request): Response
     {
         //get workspace uuid form headers
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
-        $response = Http::post("$basePath/$wsid/".$this->entryType."$uuid",$body);
+        $response = Http::post("$basePath/$wsid".$this->entryType,$body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -99,7 +99,7 @@ class EntryController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
-        $response = Http::put("$basePath/$wsid/".$this->entryType."$uuid",$body);
+        $response = Http::put("$basePath/$wsid".$this->entryType."/$uuid",$body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -124,7 +124,7 @@ class EntryController extends Controller {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
-        $response = Http::delete("$basePath/$wsid/".$this->entryType."$uuid");
+        $response = Http::delete("$basePath/$wsid".$this->entryType."/$uuid");
         $data = $response->json();
 
         if (json_encode($data) === null) {

@@ -5,5 +5,5 @@ namespace App\Http\Controllers;
 
 class ExpensesController extends EntryController {
 
-    protected string $entryType = "expense/";
+    protected string $entryType = "/expense";
 }

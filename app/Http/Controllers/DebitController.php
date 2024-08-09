@@ -6,6 +6,6 @@ namespace App\Http\Controllers;
 
 class DebitController extends EntryController {
 
-    protected string $entryType = "debit/";
+    protected string $entryType = "/debit";
 
 }

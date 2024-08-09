@@ -5,6 +5,6 @@ namespace App\Http\Controllers;
 
 class TransferController extends EntryController {
 
-    protected string $entryType = "transfer/";
+    protected string $entryType = "/transfer";
 
 }
