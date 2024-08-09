@@ -1,5 +1,3 @@
-use Illuminate\Support\Facades\\Illuminate\Support\Facades\Route;
-
 <?php
 
 \Illuminate\Support\Facades\Route::get('/auth/check', [\App\Http\Controllers\AuthController::class, 'check']);

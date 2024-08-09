@@ -17,6 +17,10 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        Log::debug('Request: ' . $request->fullUrl());
+        Log::debug('Headers: ' . json_encode($request->header()));
+        Log::debug('Body: ' . json_encode($request->all()));
+
         $token = $request->header('X-BC-Token');
         $authToken = $request->header('Authorization');
 
