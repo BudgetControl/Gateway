@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class EntryModelController extends Controller {
+class EntryModelController extends EntryController {
 
     protected string $entryType = "/model";
 
