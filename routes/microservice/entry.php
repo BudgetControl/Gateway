@@ -27,7 +27,15 @@
     \Illuminate\Support\Facades\Route::delete('/entry/expense/{uuid}', '\App\Http\Controllers\ExpensesController@delete');
     \Illuminate\Support\Facades\Route::delete('/entry/transfer/{uuid}', '\App\Http\Controllers\TransferController@delete');
     \Illuminate\Support\Facades\Route::delete('/entry/{uuid}', '\App\Http\Controllers\EntryController@delete');
+    \Illuminate\Support\Facades\Route::delete('/entry/model/{uuid}', '\App\Http\Controllers\EntryModelController@delete');
 
+    // MODEL
+    \Illuminate\Support\Facades\Route::get('/entry/model', '\App\Http\Controllers\EntryModelController@list');
+    \Illuminate\Support\Facades\Route::post('/entry/model', '\App\Http\Controllers\EntryModelController@create');
+    \Illuminate\Support\Facades\Route::get('/entry/model/{uuid}', '\App\Http\Controllers\EntryModelController@show');
+    \Illuminate\Support\Facades\Route::put('/entry/model/{uuid}', '\App\Http\Controllers\EntryModelController@update');
+
+    // generic ENTRY
     \Illuminate\Support\Facades\Route::get('/entry/{uuid}', '\App\Http\Controllers\EntryController@show');
     \Illuminate\Support\Facades\Route::put('/entry/{uuid}', '\App\Http\Controllers\EntryController@update');
     \Illuminate\Support\Facades\Route::get('/entry', '\App\Http\Controllers\EntryController@list');
