@@ -22,7 +22,7 @@ class EntryController extends Controller {
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
 
-        $response = Http::get("$basePath".$this->entryType."/$wsid".$queryParams);
+        $response = Http::get("$basePath/$wsid".$this->entryType.$queryParams);
         $data = $response->json();
 
         if (json_encode($data) === null) {
