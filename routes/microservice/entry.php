@@ -35,7 +35,7 @@
     \Illuminate\Support\Facades\Route::get('/entry/model/{uuid}', '\App\Http\Controllers\EntryModelController@show');
     \Illuminate\Support\Facades\Route::put('/entry/model/{uuid}', '\App\Http\Controllers\EntryModelController@update');
 
-
+    // generic ENTRY
     \Illuminate\Support\Facades\Route::get('/entry/{uuid}', '\App\Http\Controllers\EntryController@show');
     \Illuminate\Support\Facades\Route::put('/entry/{uuid}', '\App\Http\Controllers\EntryController@update');
     \Illuminate\Support\Facades\Route::get('/entry', '\App\Http\Controllers\EntryController@list');
