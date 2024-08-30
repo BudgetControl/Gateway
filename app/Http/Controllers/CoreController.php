@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class CoreController extends EntryController {
 
-    public function paymentType(Request $request): Response
+    public function paymentTypes(Request $request): Response
     {
         //get workspace uuid form headers
         $basePath = $this->routes['entry'];

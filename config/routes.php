@@ -11,4 +11,5 @@ return [
     'wallet' => env('WALLET_API_BASE_URL'),
     'entry' => env('ENTRY_API_BASE_URL'),
     'debt' => env('DEBT_API_BASE_URL'),
+    'labels' => env('LABEL_API_BASE_URL'),
 ];
