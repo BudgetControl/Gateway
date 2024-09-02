@@ -9,8 +9,6 @@ require_once __DIR__ . '/microservice/wallet.php';
 require_once __DIR__ . '/microservice/entry.php';
 require_once __DIR__ . '/microservice/debt.php';
 require_once __DIR__ . '/microservice/label.php';
+require_once __DIR__ . '/microservice/core.php';
 
-\Illuminate\Support\Facades\Route::get('/payment-types', '\App\Http\Controllers\CoreController@paymentTypes');
-\Illuminate\Support\Facades\Route::get('/currencies', '\App\Http\Controllers\CoreController@currencies');
-\Illuminate\Support\Facades\Route::get('/categories', '\App\Http\Controllers\CoreController@categories');
 \Illuminate\Support\Facades\Route::get('/monitor/{ms}','\App\Http\Controllers\BaseController@monitor');
