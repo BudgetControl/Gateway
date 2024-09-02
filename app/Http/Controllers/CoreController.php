@@ -14,7 +14,7 @@ class CoreController extends EntryController {
     public function paymentTypes(Request $request): Response
     {
         //get workspace uuid form headers
-        $basePath = $this->routes['entry'];
+        $basePath = $this->routes['core'];
 
         $response = Http::get("$basePath/payment-types");
         $data = $response->json();
@@ -38,7 +38,7 @@ class CoreController extends EntryController {
     public function currencies(Request $request): Response
     {
         //get workspace uuid form headers
-        $basePath = $this->routes['entry'];
+        $basePath = $this->routes['core'];
 
         $response = Http::get("$basePath/currencies");
         $data = $response->json();
@@ -62,7 +62,7 @@ class CoreController extends EntryController {
     public function categories(Request $request): Response
     {
         //get workspace uuid form headers
-        $basePath = $this->routes['entry'];
+        $basePath = $this->routes['core'];
 
         $response = Http::get("$basePath/categories");
         $data = $response->json();
