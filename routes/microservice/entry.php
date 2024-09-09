@@ -35,6 +35,13 @@
     \Illuminate\Support\Facades\Route::get('/entry/model/{uuid}', '\App\Http\Controllers\EntryModelController@show');
     \Illuminate\Support\Facades\Route::put('/entry/model/{uuid}', '\App\Http\Controllers\EntryModelController@update');
 
+    // PLANNED ENTRY
+    \Illuminate\Support\Facades\Route::get('/entry/planned', '\App\Http\Controllers\PlannedEntryController@list');
+    \Illuminate\Support\Facades\Route::post('/entry/planned', '\App\Http\Controllers\PlannedEntryController@create');
+    \Illuminate\Support\Facades\Route::get('/entry/planned/{uuid}', '\App\Http\Controllers\PlannedEntryController@show');
+    \Illuminate\Support\Facades\Route::put('/entry/planned/{uuid}', '\App\Http\Controllers\PlannedEntryController@update');
+    \Illuminate\Support\Facades\Route::delete('/entry/planned/{uuid}', '\App\Http\Controllers\PlannedEntryController@delete');
+
     // generic ENTRY
     \Illuminate\Support\Facades\Route::get('/entry/{uuid}', '\App\Http\Controllers\EntryController@show');
     \Illuminate\Support\Facades\Route::put('/entry/{uuid}', '\App\Http\Controllers\EntryController@update');
