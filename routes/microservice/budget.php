@@ -12,6 +12,6 @@
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/status', '\App\Http\Controllers\BudgetController@status');
 \Illuminate\Support\Facades\Route::get('/budget/{uuid}/stats', '\App\Http\Controllers\BudgetController@budgetStats');
 \Illuminate\Support\Facades\Route::get('/budgets/stats', '\App\Http\Controllers\BudgetController@budgetsStats');
-
+\Illuminate\Support\Facades\Route::get('/budget/{uuid}/entry-list', '\App\Http\Controllers\BudgetController@entryList');
 
 });

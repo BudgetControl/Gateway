@@ -251,4 +251,28 @@ class BudgetController extends Controller
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
+
+    public function entryList(Request $request, $uuid): Response
+    {
+        $body = $request->all();
+        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+        $basePath = $this->routes['budget'];
+        $response = Http::get("$basePath/$wsid/budget/$uuid/entry-list");
+        $data = $response->json();
+
+        if (json_encode($data) === null) {
+            Log::error('Error: on budgets entry-list', ['response' => $response->json()]);
+            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+        }
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();
+        } else {
+            // Handle the error
+            $statusCode = $response->status();
+            // Handle the error based on the status code
+        }
+
+        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
 }
