@@ -45,7 +45,7 @@ abstract class Controller
             $client->request('GET', $path . "/monitor");
         } catch (\Exception $e) {
             Log::error('Error while calling the API', ['error' => $e->getMessage()]);
-            return response()->json(['message' => 'Something went wrong'], $e->getCode());
+            return response(['message' => 'Something went wrong '. $e->getCode()], 500);
         }
         
         return response([], 200, ['Content-Type' => 'application/json']);
