@@ -139,7 +139,7 @@ class StatsController extends Controller {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
         $basePath = $this->routes['stats'];
-        $response = Http::get("$basePath/$wsid/total/planned?".$request->getQueryString());
+        $response = Http::get("$basePath/$wsid/planned?".$request->getQueryString());
         $data = $response->json();
         
         if(json_encode($data) === null) {
