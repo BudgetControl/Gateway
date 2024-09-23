@@ -6,7 +6,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class ChartsController extends Controller {
+class ChartsController extends StatsController {
 
     public function incomingExpensesLineByDate(Request $request): Response
     {
