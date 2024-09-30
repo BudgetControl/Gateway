@@ -26,5 +26,6 @@
     \Illuminate\Support\Facades\Route::get('/stats/average-savings', '\App\Http\Controllers\AverangeController@averageSavings');
     \Illuminate\Support\Facades\Route::get('/stats/total-loan-installments', '\App\Http\Controllers\AverangeController@totalLoanInstallmentsOfCurrentMonth');
     \Illuminate\Support\Facades\Route::get('/stats/total/planned/remaining', '\App\Http\Controllers\AverangeController@totalPlannedRemainingOfCurrentMonth');
+    \Illuminate\Support\Facades\Route::get('/stats/total/planned/monthly', '\App\Http\Controllers\AverangeController@totalPlannedMonthly');
 
 });

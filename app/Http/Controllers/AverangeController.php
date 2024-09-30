@@ -116,4 +116,25 @@ class AverangeController extends ChartsController {
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
+
+    public function totalPlannedMonthly(Request $request): Response
+    {
+        //get workspace uuid form headers
+        $body = $request->all();
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = Http::get("$basePath/$wsid/total/planned/monthly");
+        $data = $response->json();
+        
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();
+        } else {
+            // Handle the error
+            Log::error('Error: on total/planned/monthly', ['response' => $response->json()]);
+            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+        }
+
+        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
 }
