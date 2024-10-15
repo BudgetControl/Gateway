@@ -20,7 +20,7 @@ class WalletController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on wallet list', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -44,7 +44,7 @@ class WalletController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on wallet show', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -68,7 +68,7 @@ class WalletController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on wallet create', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -92,7 +92,7 @@ class WalletController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on wallet update', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -116,7 +116,7 @@ class WalletController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on wallet update', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -140,7 +140,7 @@ class WalletController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on wallet update', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -164,7 +164,7 @@ class WalletController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on wallet update', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {

@@ -21,7 +21,7 @@ class CoreController extends EntryController {
 
         if (json_encode($data) === null) {
             Log::error('Error: on getting payment types', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -45,7 +45,7 @@ class CoreController extends EntryController {
 
         if (json_encode($data) === null) {
             Log::error('Error: on getting currencies', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -69,7 +69,7 @@ class CoreController extends EntryController {
 
         if (json_encode($data) === null) {
             Log::error('Error: on getting categories', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -93,7 +93,7 @@ class CoreController extends EntryController {
 
         if (json_encode($data) === null) {
             Log::error('Error: on getting categories and sub categories', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {

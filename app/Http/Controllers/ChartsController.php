@@ -19,7 +19,7 @@ class ChartsController extends StatsController {
         
         if(json_encode($data) === null) {
             Log::error('Error: on incoming expenses line by date', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -44,7 +44,7 @@ class ChartsController extends StatsController {
         
         if(json_encode($data) === null) {
             Log::error('Error: on expenses category bar by date', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -69,7 +69,7 @@ class ChartsController extends StatsController {
         
         if(json_encode($data) === null) {
             Log::error('Error: on expenses category table by date', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -94,7 +94,7 @@ class ChartsController extends StatsController {
         
         if(json_encode($data) === null) {
             Log::error('Error: on expenses label bar by date', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -119,7 +119,7 @@ class ChartsController extends StatsController {
         
         if(json_encode($data) === null) {
             Log::error('Error: on incoming category bar by date', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -144,7 +144,7 @@ class ChartsController extends StatsController {
         
         if(json_encode($data) === null) {
             Log::error('Error: on incoming category table by date', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -169,7 +169,7 @@ class ChartsController extends StatsController {
         
         if(json_encode($data) === null) {
             Log::error('Error: on expenses label apple pie by date', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {

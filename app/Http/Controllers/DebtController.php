@@ -20,7 +20,7 @@ class DebtController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on payees list', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -44,7 +44,7 @@ class DebtController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on debt delete', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
