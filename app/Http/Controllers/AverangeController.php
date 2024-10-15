@@ -26,7 +26,7 @@ class AverangeController extends ChartsController {
         } else {
             // Handle the error
             Log::error('Error: on average-expenses', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -47,7 +47,7 @@ class AverangeController extends ChartsController {
         } else {
             // Handle the error
             Log::error('Error: on average-incoming', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -68,7 +68,7 @@ class AverangeController extends ChartsController {
         } else {
             // Handle the error
             Log::error('Error: on average-savings', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -90,7 +90,7 @@ class AverangeController extends ChartsController {
         } else {
             // Handle the error
             Log::error('Error: on total-loan-installments', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -111,7 +111,7 @@ class AverangeController extends ChartsController {
         } else {
             // Handle the error
             Log::error('Error: on total/planned/remaining', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -132,7 +132,7 @@ class AverangeController extends ChartsController {
         } else {
             // Handle the error
             Log::error('Error: on total/planned/monthly', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
