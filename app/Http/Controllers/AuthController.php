@@ -110,6 +110,9 @@ class AuthController extends Controller
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
+        //remove the refresh token from the response for security reasons
+        $response->header('refresh_token', null);
+
         return $response;
     }
 
