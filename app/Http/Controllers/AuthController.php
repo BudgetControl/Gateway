@@ -5,6 +5,7 @@ use App\Service\JwtService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -98,7 +99,13 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/authenticate", $request->all());
-        if ($response->status() !== 200) {
+
+        $refreshToken = $response->header('refresh_token');
+
+        $cacheKey = cacheKey_refreshToken($request->input('email'));
+        Cache::add($cacheKey, $refreshToken, 60 * 24 * 30);
+
+        if ($response->status() !== 200 || empty($refreshToken)) {
             Log::error('Error: on authenticate', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }

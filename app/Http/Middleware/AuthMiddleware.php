@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Service\AuthCognitoService;
 use Closure;
 use App\Service\JwtService;
 use Illuminate\Http\Request;
@@ -28,6 +29,12 @@ class AuthMiddleware
             return response('Unauthorized', 401);
         }
 
+        $cognitoClientService = new AuthCognitoService();
+        $validToken = $cognitoClientService->validateAuthToken($token);
+        if ($validToken === false) {
+            return response('Unauthorized', 401);
+        }
+
         if (JwtService::isValidToken($token) === false) {
             return response('Unauthorized', 401);
         }
@@ -41,6 +48,8 @@ class AuthMiddleware
         }
 
         $request->merge(['token' => $decoded]);
+        $request->attributes->set('new_access_token', $validToken);
+
         return $next($request);
     }
 }
