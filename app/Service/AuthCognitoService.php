@@ -54,6 +54,7 @@ class AuthCognitoService
     public function validateAuthToken(string $token): string|bool
     {
         try {
+            Log::debug('Validating token ' . $token);
             $username = $this->cognitoClient->verifyAccessToken($token);
         } catch( TokenExpiryException $e) {
 
@@ -63,6 +64,8 @@ class AuthCognitoService
                 Log::warning('Refresh token not found in cache');
                 return false;
             }
+
+            Log::debug('Refresh token with [' . $username . '] ' . $refreshToken);
             $newTokens = $this->cognitoClient->refreshAuthentication($username, $refreshToken);
             if (!$newTokens) {
                 Log::error('Failed to refresh tokens');
