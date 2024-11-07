@@ -100,7 +100,8 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/authenticate", $request->all());
 
-        $refreshToken = $response->header('refresh_token');
+        // get refresh token from body response
+        $refreshToken = $response->json()['refresh_token'];
 
         $cacheKey = cacheKey_refreshToken($request->input('email'));
         Cache::add($cacheKey, $refreshToken, 60 * 24 * 30);
