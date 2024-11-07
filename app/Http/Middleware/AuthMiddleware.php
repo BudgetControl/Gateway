@@ -30,7 +30,7 @@ class AuthMiddleware
         }
 
         $cognitoClientService = new AuthCognitoService();
-        $validToken = $cognitoClientService->validateAuthToken($token);
+        $validToken = $cognitoClientService->validateAuthToken($authToken);
         if ($validToken === false) {
             return response('Unauthorized', 401);
         }
