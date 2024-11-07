@@ -22,7 +22,7 @@ class LabelController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on labels list', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -46,7 +46,7 @@ class LabelController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on labels update', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -70,7 +70,7 @@ class LabelController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on labels insert', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -94,7 +94,7 @@ class LabelController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on labels show', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -118,7 +118,7 @@ class LabelController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on labels patch', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -142,7 +142,7 @@ class LabelController extends Controller {
 
         if (json_encode($data) === null) {
             Log::error('Error: on labels delete', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {

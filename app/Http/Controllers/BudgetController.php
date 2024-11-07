@@ -20,17 +20,13 @@ class BudgetController extends Controller
         $response = Http::get("$basePath/$wsid");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget list', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget list', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -44,17 +40,13 @@ class BudgetController extends Controller
         $response = Http::get("$basePath/$wsid/$uuid");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget show', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget show', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -68,17 +60,13 @@ class BudgetController extends Controller
         $response = Http::post("$basePath/$wsid/budget", $body);
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget create', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget create', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -91,18 +79,14 @@ class BudgetController extends Controller
         $basePath = $this->routes['budget'];
         $response = Http::put("$basePath/$wsid/budget/$uuid", $body);
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget update', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
+           
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget update', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -116,17 +100,13 @@ class BudgetController extends Controller
         $response = Http::delete("$basePath/$wsid/budget/$uuid");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget delete', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget delete', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -140,17 +120,13 @@ class BudgetController extends Controller
         $response = Http::get("$basePath/$wsid/budget/$uuid/expired");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget expired', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget expired', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -164,17 +140,13 @@ class BudgetController extends Controller
         $response = Http::get("$basePath/$wsid/budget/$uuid/exceeded");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget exceeded', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget expired', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -188,17 +160,13 @@ class BudgetController extends Controller
         $response = Http::get("$basePath/$wsid/budget/$uuid/status");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget status', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget status', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -212,17 +180,13 @@ class BudgetController extends Controller
         $response = Http::get("$basePath/$wsid/budget/$uuid/stats");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budget stats', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on budget stats', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
@@ -236,17 +200,33 @@ class BudgetController extends Controller
         $response = Http::get("$basePath/$wsid/budgets/stats");
         $data = $response->json();
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on budgets stats', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
-        }
         // Process the response
         if ($response->successful()) {
             $statusCode = $response->status();
         } else {
             // Handle the error
+            Log::error('Error: on budget stats', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
+        }
+
+        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
+
+    public function entryList(Request $request, $uuid): Response
+    {
+        $body = $request->all();
+        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+        $basePath = $this->routes['budget'];
+        $response = Http::get("$basePath/$wsid/budget/$uuid/entry-list");
+        $data = $response->json();
+
+        // Process the response
+        if ($response->successful()) {
             $statusCode = $response->status();
-            // Handle the error based on the status code
+        } else {
+            // Handle the error
+            Log::error('Error: on budgets entry-list', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);

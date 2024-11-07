@@ -19,7 +19,7 @@ class StatsController extends Controller {
         
         if(json_encode($data) === null) {
             Log::error('Error: on incoming', ['response' => $response->json()]);
-            return response(["An error occurred"], 500, ['Content-Type' => 'application/json']);
+            return response(["An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -44,7 +44,7 @@ class StatsController extends Controller {
         
         if(json_encode($data) === null) {
             Log::error('Error: on expenses', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -69,7 +69,7 @@ class StatsController extends Controller {
         
         if(json_encode($data) === null) {
             Log::error('Error: on total', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -94,7 +94,7 @@ class StatsController extends Controller {
         
         if(json_encode($data) === null) {
             Log::error('Error: on wallets', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -119,7 +119,7 @@ class StatsController extends Controller {
         
         if(json_encode($data) === null) {
             Log::error('Error: on health', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -139,12 +139,12 @@ class StatsController extends Controller {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
         $basePath = $this->routes['stats'];
-        $response = Http::get("$basePath/$wsid/total/planned?".$request->getQueryString());
+        $response = Http::get("$basePath/$wsid/planned?".$request->getQueryString());
         $data = $response->json();
         
         if(json_encode($data) === null) {
             Log::error('Error: on total planned', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {
@@ -169,7 +169,7 @@ class StatsController extends Controller {
         
         if(json_encode($data) === null) {
             Log::error('Error: on stats entries', ['response' => $response->json()]);
-            return response("An error occurred", 500, ['Content-Type' => 'application/json']);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
         if ($response->successful()) {

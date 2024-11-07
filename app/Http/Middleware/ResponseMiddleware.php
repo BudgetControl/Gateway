@@ -16,9 +16,21 @@ class ResponseMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        //get new refresh token form cache
         Log::debug('Headers: ' . json_encode($request->header()));
         Log::debug('Body: ' . json_encode($request->all()));
         
-        return $next($request);
+        // Process the request and get the response
+        $response = $next($request);
+
+        // Retrieve the new access token from the request (assuming it's set by the auth middleware)
+        $newAccessToken = $request->attributes->get('new_access_token');
+
+        // Add the new access token to the response headers
+        if ($newAccessToken) {
+            $response->headers->set('Authorization', 'Bearer ' . $newAccessToken);
+        }
+
+        return $response;
     }
 }

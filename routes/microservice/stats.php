@@ -19,4 +19,13 @@
     \Illuminate\Support\Facades\Route::get('/stats/chart/table/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryTableByDate');
     \Illuminate\Support\Facades\Route::get('/stats/chart/bar/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelBarByDate');
     \Illuminate\Support\Facades\Route::get('/stats/chart/apple-pie/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelApplePieByDate');
+
+    // ########### STATS AVERANGE ###########
+    \Illuminate\Support\Facades\Route::get('/stats/average-expenses', '\App\Http\Controllers\AverangeController@averageExpenses');
+    \Illuminate\Support\Facades\Route::get('/stats/average-incoming', '\App\Http\Controllers\AverangeController@averageIncoming');
+    \Illuminate\Support\Facades\Route::get('/stats/average-savings', '\App\Http\Controllers\AverangeController@averageSavings');
+    \Illuminate\Support\Facades\Route::get('/stats/total-loan-installments', '\App\Http\Controllers\AverangeController@totalLoanInstallmentsOfCurrentMonth');
+    \Illuminate\Support\Facades\Route::get('/stats/total/planned/remaining', '\App\Http\Controllers\AverangeController@totalPlannedRemainingOfCurrentMonth');
+    \Illuminate\Support\Facades\Route::get('/stats/total/planned/monthly', '\App\Http\Controllers\AverangeController@totalPlannedMonthly');
+
 });
