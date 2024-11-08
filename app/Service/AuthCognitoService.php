@@ -51,11 +51,11 @@ class AuthCognitoService
      * @param string $token The authentication token to be validated.
      * @return string|bool Returns true if the token is valid, false otherwise.
      */
-    public function validateAuthToken(string $token): string|bool
+    public function validateAuthToken(string $token, string $username): string|bool
     {
         try {
             Log::debug('Validating token ' . $token);
-            $username = $this->cognitoClient->verifyAccessToken($token);
+            $this->cognitoClient->verifyAccessToken($token);
         } catch( TokenExpiryException $e) {
 
             $cacheKey = cacheKey_refreshToken($username);

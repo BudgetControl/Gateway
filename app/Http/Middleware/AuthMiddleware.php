@@ -29,23 +29,23 @@ class AuthMiddleware
             return response('Unauthorized', 401);
         }
 
-        $cognitoClientService = new AuthCognitoService();
-        
-        $authToken = str_replace('Bearer ', '', $authToken);
-        $validToken = $cognitoClientService->validateAuthToken($authToken);
-        if ($validToken === false) {
-            return response('Unauthorized', 401);
-        }
-
-        if (JwtService::isValidToken($token) === false) {
-            return response('Unauthorized', 401);
-        }
-
         // Validate the token
         try {
             $decoded = JwtService::decodeToken($token);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            return response('Unauthorized', 401);
+        }
+
+        $cognitoClientService = new AuthCognitoService();
+        
+        $authToken = str_replace('Bearer ', '', $authToken);
+        $validToken = $cognitoClientService->validateAuthToken($authToken, $decoded['email']);
+        if ($validToken === false) {
+            return response('Unauthorized', 401);
+        }
+
+        if (JwtService::isValidToken($token) === false) {
             return response('Unauthorized', 401);
         }
 
