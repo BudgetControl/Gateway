@@ -174,12 +174,12 @@ class AuthController extends Controller
         $deviceOnQuery = '';
         if($this->isAndroid($request)) {
             Log::debug('Mobile phone detected');
-            $deviceOnQuery = '&device=android';
+            $deviceOnQuery = 'android';
         }
 
         if($this->isIos($request)) {
             Log::debug('Mobile phone detected');
-            $deviceOnQuery = '&device=ios';
+            $deviceOnQuery = 'ios';
         }
 
         $queryParams = $request->query();
