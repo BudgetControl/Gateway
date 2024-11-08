@@ -169,8 +169,32 @@ class AuthController extends Controller
     public function providerToken(Request $request, $provider)
     {
         $basePath = $this->routes['auth'];
-        $queryString = $request->getQueryString();
-        $response = Http::get("$basePath/authenticate/token/$provider?$queryString");
+
+        //check if is an mobile phone
+        $deviceOnQuery = '';
+        if($this->isAndroid($request)) {
+            Log::debug('Mobile phone detected');
+            $deviceOnQuery = '&device=android';
+        }
+
+        if($this->isIos($request)) {
+            Log::debug('Mobile phone detected');
+            $deviceOnQuery = '&device=ios';
+        }
+
+        $queryParams = $request->query();
+        if($queryParams['code'] === null) {
+            Log::info('Error: code is required');
+            return response()->json(['message' => 'Code is required'], 400);
+        }
+
+        $newQueryParams = [
+            'code' => $queryParams['code'],
+            'device' => $deviceOnQuery
+        ];
+
+        $queryString = http_build_query($newQueryParams);
+        $response = Http::get("$basePath/authenticate/token/$provider$queryString");
         if ($response->status() !== 200) {
             Log::error('Error: on provider token '.$provider, ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
