@@ -67,14 +67,14 @@ abstract class Controller
      */
     private function checkUserAgent(Request $request, string $userAgentName): bool
     {
-        $userAgent = $request->getHeader('User-Agent');
-        \Illuminate\Support\Facades\Log::debug('User agent: ' . $userAgent[0]);
+        $userAgent = $request->header('User-Agent');
+        \Illuminate\Support\Facades\Log::debug('User agent: ' . $userAgent);
 
         switch ($userAgentName) {
             case 'android':
-                return strpos($userAgent[0], 'Android') !== false;
+                return strpos($userAgent, 'Android') !== false;
             case 'ios':
-                return strpos($userAgent[0], 'iPhone') !== false || strpos($userAgent[0], 'iPad') !== false;
+                return strpos($userAgent, 'iPhone') !== false || strpos($userAgent[0], 'iPad') !== false;
             default:
                 return false;
         }
