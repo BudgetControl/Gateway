@@ -144,7 +144,20 @@ class AuthController extends Controller
     public function authenticateProvider(Request $request, $provider)
     {
         $basePath = $this->routes['auth'];
-        $response = Http::get("$basePath/authenticate/$provider");
+
+        //check if is an mobile phone
+        $queryParam = '';
+        if($this->isAndroid($request)) {
+            Log::debug('Mobile phone detected');
+            $queryParam = '?mobile=andoird';
+        }
+
+        if($this->isIos($request)) {
+            Log::debug('Mobile phone detected');
+            $queryParam = '?mobile=ios';
+        }
+
+        $response = Http::get("$basePath/authenticate/$provider$queryParam");
         if ($response->status() !== 200) {
             Log::error('Error: on authenticate provider '.$provider, ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
