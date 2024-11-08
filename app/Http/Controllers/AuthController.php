@@ -194,7 +194,7 @@ class AuthController extends Controller
         ];
 
         $queryString = http_build_query($newQueryParams);
-        $response = Http::get("$basePath/authenticate/token/$provider$queryString");
+        $response = Http::get("$basePath/authenticate/token/$provider?$queryString");
         if ($response->status() !== 200) {
             Log::error('Error: on provider token '.$provider, ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
