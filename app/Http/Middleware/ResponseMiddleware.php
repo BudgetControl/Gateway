@@ -31,6 +31,8 @@ class ResponseMiddleware
             $response->headers->set('Authorization', 'Bearer ' . $newAccessToken);
         }
 
+        Log::debug('Response: ' . json_encode($response));
+
         return $response;
     }
 }
