@@ -149,12 +149,12 @@ class AuthController extends Controller
         $queryParam = '';
         if($this->isAndroid($request)) {
             Log::debug('Mobile phone detected');
-            $queryParam = '?mobile=andoird';
+            $queryParam = '?device=andoird';
         }
 
         if($this->isIos($request)) {
             Log::debug('Mobile phone detected');
-            $queryParam = '?mobile=ios';
+            $queryParam = '?device=ios';
         }
 
         $response = Http::get("$basePath/authenticate/$provider$queryParam");
