@@ -49,15 +49,18 @@ class AuthCognitoService
      * Validates the given authentication token.
      *
      * @param string $token The authentication token to be validated.
+     * @param string $username The username of the user.
+     * @param string $subId The sub id of the user.
      * @return string|bool Returns true if the token is valid, false otherwise.
      */
-    public function validateAuthToken(string $token, string $username): string|bool
+    public function validateAuthToken(string $token, string $username, string $subId): string|bool
     {
         try {
             Log::debug('Validating token ' . $token);
             $this->cognitoClient->verifyAccessToken($token);
         } catch( TokenExpiryException $e) {
 
+            Log::debug("Getting user name ". $username);
             $cacheKey = cacheKey_refreshToken($username);
             $refreshToken = Cache::get($cacheKey);
             if (!$refreshToken) {
@@ -65,8 +68,8 @@ class AuthCognitoService
                 return false;
             }
 
-            Log::debug('Refresh token with [' . $username . '] ' . $refreshToken);
-            $newTokens = $this->cognitoClient->refreshAuthentication($username, $refreshToken);
+            Log::debug('Refresh token with [' . $subId . '] ' . $refreshToken);  
+            $newTokens = $this->cognitoClient->refreshAuthentication($subId, $refreshToken);
             if (!$newTokens) {
                 Log::error('Failed to refresh tokens');
                 return false;

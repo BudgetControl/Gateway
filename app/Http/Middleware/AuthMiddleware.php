@@ -40,12 +40,8 @@ class AuthMiddleware
         $cognitoClientService = new AuthCognitoService();
         
         $authToken = str_replace('Bearer ', '', $authToken);
-        $validToken = $cognitoClientService->validateAuthToken($authToken, $decoded['email']);
+        $validToken = $cognitoClientService->validateAuthToken($authToken, $decoded['email'], $decoded['sub']);
         if ($validToken === false) {
-            return response('Unauthorized', 401);
-        }
-
-        if (JwtService::isValidToken($token) === false) {
             return response('Unauthorized', 401);
         }
 
