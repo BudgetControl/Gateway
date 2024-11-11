@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Facade\AwsCognito;
 use App\Service\JwtService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
@@ -102,8 +103,11 @@ class AuthController extends Controller
 
         // get refresh token from body response
         $refreshToken = $response->json()['refresh_token'];
+        $accessToken = $response->json()['access_token'];
 
-        $cacheKey = cacheKey_refreshToken($request->input('email'));
+        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
+
+        $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
         Cache::add($cacheKey, $refreshToken, 60 * 24 * 30);
 
         if ($response->status() !== 200 || empty($refreshToken)) {

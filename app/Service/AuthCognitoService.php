@@ -13,23 +13,9 @@ class AuthCognitoService
 
     private readonly CognitoClient $cognitoClient;
     
-    public function __construct()
+    public function __construct(array $config)
     {
 
-        $config = [
-            'credentials' => [
-                'key' => config('aws.credentials.key'),
-                'secret' => config('aws.credentials.secret'),
-            ],
-            'region' => config('aws.region'),
-            'version' => config('aws.version'),
-        
-            'app_client_id' => config('aws.cognito.app_client_id'),
-            'app_client_secret' => config('aws.cognito.app_client_secret'),
-            'user_pool_id' => config('aws.cognito.user_pool_id'),
-            'redirect_uri' => config('aws.cognito.redirect_uri'),
-        ];
-        
         $aws = new \Aws\Sdk($config);
         $cognitoClient = $aws->createCognitoIdentityProvider();
         
@@ -49,19 +35,18 @@ class AuthCognitoService
      * Validates the given authentication token.
      *
      * @param string $token The authentication token to be validated.
-     * @param string $username The username of the user.
      * @param string $subId The sub id of the user.
      * @return string|bool Returns true if the token is valid, false otherwise.
      */
-    public function validateAuthToken(string $token, string $username, string $subId): string|bool
+    public function validateAuthToken(string $token, string $subId): string|bool
     {
         try {
             Log::debug('Validating token ' . $token);
             $this->cognitoClient->verifyAccessToken($token);
         } catch( TokenExpiryException $e) {
 
-            Log::debug("Getting user name ". $username);
-            $cacheKey = cacheKey_refreshToken($username);
+            Log::debug("Getting user name ". $subId);
+            $cacheKey = cacheKey_refreshToken($subId);
             $refreshToken = Cache::get($cacheKey);
             if (!$refreshToken) {
                 Log::warning('Refresh token not found in cache');
@@ -84,5 +69,16 @@ class AuthCognitoService
         }
 
         return $token;
+    }
+
+    /**
+     * Decodes the given access token.
+     *
+     * @param string $token The access token to decode.
+     * @return array The decoded token data.
+     */
+    public function decodeAccessToken(string $token): array
+    {
+        return $this->cognitoClient->decodeAccessToken($token);
     }
 }
