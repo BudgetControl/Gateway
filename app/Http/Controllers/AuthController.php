@@ -101,6 +101,11 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/authenticate", $request->all());
 
+        if ($response->status() !== 200) {
+            Log::error('Error: on authenticate', ['response' => $response->json()]);
+            return response()->json(['message' => 'An error occurred'], 401);
+        }
+
         // get refresh token from body response
         $refreshToken = $response->json()['refresh_token'];
         $accessToken = $response->json()['token'];
@@ -109,11 +114,6 @@ class AuthController extends Controller
 
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
         Cache::add($cacheKey, $refreshToken, 60 * 24 * 30);
-
-        if ($response->status() !== 200 || empty($refreshToken)) {
-            Log::error('Error: on authenticate', ['response' => $response->json()]);
-            return response()->json(['message' => 'An error occurred'], 401);
-        }
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
