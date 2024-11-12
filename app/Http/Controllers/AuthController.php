@@ -103,7 +103,7 @@ class AuthController extends Controller
 
         // get refresh token from body response
         $refreshToken = $response->json()['refresh_token'];
-        $accessToken = $response->json()['access_token'];
+        $accessToken = $response->json()['token'];
 
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
