@@ -101,12 +101,7 @@ class QueryString {
                 $paramValue = $closure($value->value);
             }
 
-            if(is_array($value->value)) {
-                $newKey = array_key_first($value->value);
-                $params[$value->name][$newKey] = $paramValue;
-            } else {
-                $params[$value->name] = $paramValue;
-            }
+            $params[$value->name] = $paramValue;
 
         }
 
