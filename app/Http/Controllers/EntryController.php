@@ -165,17 +165,20 @@ class EntryController extends Controller {
             switch($keyValue) {
                 case 'category_id':
                     $closure = function($value) {
-                        return \Budgetcontrol\Library\Model\Category::find($value['category_id'])->id ?? null;
+                        $result = \Budgetcontrol\Library\Model\Category::where('uuid', $value['category_id']);
+                        return $result->id ?? null;
                     };
                     break;
                 case 'account_id':
                     $closure = function($value) {
-                        return \Budgetcontrol\Library\Model\Wallet::find($value['account_id'])->id ?? null;
+                        $result = \Budgetcontrol\Library\Model\Wallet::where('uuid', $value['account_id'])->id ?? null;
+                        return $result->id ?? null;
                     };
                     break;
                 case 'payee_id':
                     $closure = function($value) {
-                        return \Budgetcontrol\Library\Model\Payee::find($value['payee_id'])->id ?? null;
+                        $result = \Budgetcontrol\Library\Model\Payee::where('uuid', $value['payee_id'])->id ?? null;
+                        return $result->id ?? null;
                     };
                     break;
                 default:
