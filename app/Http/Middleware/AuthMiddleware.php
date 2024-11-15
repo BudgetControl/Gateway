@@ -47,7 +47,7 @@ class AuthMiddleware
         $request->merge(['token' => $decoded]);
 
         $response = $next($request);
-        $response->headers->set('Authorization', 'Bearer ' . "pippo");
+        $response->headers->set('Authorization', 'Bearer ' . $validToken);
         return $response;
     }
 }
