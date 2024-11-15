@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Facade\AwsCognito;
+use App\Service\AuthCognitoService;
 use Closure;
 use App\Service\JwtService;
 use Illuminate\Http\Request;
@@ -28,10 +30,6 @@ class AuthMiddleware
             return response('Unauthorized', 401);
         }
 
-        if (JwtService::isValidToken($token) === false) {
-            return response('Unauthorized', 401);
-        }
-
         // Validate the token
         try {
             $decoded = JwtService::decodeToken($token);
@@ -40,7 +38,16 @@ class AuthMiddleware
             return response('Unauthorized', 401);
         }
 
+        $authToken = str_replace('Bearer ', '', $authToken);
+        $validToken = AwsCognito::validateAuthToken($authToken, $decoded['sub']);
+        if ($validToken === false) {
+            return response('Unauthorized', 401);
+        }
+
         $request->merge(['token' => $decoded]);
-        return $next($request);
+
+        $response = $next($request);
+        $response->headers->set('Authorization', 'Bearer ' . $validToken);
+        return $response;
     }
 }

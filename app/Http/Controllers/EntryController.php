@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Entities\QueryString;
+use App\Entities\Param;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class EntryController extends Controller {
 
@@ -17,12 +19,15 @@ class EntryController extends Controller {
     {
         //get workspace uuid form headers
         $body = $request->all();
-        $queryParams = $this->getQueryParams($request);
+
+        $queryString = new QueryString();
+        $this->getQueryParams($request, $queryString);
+        $httpBuildQuery = $queryString->__toString();
 
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
 
-        $response = Http::get("$basePath/$wsid".$this->entryType.$queryParams);
+        $response = Http::get("$basePath/$wsid".$this->entryType.$httpBuildQuery);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -45,11 +50,10 @@ class EntryController extends Controller {
     {
         //get workspace uuid form headers
         $body = $request->all();
-        $queryParams = $this->getQueryParams($request);
 
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
-        $response = Http::get("$basePath/$wsid".$this->entryType."/$uuid".$queryParams);
+        $response = Http::get("$basePath/$wsid".$this->entryType."/$uuid");
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -141,6 +145,55 @@ class EntryController extends Controller {
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
+
+
+    /**
+     * Retrieves query parameters from the given request or array and updates the provided QueryString object.
+     *
+     * @param Request|array $request The request object or array containing query parameters.
+     * @param QueryString $queryString The QueryString object to be updated with the query parameters.
+     * @param string|null $index Optional index to specify a particular subset of query parameters.
+     *
+     * @return void
+     */
+    protected function getQueryParams(Request|array $request, QueryString &$queryString, string $index = null)
+    {
+        $queryParams = is_array($request) ? $request : $request->query();
+        $queryParams = $queryString->removeParamsByConfig($queryParams);
+
+        foreach ($queryParams as $key => $value) {
+            $closure = null;
+
+            if (is_array($value)) {
+                $this->getQueryParams($value, $queryString, $key);
+                return;
+            }
+
+            Log::debug('keyValue: ' . $key);
+
+            switch ($key) {
+                case 'category_id':
+                    $closure = fn($value) => \Budgetcontrol\Library\Model\Category::where('uuid', $value)->first()->id ?? null;
+                    break;
+                case 'account_id':
+                    $closure = fn($value) => \Budgetcontrol\Library\Model\Wallet::where('uuid', $value)->first()->id ?? null;
+                    break;
+                case 'payee_id':
+                    $closure = fn($value) => \Budgetcontrol\Library\Model\Payee::where('uuid', $value)->first()->id ?? null;
+                    break;
+            }
+
+            if(is_null($value)) {
+                Log::debug('Removed keyValue: ' . $key . ' value: ' . $value);
+            }
+
+            if(!is_null($value)) {
+                $queryString->setParam($key, $value, $closure, $index);
+            }
+
+        }
+
     }
 
 }
