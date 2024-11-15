@@ -66,7 +66,7 @@ class AuthCognitoService
 
             Log::debug('New tokens: ' . json_encode($newTokens));
 
-            $token = $newTokens['AccessToken'];
+            $token = $newTokens['RefreshToken'];
             Cache::put($cacheKey, $token, 60 * 24 * 30);
 
         } catch( \Exception $e) {
