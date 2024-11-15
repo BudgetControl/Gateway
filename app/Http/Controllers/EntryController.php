@@ -19,13 +19,15 @@ class EntryController extends Controller {
     {
         //get workspace uuid form headers
         $body = $request->all();
-        $queryParams = $this->getQueryParams($request);
-        $queryString = $queryParams->__toString();
+
+        $queryString = new QueryString();
+        $this->getQueryParams($request, $queryString);
+        $httpBuildQuery = $queryString->__toString();
 
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['entry'];
 
-        $response = Http::get("$basePath/$wsid".$this->entryType.$queryString);
+        $response = Http::get("$basePath/$wsid".$this->entryType.$httpBuildQuery);
         $data = $response->json();
 
         if (json_encode($data) === null) {
@@ -151,46 +153,36 @@ class EntryController extends Controller {
      * @param Request $request The HTTP request instance.
      * @return QueryString The query parameters as a string.
      */
-    protected function getQueryParams(Request $request): QueryString
+    protected function getQueryParams(Request|array $request, QueryString &$queryString): QueryString
     {
-        $queryParams = $request->query();
-        foreach($queryParams as $key => $value)  {
+        $queryParams = is_array($request) ? $request : $request->query();
+
+        foreach ($queryParams as $key => $value) {
             $closure = null;
-            
-            $keyValue = $key;
-            if(is_array($value)) {
-                $keyValue = array_key_first($value);
+
+            if (is_array($value)) {
+                $this->getQueryParams($value, $queryString);
             }
 
-            switch($keyValue) {
+            Log::debug('keyValue: ' . $key);
+
+            switch ($key) {
                 case 'category_id':
-                    $closure = function($value) {
-                        $result = \Budgetcontrol\Library\Model\Category::where('uuid', $value['category_id'])->first();
-                        return $result->id ?? null;
-                    };
+                    $closure = fn($value) => \Budgetcontrol\Library\Model\Category::where('uuid', $value)->first()->id ?? null;
                     break;
                 case 'account_id':
-                    $closure = function($value) {
-                        $result = \Budgetcontrol\Library\Model\Wallet::where('uuid', $value['account_id'])->first();
-                        return $result->id ?? null;
-                    };
+                    $closure = fn($value) => \Budgetcontrol\Library\Model\Wallet::where('uuid', $value)->first()->id ?? null;
                     break;
                 case 'payee_id':
-                    $closure = function($value) {
-                        $result = \Budgetcontrol\Library\Model\Payee::where('uuid', $value['payee_id'])->first();
-                        return $result->id ?? null;
-                    };
-                    break;
-                default:
+                    $closure = fn($value) => \Budgetcontrol\Library\Model\Payee::where('uuid', $value)->first()->id ?? null;
                     break;
             }
 
-            $params[] = new Param($key, $value, $closure);
+            $queryString->setParam($key, $value, $closure);
+
         }
 
-        $queryParams = new QueryString($params);
-        return $queryParams;
-        
+        return $queryString;
     }
 
 }

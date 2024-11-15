@@ -60,9 +60,10 @@ abstract class Controller
      * Retrieve query parameters from the given request.
      *
      * @param Request $request The HTTP request instance.
+     * @param QueryString $queryString The query parameters object.
      * @return QueryString The query parameters as a string.
      */
-    protected function getQueryParams(Request $request): QueryString
+    protected function getQueryParams(Request $request, QueryString &$queryString): QueryString
     {
         $queryParams = $request->query();
         foreach($queryParams as $key => $value) {

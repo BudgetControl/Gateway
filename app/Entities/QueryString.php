@@ -10,14 +10,14 @@ use App\Entities\Param;
 class QueryString {
 
     /** @var array<string,string> $params */
-    public readonly array $params;
+    public array $params;
 
     /**
      * QueryString constructor.
      *
      * @param array<string,Param> $params An associative array of query parameters.
      */
-    public function __construct(array $params)
+    public function __construct(array $params = [])
     {
         $this->params = $this->cleanQUeryParams($params);
     }
@@ -89,23 +89,48 @@ class QueryString {
             $queryParams = array_filter($queryParams, function($key) use ($fiterlConf) { return in_array($key->name, $fiterlConf); });
         }
 
-        /** @var Param $value */
-            foreach ($queryParams as $key => $value) {
-            if(!$value instanceof Param) {
-                throw new \InvalidArgumentException("Object must be instance of \App\Entities\Param ");
-            }
-
-            $paramValue = $value->value;
-            if(isset($value->closure) && is_callable($value->closure)){
-                $closure = $value->closure;
-                $paramValue = $closure($value->value);
-            }
-
-            $params[$value->name] = $paramValue;
-
+        foreach($queryParams as $key => $value) {
+            $params[$key] = $this->build($value);
         }
 
-        return $params;
+        return $queryParams;
+    }
+
+    /**
+     * Builds an array representation of the given parameter.
+     *
+     * @param Param $value The parameter to be converted into an array.
+     * @return mixed The array representation of the parameter.
+     */
+    private function build(Param $value): mixed
+    {
+        /** @var Param $value */
+        if(!$value instanceof Param) {
+            throw new \InvalidArgumentException("Object must be instance of \App\Entities\Param ");
+        }
+
+        $paramValue = $value->value;
+        if(isset($value->closure) && is_callable($value->closure)){
+            $closure = $value->closure;
+            $paramValue = $closure($value->value);
+        }
+
+        return $paramValue;
+
+    }
+
+    /**
+     * Sets a parameter in the query string.
+     *
+     * @param string $name The name of the parameter.
+     * @param string|array $value The value of the parameter.
+     * @param callable|null $closure An optional closure to modify the value before setting it.
+     * 
+     * @return void
+     */
+    public function setParam(string $name, string|array $value, ?callable $closure = null): void
+    {
+        $this->params[$name] = $this->build(new Param($name, $value, $closure));
     }
 
 
