@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "budgetcontrol/api-gateway",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
@@ -16,6 +16,10 @@
         "budgetcontrol/cryptable" : {
             "type":"vcs",
             "url":"git@github.com:BudgetControl/LibsCryptable.git"
+        },
+        "mailrobot/aws-cognito": {
+            "type": "vcs",
+            "url": "https://github.com/MaliRobot/aws-cognito.git"
         }
     },
     "require": {
@@ -24,7 +28,9 @@
         "firebase/php-jwt": "^6.10",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
-        "logtail/monolog-logtail": "^3.1"
+        "logtail/monolog-logtail": "^3.1",
+        "malirobot/aws-cognito": "^1.0",
+        "symfony/http-foundation": "7.1.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -40,7 +46,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "helpers/libs.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

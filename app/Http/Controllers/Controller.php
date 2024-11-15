@@ -101,4 +101,60 @@ abstract class Controller
         Log::error('Error: ID not found for given UUID in any model', ['uuid' => $uuid]);
         throw new InvalidArgumentException('Invalid UUID: Resource not found');
     }
+
+    /**
+     * Checks if the user agent in the request matches the specified user agent name.
+     *
+     * @param Request $request The HTTP request object.
+     * @param string $userAgentName The name of the user agent to check against.
+     * @return bool Returns true if the user agent matches, false otherwise.
+     */
+    private function checkUserAgent(Request $request, string $userAgentName): bool
+    {
+        $userAgent = $request->header('User-Agent');
+        \Illuminate\Support\Facades\Log::debug('User agent: ' . $userAgent);
+
+        switch ($userAgentName) {
+            case 'android':
+                return strpos($userAgent, 'Android') !== false;
+            case 'ios':
+                return strpos($userAgent, 'iPhone') !== false || strpos($userAgent[0], 'iPad') !== false;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Checks if a specific header exists in the given request.
+     *
+     * @param Request $request The HTTP request object.
+     * @param string $headerName The name of the header to check for.
+     * @return bool Returns true if the header exists, false otherwise.
+     */
+    protected function existHeader(Request $request, string $headerName): bool 
+    {
+        return $request->getHeader($headerName) !== null;
+    }
+
+    /**
+     * Checks if the request is coming from an Android device.
+     *
+     * @param Request $request The HTTP request object.
+     * @return bool Returns true if the request is from an Android device, false otherwise.
+     */
+    protected function isAndroid(Request $request): bool
+    {
+        return $this->checkUserAgent($request, 'android');
+    }
+    
+    /**
+     * Checks if the request is coming from an iOS device.
+     *
+     * @param Request $request The HTTP request object.
+     * @return bool Returns true if the request is from an iOS device, false otherwise.
+     */
+    protected function isIos(Request $request): bool
+    {
+        return $this->checkUserAgent($request, 'ios');
+    }
 }
