@@ -13,16 +13,6 @@ class QueryString {
     public array $params;
 
     /**
-     * QueryString constructor.
-     *
-     * @param array<string,Param> $params An associative array of query parameters.
-     */
-    public function __construct(array $params = [])
-    {
-        $this->params = $this->cleanQUeryParams($params);
-    }
-
-    /**
      * Retrieve query parameters from the given request.
      *
      * @param Request $request The HTTP request instance.
@@ -71,27 +61,13 @@ class QueryString {
         return $ws;
     }
 
-
     /**
-     * Cleans the query parameters.
+     * Removes query parameters based on a given configuration.
      *
-     * This function takes an array of query parameters and processes them to remove
-     * any unwanted or invalid entries, ensuring that the resulting array contains
-     * only valid query parameters.
-     *
-     * @param array $queryParams The array of query parameters to be cleaned.
-     * @return array<string,string> The cleaned array of query parameters.
+     * @param array $queryParams The array of query parameters to be filtered.
+     * @return array The filtered array of query parameters.
      */
-    private function cleanQUeryParams($queryParams): array 
-    {
-        foreach($queryParams as $key => $value) {
-            $params[$key] = $this->build($value);
-        }
-
-        return $queryParams;
-    }
-
-    private function removeParamsByConfig($queryParams) {
+    public static function removeParamsByConfig($queryParams) {
         $fiterlConf = config('routes.config.query_filters');
         if(!empty($fiterlConf) && is_array($fiterlConf)) {
             foreach($queryParams as $key => $_) {

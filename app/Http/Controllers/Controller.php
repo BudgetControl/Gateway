@@ -57,25 +57,37 @@ abstract class Controller
     }
 
     /**
-     * Retrieve query parameters from the given request.
+     * Retrieves query parameters from the given request or array and updates the provided QueryString object.
      *
-     * @param Request $request The HTTP request instance.
-     * @param QueryString $queryString The query parameters object.
-     * @return QueryString The query parameters as a string.
+     * @param Request|array $request The request object or array containing query parameters.
+     * @param QueryString $queryString The QueryString object to be updated with the query parameters.
+     * @param string|null $index Optional index to specify a particular subset of query parameters.
+     *
+     * @return void
      */
-    protected function getQueryParams(Request $request, QueryString &$queryString): QueryString
+    protected function getQueryParams(Request $request, QueryString &$queryString, string $index = null)
     {
-        $queryParams = $request->query();
-        foreach($queryParams as $key => $value) {
-            $params[] = new Param($key, $value);
-        }
+        $queryParams = is_array($request) ? $request : $request->query();
+        $queryParams = $queryString->removeParamsByConfig($queryParams);
 
-        $queryParams = new QueryString($params);
-        return $queryParams;
+        foreach($queryParams as $key => $value) {
+            if(is_null($value)) {
+                Log::debug('Removed keyValue: ' . $key . ' value: ' . $value);
+            }
+
+            if(!is_null($value)) {
+                $queryString->setParam($key, $value, null, $index);
+            }
+        }
         
     }
 
     /**
+     * Retrieve the ID of a specific model based on its UUID.
+     *
+     * @param string $uuid The UUID of the model.
+     * @param Model $model The model instance to search within.
+     * @return int The ID of the model.
      */
     protected function getIdOfSpecificModel(string $uuid, Model $model): int
     {

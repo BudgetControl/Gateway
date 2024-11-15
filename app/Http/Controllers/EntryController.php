@@ -147,22 +147,27 @@ class EntryController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
+
     /**
-     * Retrieve query parameters from the given request.
+     * Retrieves query parameters from the given request or array and updates the provided QueryString object.
      *
-     * @param Request $request The HTTP request instance.
-     * @return QueryString The query parameters as a string.
+     * @param Request|array $request The request object or array containing query parameters.
+     * @param QueryString $queryString The QueryString object to be updated with the query parameters.
+     * @param string|null $index Optional index to specify a particular subset of query parameters.
+     *
+     * @return void
      */
-    protected function getQueryParams(Request|array $request, QueryString &$queryString, string $index = null): QueryString
+    protected function getQueryParams(Request|array $request, QueryString &$queryString, string $index = null)
     {
         $queryParams = is_array($request) ? $request : $request->query();
+        $queryParams = $queryString->removeParamsByConfig($queryParams);
 
         foreach ($queryParams as $key => $value) {
             $closure = null;
 
             if (is_array($value)) {
                 $this->getQueryParams($value, $queryString, $key);
-                continue;
+                return;
             }
 
             Log::debug('keyValue: ' . $key);
@@ -179,13 +184,16 @@ class EntryController extends Controller {
                     break;
             }
 
+            if(is_null($value)) {
+                Log::debug('Removed keyValue: ' . $key . ' value: ' . $value);
+            }
+
             if(!is_null($value)) {
                 $queryString->setParam($key, $value, $closure, $index);
             }
 
         }
 
-        return $queryString;
     }
 
 }
