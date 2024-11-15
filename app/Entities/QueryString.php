@@ -10,7 +10,7 @@ use App\Entities\Param;
 class QueryString {
 
     /** @var array<string,string> $params */
-    public array $params;
+    private array $params = [];
 
     /**
      * Retrieve query parameters from the given request.
@@ -123,4 +123,13 @@ class QueryString {
     }
 
 
+    /**
+     * Get the value of params
+     *
+     * @return array
+     */
+    public function getParams(): array
+    {
+        return $this->params;
+    }
 }
