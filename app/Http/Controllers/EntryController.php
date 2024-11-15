@@ -153,7 +153,7 @@ class EntryController extends Controller {
      * @param Request $request The HTTP request instance.
      * @return QueryString The query parameters as a string.
      */
-    protected function getQueryParams(Request|array $request, QueryString &$queryString): QueryString
+    protected function getQueryParams(Request|array $request, QueryString &$queryString, string $index = null): QueryString
     {
         $queryParams = is_array($request) ? $request : $request->query();
 
@@ -161,7 +161,8 @@ class EntryController extends Controller {
             $closure = null;
 
             if (is_array($value)) {
-                $this->getQueryParams($value, $queryString);
+                $this->getQueryParams($value, $queryString, $key);
+                continue;
             }
 
             Log::debug('keyValue: ' . $key);
@@ -178,7 +179,9 @@ class EntryController extends Controller {
                     break;
             }
 
-            $queryString->setParam($key, $value, $closure);
+            if(!is_null($value)) {
+                $queryString->setParam($key, $value, $closure, $index);
+            }
 
         }
 

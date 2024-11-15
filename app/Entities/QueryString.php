@@ -50,7 +50,8 @@ class QueryString {
      */
     public function __toString()
     {
-        return  "?" . http_build_query($this->params);
+        $queryParams = $this->removeParamsByConfig($this->params);           
+        return  "?" . http_build_query($queryParams);
     }
 
     /**
@@ -83,14 +84,21 @@ class QueryString {
      */
     private function cleanQUeryParams($queryParams): array 
     {
-        $params = [];
-        $fiterlConf = config('routes.config.query_filters');
-        if(!empty($fiterlConf) && is_array($fiterlConf)) {
-            $queryParams = array_filter($queryParams, function($key) use ($fiterlConf) { return in_array($key->name, $fiterlConf); });
-        }
-
         foreach($queryParams as $key => $value) {
             $params[$key] = $this->build($value);
+        }
+
+        return $queryParams;
+    }
+
+    private function removeParamsByConfig($queryParams) {
+        $fiterlConf = config('routes.config.query_filters');
+        if(!empty($fiterlConf) && is_array($fiterlConf)) {
+            foreach($queryParams as $key => $_) {
+                if(!in_array($key, $fiterlConf)) {
+                    unset($queryParams[$key]);
+                }
+            }
         }
 
         return $queryParams;
@@ -128,9 +136,14 @@ class QueryString {
      * 
      * @return void
      */
-    public function setParam(string $name, string|array $value, ?callable $closure = null): void
+    public function setParam(string $name, string|array $value, ?callable $closure = null, string $subKey = null): void
     {
-        $this->params[$name] = $this->build(new Param($name, $value, $closure));
+        
+        if($subKey !== null) {
+            $this->params[$subKey][$name] = $this->build(new Param($name, $value, $closure));
+        } else {
+            $this->params[$name] = $this->build(new Param($name, $value, $closure));
+        }
     }
 
 
