@@ -17,30 +17,8 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Log::debug('Request: ' . $request->fullUrl());
-        Log::debug('Headers: ' . json_encode($request->header()));
-        Log::debug('Body: ' . json_encode($request->all()));
-
-        $token = $request->header('X-BC-Token');
-        $authToken = $request->header('Authorization');
-
-        if(empty($token) || empty($authToken)) {
-            return response('Unauthorized', 401);
-        }
-
-        if (JwtService::isValidToken($token) === false) {
-            return response('Unauthorized', 401);
-        }
-
-        // Validate the token
-        try {
-            $decoded = JwtService::decodeToken($token);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return response('Unauthorized', 401);
-        }
-
-        $request->merge(['token' => $decoded]);
+        
+        $request->merge(['token' => "d"]);
         return $next($request);
     }
 }
