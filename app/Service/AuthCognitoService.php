@@ -40,6 +40,10 @@ class AuthCognitoService
      */
     public function validateAuthToken(string $token, string $subId): string|bool
     {
+        $cacheKey = cacheKey_refreshToken($subId);
+        $refreshToken = Cache::get($cacheKey);
+        Log::debug('Current refresh token: ' . $refreshToken);
+
         try {
             Log::debug('Validating token ' . $token);
             $this->cognitoClient->verifyAccessToken($token);
@@ -59,6 +63,8 @@ class AuthCognitoService
                 Log::error('Failed to refresh tokens');
                 return false;
             }
+
+            Log::debug('New tokens: ' . json_encode($newTokens));
 
             $token = $newTokens['AccessToken'];
             Cache::put($cacheKey, $token, 60 * 24 * 30);
