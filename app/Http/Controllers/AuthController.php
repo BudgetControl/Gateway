@@ -204,6 +204,18 @@ class AuthController extends Controller
             return response()->json(['message' => 'An error occurred'], 401);
         }
 
+        // get refresh token from body response
+        $refreshToken = $response->json()['refresh_token'];
+        $accessToken = $response->json()['token'];
+
+        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
+
+        $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
+        Cache::put($cacheKey, $refreshToken, 60 * 24 * 30);
+
+        //remove the refresh token from the body of the response
+        unset($response->json()['refresh_token']);
+
         return $response;
     }
 
