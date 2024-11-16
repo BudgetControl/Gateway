@@ -38,9 +38,14 @@ class AuthMiddleware
             return response('Unauthorized', 401);
         }
 
-        $authToken = str_replace('Bearer ', '', $authToken);
-        $validToken = AwsCognito::validateAuthToken($authToken, $decoded['sub']);
-        if ($validToken === false) {
+        try {
+            $authToken = str_replace('Bearer ', '', $authToken);
+            $validToken = AwsCognito::validateAuthToken($authToken, $decoded['sub']);
+            if ($validToken === false) {
+                return response('Unauthorized', 401);
+            }
+        } catch (\Throwable $e) {
+            Log::error("Token expired:" . $e->getMessage());
             return response('Unauthorized', 401);
         }
 
