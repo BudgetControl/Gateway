@@ -13,19 +13,19 @@
 
     // ########### STATS CHART ###########
     \Illuminate\Support\Facades\Route::get('/stats/chart/line/incoming-expenses', '\App\Http\Controllers\ChartsController@incomingExpensesLineByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
-    \Illuminate\Support\Facades\Route::get('/stats/chart/bar/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryBarByDate');
-    \Illuminate\Support\Facades\Route::get('/stats/chart/bar/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryBarByDate');
-    \Illuminate\Support\Facades\Route::get('/stats/chart/table/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryTableByDate');
-    \Illuminate\Support\Facades\Route::get('/stats/chart/table/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryTableByDate');
-    \Illuminate\Support\Facades\Route::get('/stats/chart/bar/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelBarByDate');
-    \Illuminate\Support\Facades\Route::get('/stats/chart/apple-pie/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelApplePieByDate');
+    \Illuminate\Support\Facades\Route::get('/stats/chart/bar/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryBarByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 15]);
+    \Illuminate\Support\Facades\Route::get('/stats/chart/bar/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryBarByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 15]);
+    \Illuminate\Support\Facades\Route::get('/stats/chart/table/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryTableByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 15]);
+    \Illuminate\Support\Facades\Route::get('/stats/chart/table/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryTableByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 15]);
+    \Illuminate\Support\Facades\Route::get('/stats/chart/bar/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelBarByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 30]);
+    \Illuminate\Support\Facades\Route::get('/stats/chart/apple-pie/expenses/label', '\App\Http\Controllers\ChartsController@expensesLabelApplePieByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 30]);
 
     // ########### STATS AVERANGE ###########
-    \Illuminate\Support\Facades\Route::get('/stats/average-expenses', '\App\Http\Controllers\AverangeController@averageExpenses');
-    \Illuminate\Support\Facades\Route::get('/stats/average-incoming', '\App\Http\Controllers\AverangeController@averageIncoming');
-    \Illuminate\Support\Facades\Route::get('/stats/average-savings', '\App\Http\Controllers\AverangeController@averageSavings');
-    \Illuminate\Support\Facades\Route::get('/stats/total-loan-installments', '\App\Http\Controllers\AverangeController@totalLoanInstallmentsOfCurrentMonth');
-    \Illuminate\Support\Facades\Route::get('/stats/total/planned/remaining', '\App\Http\Controllers\AverangeController@totalPlannedRemainingOfCurrentMonth');
-    \Illuminate\Support\Facades\Route::get('/stats/total/planned/monthly', '\App\Http\Controllers\AverangeController@totalPlannedMonthly');
+    \Illuminate\Support\Facades\Route::get('/stats/average-expenses', '\App\Http\Controllers\AverangeController@averageExpenses')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
+    \Illuminate\Support\Facades\Route::get('/stats/average-incoming', '\App\Http\Controllers\AverangeController@averageIncoming')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
+    \Illuminate\Support\Facades\Route::get('/stats/average-savings', '\App\Http\Controllers\AverangeController@averageSavings')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
+    \Illuminate\Support\Facades\Route::get('/stats/total-loan-installments', '\App\Http\Controllers\AverangeController@totalLoanInstallmentsOfCurrentMonth')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
+    \Illuminate\Support\Facades\Route::get('/stats/total/planned/remaining', '\App\Http\Controllers\AverangeController@totalPlannedRemainingOfCurrentMonth')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
+    \Illuminate\Support\Facades\Route::get('/stats/total/planned/monthly', '\App\Http\Controllers\AverangeController@totalPlannedMonthly')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
 
 });
