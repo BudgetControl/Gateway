@@ -64,7 +64,8 @@ class AuthCognitoService
                 return false;
             }
 
-            Log::debug('New tokens: ' . json_encode($newTokens));
+            Log::debug('New tokens: ' . $newTokens['AccessToken']);
+            $token = $newTokens['AccessToken'];
 
         } catch( \Exception $e) {
             Log::warning($e->getMessage());
