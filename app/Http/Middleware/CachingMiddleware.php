@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Traits\Cache;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class CachingMiddleware
@@ -20,6 +21,7 @@ class CachingMiddleware
         $this->initCache($request->fullUrl());
 
         if ($this->hasCache()) {
+            Log::debug('From cache: ' . $request->fullUrl());
             return response($this->getCache(), 200, ['Content-Type' => 'application/json']);
         }
 
