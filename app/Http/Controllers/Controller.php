@@ -65,7 +65,7 @@ abstract class Controller
      *
      * @return void
      */
-    protected function getQueryParams(Request $request, QueryString &$queryString, string $index = null)
+    protected function getQueryParams(Request $request, QueryString &$queryString, string $index = null): void
     {
         $queryParams = is_array($request) ? $request : $request->query();
         $queryParams = $queryString->removeParamsByConfig($queryParams);

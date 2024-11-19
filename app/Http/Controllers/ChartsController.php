@@ -2,11 +2,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Entities\QueryString;
+use App\Traits\BuildQuery;
+use App\Traits\Cache;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class ChartsController extends StatsController {
+
+    use BuildQuery;
 
     public function incomingExpensesLineByDate(Request $request): Response
     {
@@ -14,7 +19,10 @@ class ChartsController extends StatsController {
         $body = $request->all();
         $wsid = $body['token']['current_ws'];
         $basePath = $this->routes['stats'];
-        $response = Http::get("$basePath/$wsid/chart/line/incoming-expenses?".$request->getQueryString());
+
+        $httpBuildQuery = $this->queryParams($request);
+        
+        $response = Http::get("$basePath/$wsid/chart/line/incoming-expenses".$httpBuildQuery);
         $data = $response->json();
         
         if(json_encode($data) === null) {
