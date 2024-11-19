@@ -12,7 +12,7 @@
     \Illuminate\Support\Facades\Route::post('/stats/entries', '\App\Http\Controllers\StatsController@entries');
 
     // ########### STATS CHART ###########
-    \Illuminate\Support\Facades\Route::get('/stats/chart/line/incoming-expenses', '\App\Http\Controllers\ChartsController@incomingExpensesLineByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . (int) env('CACHE_TTL_VALUE', 60)]);
+    \Illuminate\Support\Facades\Route::get('/stats/chart/line/incoming-expenses', '\App\Http\Controllers\ChartsController@incomingExpensesLineByDate')->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 60]);
     \Illuminate\Support\Facades\Route::get('/stats/chart/bar/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryBarByDate');
     \Illuminate\Support\Facades\Route::get('/stats/chart/bar/incoming/category', '\App\Http\Controllers\ChartsController@incomingCategoryBarByDate');
     \Illuminate\Support\Facades\Route::get('/stats/chart/table/expenses/category', '\App\Http\Controllers\ChartsController@expensesCategoryTableByDate');
