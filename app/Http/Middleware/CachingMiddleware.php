@@ -11,6 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 class CachingMiddleware
 {
     use Cache;
+
+    private int $ttl;
+
+    public function __construct(?int $ttl = null)
+    {
+        $this->ttl = $ttl ?? config('cache.ttl');
+    }
     /**
      * Handle an incoming request.
      *
@@ -31,7 +38,7 @@ class CachingMiddleware
         $response = $next($request);
 
         if ($response->isSuccessful()) {
-            $this->setCache($response->getContent(), $ttl);
+            $this->setCache($response->getContent(), $this->ttl);
         }
 
         return $response;
