@@ -18,17 +18,20 @@ class CachingMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $this->initCache($request->fullUrl());
+        $ttl = config('cache.ttl');
+        $key = $request->fullUrl().$request->header('X-BC-Token');
+
+        $this->initCache($key);
 
         if ($this->hasCache()) {
-            Log::debug('From cache: ' . $request->fullUrl());
+            Log::debug('From cache: ' . $this->getCacheKey());
             return response($this->getCache(), 200, ['Content-Type' => 'application/json']);
         }
 
         $response = $next($request);
 
         if ($response->isSuccessful()) {
-            $this->setCache($response->getContent());
+            $this->setCache($response->getContent(), $ttl);
         }
 
         return $response;

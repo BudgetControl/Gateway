@@ -157,7 +157,7 @@ class EntryController extends Controller {
      *
      * @return void
      */
-    protected function getQueryParams(Request|array $request, QueryString &$queryString, string $index = null)
+    protected function getQueryParams(Request|array $request, QueryString &$queryString, string $index = null): void
     {
         $queryParams = is_array($request) ? $request : $request->query();
         $queryParams = $queryString->removeParamsByConfig($queryParams);
