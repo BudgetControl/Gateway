@@ -45,7 +45,7 @@ trait Cache {
      */
     public function setCache(mixed $data, int $minutes = 60): void
     {
-        $this->cacheManager->put($this->cacheKey, $data, $minutes);
+        $this->cacheManager->put($this->cacheKey, $data, $minutes * 60);
     }
 
     /**
