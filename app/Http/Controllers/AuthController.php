@@ -113,7 +113,7 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
-        Cache::put($cacheKey, $refreshToken, 60 * 24 * 30);
+        Cache::put($cacheKey, $refreshToken, now()->addDays(30));
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
@@ -211,7 +211,7 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
-        Cache::put($cacheKey, $refreshToken, 60 * 24 * 30);
+        Cache::put($cacheKey, $refreshToken, now()->addDays(30));
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
