@@ -58,4 +58,23 @@ class DebtController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
+    public function getDebits(Request $request): Response
+    {
+        $body = $request->all();
+        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+        $basePath = $this->routes['debt'];
+
+        $response = Http::get("$basePath/$wsid/debits");
+        $data = $response->json();
+
+        if (json_encode($data) === null) {
+            Log::error('Error: on debits list', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
+        }
+        // Process the response
+        $statusCode = $response->status();
+
+        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
+
 }

@@ -1,6 +1,8 @@
 <?php 
 // Path: config/routes.php
 
+$queryFilters = explode(',', env('APP_QUERY_FILTERS', ''));
+
 return [
     'core' => env('CORE_API_BASE_URL'),
     'workspace' => env('WORKSPACE_API_BASE_URL'),
@@ -12,4 +14,7 @@ return [
     'entry' => env('ENTRY_API_BASE_URL'),
     'debt' => env('DEBT_API_BASE_URL'),
     'label' => env('LABEL_API_BASE_URL'),
+    'config' => [
+        'query_filters' => $queryFilters
+    ]
 ];

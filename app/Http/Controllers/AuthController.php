@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Facade\AwsCognito;
 use App\Service\JwtService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
@@ -100,16 +101,19 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $response = Http::post("$basePath/authenticate", $request->all());
 
-        // get refresh token from body response
-        $refreshToken = $response->json()['refresh_token'];
-
-        $cacheKey = cacheKey_refreshToken($request->input('email'));
-        Cache::add($cacheKey, $refreshToken, 60 * 24 * 30);
-
-        if ($response->status() !== 200 || empty($refreshToken)) {
+        if ($response->status() !== 200) {
             Log::error('Error: on authenticate', ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
+
+        // get refresh token from body response
+        $refreshToken = $response->json()['refresh_token'];
+        $accessToken = $response->json()['token'];
+
+        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
+
+        $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
+        Cache::put($cacheKey, $refreshToken, 60 * 24 * 30);
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
@@ -149,12 +153,12 @@ class AuthController extends Controller
         $queryParam = '';
         if($this->isAndroid($request)) {
             Log::debug('Mobile phone detected');
-            $queryParam = '?mobile=andoird';
+            $queryParam = '?device=android';
         }
 
         if($this->isIos($request)) {
             Log::debug('Mobile phone detected');
-            $queryParam = '?mobile=ios';
+            $queryParam = '?device=ios';
         }
 
         $response = Http::get("$basePath/authenticate/$provider$queryParam");
@@ -169,12 +173,48 @@ class AuthController extends Controller
     public function providerToken(Request $request, $provider)
     {
         $basePath = $this->routes['auth'];
-        $queryString = $request->getQueryString();
+
+        //check if is an mobile phone
+        $deviceOnQuery = '';
+        if($this->isAndroid($request)) {
+            Log::debug('Mobile phone detected');
+            $deviceOnQuery = 'android';
+        }
+
+        if($this->isIos($request)) {
+            Log::debug('Mobile phone detected');
+            $deviceOnQuery = 'ios';
+        }
+
+        $queryParams = $request->query();
+        if($queryParams['code'] === null) {
+            Log::info('Error: code is required');
+            return response()->json(['message' => 'Code is required'], 400);
+        }
+
+        $newQueryParams = [
+            'code' => $queryParams['code'],
+            'device' => $deviceOnQuery
+        ];
+
+        $queryString = http_build_query($newQueryParams);
         $response = Http::get("$basePath/authenticate/token/$provider?$queryString");
         if ($response->status() !== 200) {
             Log::error('Error: on provider token '.$provider, ['response' => $response->json()]);
             return response()->json(['message' => 'An error occurred'], 401);
         }
+
+        // get refresh token from body response
+        $refreshToken = $response->json()['refresh_token'];
+        $accessToken = $response->json()['token'];
+
+        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
+
+        $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
+        Cache::put($cacheKey, $refreshToken, 60 * 24 * 30);
+
+        //remove the refresh token from the body of the response
+        unset($response->json()['refresh_token']);
 
         return $response;
     }

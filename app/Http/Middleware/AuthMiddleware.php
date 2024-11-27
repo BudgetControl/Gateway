@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Facade\AwsCognito;
 use App\Service\AuthCognitoService;
 use Closure;
 use App\Service\JwtService;
@@ -29,18 +30,6 @@ class AuthMiddleware
             return response('Unauthorized', 401);
         }
 
-        $cognitoClientService = new AuthCognitoService();
-        
-        $authToken = str_replace('Bearer ', '', $authToken);
-        $validToken = $cognitoClientService->validateAuthToken($authToken);
-        if ($validToken === false) {
-            return response('Unauthorized', 401);
-        }
-
-        if (JwtService::isValidToken($token) === false) {
-            return response('Unauthorized', 401);
-        }
-
         // Validate the token
         try {
             $decoded = JwtService::decodeToken($token);
@@ -49,9 +38,21 @@ class AuthMiddleware
             return response('Unauthorized', 401);
         }
 
-        $request->merge(['token' => $decoded]);
-        $request->attributes->set('new_access_token', $validToken);
+        try {
+            $authToken = str_replace('Bearer ', '', $authToken);
+            $validToken = AwsCognito::validateAuthToken($authToken, $decoded['sub']);
+            if ($validToken === false) {
+                return response('Unauthorized', 401);
+            }
+        } catch (\Throwable $e) {
+            Log::error("Token expired:" . $e->getMessage());
+            return response('Unauthorized', 401);
+        }
 
-        return $next($request);
+        $request->merge(['token' => $decoded]);
+
+        $response = $next($request);
+        $response->headers->set('Authorization', 'Bearer ' . $validToken);
+        return $response;
     }
 }
