@@ -25,11 +25,15 @@ class CachingMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $ttl = config('cache.ttl');
-        $key = $request->fullUrl().$request->header('X-BC-Token');
+        //cahche URL only if X-WS header exist
+        $wsUuid = $request->header('X-WS');
+        if (!$wsUuid) {
+            Log::warning('No X-WS header found - skipping caching');
+            return $next($request);
+        }
 
+        $key = $request->fullUrl()."_".$wsUuid;
         $this->initCache($key);
-
         if ($this->hasCache()) {
             Log::debug('From cache: ' . $this->getCacheKey());
             return response($this->getCache(), 200, ['Content-Type' => 'application/json']);
