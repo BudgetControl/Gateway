@@ -1,7 +1,7 @@
 <?php
 
 \Illuminate\Support\Facades\Route::get('/auth/check', [\App\Http\Controllers\AuthController::class, 'check']);
-\Illuminate\Support\Facades\Route::get('/auth/user-info', [\App\Http\Controllers\AuthController::class, 'getUserInfo']);
+\Illuminate\Support\Facades\Route::get('/auth/user-info', [\App\Http\Controllers\AuthController::class, 'getUserInfo'])->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 1440]);
 \Illuminate\Support\Facades\Route::post('/auth/sign-up', [\App\Http\Controllers\AuthController::class, 'signUp']);
 \Illuminate\Support\Facades\Route::get('/auth/confirm/{token}', [\App\Http\Controllers\AuthController::class, 'confirmToken']);
 \Illuminate\Support\Facades\Route::post('/auth/authenticate', [\App\Http\Controllers\AuthController::class, 'authenticate']);
