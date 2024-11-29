@@ -8,4 +8,5 @@
     \Illuminate\Support\Facades\Route::post('/workspace/create', '\App\Http\Controllers\WorkspaceController@create');
     \Illuminate\Support\Facades\Route::put('/workspace/update/{id}', '\App\Http\Controllers\WorkspaceController@update');
     \Illuminate\Support\Facades\Route::patch('/workspace/activate/{id}', '\App\Http\Controllers\WorkspaceController@activate');
+    \Illuminate\Support\Facades\Route::delete('/workspace/delete/{id}', '\App\Http\Controllers\WorkspaceController@delete');
 });
