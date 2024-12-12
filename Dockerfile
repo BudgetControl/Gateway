@@ -12,6 +12,12 @@ RUN composer install --no-dev --optimize-autoloader
 RUN mkdir -p storage/logs
 RUN touch .env
 
+RUN mkdir -p /var/log/apache2 \
+    && chown -R www-data:www-data /var/log/apache2 \
+    && chmod -R 755 /var/log/apache2
+
+USER www-data
+
 # Expose the port
 EXPOSE 80
 
