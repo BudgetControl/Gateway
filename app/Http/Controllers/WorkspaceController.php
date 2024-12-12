@@ -156,6 +156,26 @@ class WorkspaceController extends Controller
         return response()->json($data, $statusCode);
     }
 
+    public function delete(Request $request, $id): JsonResponse
+    {
+        $userId = $this->userId($request->token['uuid']);
+        $basePath = $this->routes['workspace'];
+        $response = Http::delete("$basePath/$id/delete");
+        $data = $response->json();
+        
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();
+        } else {
+            // Handle the error
+            Log::error('Error: on workspace delete', ['response' => $response->json()]);
+            $statusCode = $response->status();
+            // Handle the error based on the status code
+        }
+
+        return response()->json($data, $statusCode);
+    }
+
     /**
      * validate the request
      * @throws \Illuminate\Validation\ValidationException
