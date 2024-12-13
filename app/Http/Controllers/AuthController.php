@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+    const CACHE_TTL = 43200;
+
     public function check(Request $request)
     {   
         //log all request
@@ -113,7 +115,7 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
-        Cache::put($cacheKey, $refreshToken, now()->addDays(30));
+        Cache::put($cacheKey, $refreshToken, self::CACHE_TTL);
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
@@ -211,7 +213,7 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
-        Cache::put($cacheKey, $refreshToken, now()->addDays(30));
+        Cache::put($cacheKey, $refreshToken, self::CACHE_TTL);
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
