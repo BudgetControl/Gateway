@@ -26,7 +26,7 @@ class SavingsController extends Controller {
         $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->list($wsid);
+        return $service->getAllSavings($wsid);
     }
 
     public function show(Request $request, $uuid)
@@ -36,7 +36,7 @@ class SavingsController extends Controller {
         $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->getSaving($uuid);
+        return $service->getSaving($wsid, $uuid);
     }
 
     public function create(Request $request)
@@ -46,7 +46,7 @@ class SavingsController extends Controller {
         $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->create($wsid, $body);
+        return $service->createSaving($wsid, $body);
     }
 
     public function update(Request $request, $uuid)
