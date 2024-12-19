@@ -9,5 +9,6 @@
 \Illuminate\Support\Facades\Route::delete('/wallet/{uuid}', '\App\Http\Controllers\WalletController@delete');
 \Illuminate\Support\Facades\Route::patch('/wallet/restore/{uuid}', '\App\Http\Controllers\WalletController@restore');
 \Illuminate\Support\Facades\Route::patch('/wallet/sorting/{uuid}', '\App\Http\Controllers\WalletController@sorting');
+\Illuminate\Support\Facades\Route::patch('/wallet/archive/{uuid}', '\App\Http\Controllers\WalletController@archive');
 
 });

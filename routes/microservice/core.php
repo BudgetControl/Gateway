@@ -1,6 +1,5 @@
 <?php
 \Illuminate\Support\Facades\Route::group(['middleware' => [
-    \App\Http\Middleware\AuthMiddleware::class, 
     \App\Http\Middleware\CachingMiddleware::class . ':' . 43200]
 ], function () {
 

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Facade\AwsCognito;
 use App\Service\JwtService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Response as HttpResponse;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    const CACHE_TTL = 43200;
 
     public function check(Request $request)
     {   
@@ -115,7 +115,7 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
-        Cache::put($cacheKey, $refreshToken, self::CACHE_TTL);
+        Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
@@ -213,7 +213,7 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['sub']);
-        Cache::put($cacheKey, $refreshToken, self::CACHE_TTL);
+        Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
 
         //remove the refresh token from the body of the response
         unset($response->json()['refresh_token']);
