@@ -26,46 +26,53 @@ class SavingsController extends Controller {
         $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->getAllSavings($wsid);
+        $response = $service->getAllSavings($wsid);
+
+        return response($response->toArray(), 200);
     }
 
     public function show(Request $request, $uuid)
     {
         $body = $request->all();
         $wsid = $this->getWorkspaceId($body['token']);
-        $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->getSaving($wsid, $uuid);
+        $response = $service->getSaving($wsid, $uuid);
+
+        return response($response->toArray(), 200);
     }
 
     public function create(Request $request)
     {
         $body = $request->all();
         $wsid = $this->getWorkspaceId($body['token']);
-        $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->createSaving($wsid, $body);
+        $response = $service->createSaving($wsid, $body);
+
+        return response($response->toArray(), 201);
     }
 
     public function update(Request $request, $uuid)
     {
         $body = $request->all();
         $wsid = $this->getWorkspaceId($body['token']);
-        $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->updateSaving($wsid, $uuid, $body);
+        $response = $service->updateSaving($wsid, $uuid, $body);
+
+        return response($response->toArray(), 200);
     }
 
     public function delete(Request $request, $uuid)
     {
         $body = $request->all();
         $wsid = $this->getWorkspaceId($body['token']);
-        $queryParams = $request->query();
 
         $service = $this->getService();
-        return $service->deleteSaving($wsid, $uuid);
+        $response = $service->deleteSaving($wsid, $uuid);
+
+        return response($response->toArray(), 204);
+
     }
 }
