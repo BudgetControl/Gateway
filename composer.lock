@@ -224,12 +224,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BudgetControl/BcConnector.git",
-                "reference": "2c186f450c4f773a266b9b60a8c79c5d51f10ae5"
+                "reference": "1281eb9e75aa51fb2f4debc0b1e1abd54ec086a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BudgetControl/BcConnector/zipball/2c186f450c4f773a266b9b60a8c79c5d51f10ae5",
-                "reference": "2c186f450c4f773a266b9b60a8c79c5d51f10ae5",
+                "url": "https://api.github.com/repos/BudgetControl/BcConnector/zipball/1281eb9e75aa51fb2f4debc0b1e1abd54ec086a4",
+                "reference": "1281eb9e75aa51fb2f4debc0b1e1abd54ec086a4",
                 "shasum": ""
             },
             "require": {
@@ -264,7 +264,7 @@
             "support": {
                 "source": "https://github.com/BudgetControl/BcConnector/tree/v2.0-beta"
             },
-            "time": "2024-12-20T10:54:51+00:00"
+            "time": "2024-12-20T12:11:14+00:00"
         },
         {
             "name": "budgetcontrol/cryptable",
