@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1fcfb0305bdf0568e1c3cb0389038d96",
+    "content-hash": "a91ea6f9bfc4e0b5384e8c85ec1a4547",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -220,16 +220,16 @@
         },
         {
             "name": "budgetcontrol/connector",
-            "version": "dev-main",
+            "version": "v2.0-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BudgetControl/BcConnector.git",
-                "reference": "7cde25b38d1739f0eb2ac339e914f0f1713c1d3b"
+                "reference": "2c186f450c4f773a266b9b60a8c79c5d51f10ae5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BudgetControl/BcConnector/zipball/7cde25b38d1739f0eb2ac339e914f0f1713c1d3b",
-                "reference": "7cde25b38d1739f0eb2ac339e914f0f1713c1d3b",
+                "url": "https://api.github.com/repos/BudgetControl/BcConnector/zipball/2c186f450c4f773a266b9b60a8c79c5d51f10ae5",
+                "reference": "2c186f450c4f773a266b9b60a8c79c5d51f10ae5",
                 "shasum": ""
             },
             "require": {
@@ -245,7 +245,6 @@
                 "nikic/php-parser": "^5.0",
                 "phpunit/phpunit": "^10.0"
             },
-            "default-branch": true,
             "type": "none",
             "autoload": {
                 "psr-4": {
@@ -263,9 +262,9 @@
             ],
             "description": "defines the dependencies required for a PHP library in a Budget control application",
             "support": {
-                "source": "https://github.com/BudgetControl/BcConnector/tree/main"
+                "source": "https://github.com/BudgetControl/BcConnector/tree/v2.0-beta"
             },
-            "time": "2024-12-18T16:59:07+00:00"
+            "time": "2024-12-20T10:54:51+00:00"
         },
         {
             "name": "budgetcontrol/cryptable",
@@ -9865,9 +9864,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "budgetcontrol/connector": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
