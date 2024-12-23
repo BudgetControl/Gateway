@@ -10,5 +10,6 @@ require_once __DIR__ . '/microservice/entry.php';
 require_once __DIR__ . '/microservice/debt.php';
 require_once __DIR__ . '/microservice/label.php';
 require_once __DIR__ . '/microservice/core.php';
+require_once __DIR__ . '/microservice/savings.php';
 
 \Illuminate\Support\Facades\Route::get('/monitor/{ms}','\App\Http\Controllers\BaseController@monitor');

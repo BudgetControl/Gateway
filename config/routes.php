@@ -14,6 +14,7 @@ return [
     'entry' => env('ENTRY_API_BASE_URL'),
     'debt' => env('DEBT_API_BASE_URL'),
     'label' => env('LABEL_API_BASE_URL'),
+    'savings' => env('SAVINGS_API_BASE_URL'),
     'config' => [
         'query_filters' => $queryFilters
     ]
