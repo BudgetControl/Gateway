@@ -173,9 +173,6 @@ class EntryController extends Controller {
             Log::debug('keyValue: ' . $key);
 
             switch ($key) {
-                case 'category_id':
-                    $closure = fn($value) => \Budgetcontrol\Library\Model\Category::where('uuid', $value)->first()->id ?? null;
-                    break;
                 case 'account_id':
                     $closure = fn($value) => \Budgetcontrol\Library\Model\Wallet::where('uuid', $value)->first()->id ?? null;
                     break;
