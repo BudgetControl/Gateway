@@ -40,7 +40,7 @@ class AuthMiddleware
 
         try {
             $authToken = str_replace('Bearer ', '', $authToken);
-            $validToken = AwsCognito::validateAuthToken($authToken, $decoded['username']);
+            $validToken = AwsCognito::validateAuthToken($authToken, $decoded['sub']);
             if ($validToken === false) {
                 return response('Unauthorized', 401);
             }
