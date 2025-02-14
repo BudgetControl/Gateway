@@ -2,6 +2,8 @@
 
 return [
 
+    'decrypt_key' => env('AUTH_DECRYPT_KEY'),
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults

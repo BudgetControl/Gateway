@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a91ea6f9bfc4e0b5384e8c85ec1a4547",
+    "content-hash": "79f9c68529692bcd038c1ad61904b7ad",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -224,12 +224,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BudgetControl/BcConnector.git",
-                "reference": "1281eb9e75aa51fb2f4debc0b1e1abd54ec086a4"
+                "reference": "30707b028bc9c6179e7d5e39eb892a25883e2794"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BudgetControl/BcConnector/zipball/1281eb9e75aa51fb2f4debc0b1e1abd54ec086a4",
-                "reference": "1281eb9e75aa51fb2f4debc0b1e1abd54ec086a4",
+                "url": "https://api.github.com/repos/BudgetControl/BcConnector/zipball/30707b028bc9c6179e7d5e39eb892a25883e2794",
+                "reference": "30707b028bc9c6179e7d5e39eb892a25883e2794",
                 "shasum": ""
             },
             "require": {
@@ -264,7 +264,7 @@
             "support": {
                 "source": "https://github.com/BudgetControl/BcConnector/tree/v2.0-beta"
             },
-            "time": "2024-12-20T12:11:14+00:00"
+            "time": "2024-12-20T12:36:15+00:00"
         },
         {
             "name": "budgetcontrol/cryptable",
@@ -313,16 +313,16 @@
         },
         {
             "name": "budgetcontrol/library",
-            "version": "v1.3",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/BudgetControl/Library.git",
-                "reference": "591c808cbd2a6b2e852879fcf60aca279dda1a51"
+                "reference": "f4ffdfebe099814b9c70b4b8a4e7ab16c72c398b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BudgetControl/Library/zipball/591c808cbd2a6b2e852879fcf60aca279dda1a51",
-                "reference": "591c808cbd2a6b2e852879fcf60aca279dda1a51",
+                "url": "https://api.github.com/repos/BudgetControl/Library/zipball/f4ffdfebe099814b9c70b4b8a4e7ab16c72c398b",
+                "reference": "f4ffdfebe099814b9c70b4b8a4e7ab16c72c398b",
                 "shasum": ""
             },
             "require": {
@@ -344,9 +344,9 @@
                 }
             ],
             "support": {
-                "source": "https://github.com/BudgetControl/Library/tree/v1.3"
+                "source": "https://github.com/BudgetControl/Library/tree/v1.3.3"
             },
-            "time": "2024-10-18T13:20:42+00:00"
+            "time": "2024-12-17T15:12:50+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
