@@ -13,3 +13,4 @@
 \Illuminate\Support\Facades\Route::get('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 \Illuminate\Support\Facades\Route::get('/auth/user-info/by-email/{email}', [\App\Http\Controllers\AuthController::class, 'getUserInfoByEmail'])->middleware(\App\Http\Middleware\AuthMiddleware::class)->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 1440]);
 
+\Illuminate\Support\Facades\Route::post('/auth/{userUuid}finalize/sign-up', [\App\Http\Controllers\AuthController::class, 'finalizeSignUp']);

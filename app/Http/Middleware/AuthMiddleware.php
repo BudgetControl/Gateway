@@ -26,7 +26,7 @@ class AuthMiddleware
         $token = $request->header('X-BC-Token');
         $authToken = $request->header('Authorization');
 
-        if(empty($token) || empty($authToken)) {
+        if(empty($authToken)) {
             return response('Unauthorized', 401);
         }
 
