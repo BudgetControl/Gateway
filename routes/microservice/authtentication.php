@@ -1,7 +1,7 @@
 <?php
 
 \Illuminate\Support\Facades\Route::get('/auth/check', [\App\Http\Controllers\AuthController::class, 'check']);
-\Illuminate\Support\Facades\Route::get('/auth/user-info', [\App\Http\Controllers\AuthController::class, 'getUserInfo'])->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 1440]);
+\Illuminate\Support\Facades\Route::get('/auth/user-info', [\App\Http\Controllers\AuthController::class, 'getUserInfo']);
 \Illuminate\Support\Facades\Route::post('/auth/sign-up', [\App\Http\Controllers\AuthController::class, 'signUp']);
 \Illuminate\Support\Facades\Route::get('/auth/confirm/{token}', [\App\Http\Controllers\AuthController::class, 'confirmToken']);
 \Illuminate\Support\Facades\Route::post('/auth/authenticate', [\App\Http\Controllers\AuthController::class, 'authenticate']);
@@ -9,8 +9,8 @@
 \Illuminate\Support\Facades\Route::post('/auth/verify-email', [\App\Http\Controllers\AuthController::class, 'sendVerifyEmail']);
 \Illuminate\Support\Facades\Route::put('/auth/reset-password/{token}', [\App\Http\Controllers\AuthController::class, 'resetPassword']);
 \Illuminate\Support\Facades\Route::get('/auth/authenticate/{provider}', [\App\Http\Controllers\AuthController::class, 'authenticateProvider']);
-\Illuminate\Support\Facades\Route::get('/auth/authenticate/token/{provider}', [\App\Http\Controllers\AuthController::class, 'providerToken'])->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 1440]);
+\Illuminate\Support\Facades\Route::get('/auth/authenticate/token/{provider}', [\App\Http\Controllers\AuthController::class, 'providerToken']);
 \Illuminate\Support\Facades\Route::get('/auth/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
-\Illuminate\Support\Facades\Route::get('/auth/user-info/by-email/{email}', [\App\Http\Controllers\AuthController::class, 'getUserInfoByEmail'])->middleware(\App\Http\Middleware\AuthMiddleware::class)->middleware([\App\Http\Middleware\CachingMiddleware::class . ':' . 1440]);
+\Illuminate\Support\Facades\Route::get('/auth/user-info/by-email/{email}', [\App\Http\Controllers\AuthController::class, 'getUserInfoByEmail'])->middleware(\App\Http\Middleware\AuthMiddleware::class);
 
 \Illuminate\Support\Facades\Route::post('/auth/{userUuid}finalize/sign-up', [\App\Http\Controllers\AuthController::class, 'finalizeSignUp']);
