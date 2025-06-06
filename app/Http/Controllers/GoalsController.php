@@ -48,7 +48,7 @@ class GoalsController extends Controller
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['goals'];
-        $response = Http::post("$basePath/$wsid/goals", $body);
+        $response = Http::post("$basePath/$wsid", $body);
         $data = $response->json();
 
         if ($response->successful()) {
@@ -64,7 +64,7 @@ class GoalsController extends Controller
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['goals'];
-        $response = Http::put("$basePath/$wsid/goals/$uuid", $body);
+        $response = Http::put("$basePath/$wsid/$uuid", $body);
         $data = $response->json();
 
         if ($response->successful()) {
@@ -80,7 +80,7 @@ class GoalsController extends Controller
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['goals'];
-        $response = Http::delete("$basePath/$wsid/goals/$uuid");
+        $response = Http::delete("$basePath/$wsid/$uuid");
         $data = $response->json();
 
         if ($response->successful()) {
