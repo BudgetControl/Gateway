@@ -50,7 +50,6 @@ class GoalsController extends Controller
         $basePath = $this->routes['goals'];
         $response = Http::post("$basePath/$wsid", $body);
         $data = $response->json();
-        var_dump($response->body());
 
         if ($response->successful()) {
             return response($data, $response->status(), ['Content-Type' => 'application/json']);
