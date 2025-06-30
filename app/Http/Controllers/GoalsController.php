@@ -91,5 +91,21 @@ class GoalsController extends Controller
         }
     }
 
+    public function updateStatus(Request $request, $uuid): Response
+    {
+        $body = $request->all();
+        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+        $basePath = $this->routes['goals'];
+        $response = Http::patch("$basePath/$wsid/$uuid/status", $body);
+        $data = $response->json();
+
+        if ($response->successful()) {
+            return response($data, $response->status(), ['Content-Type' => 'application/json']);
+        } else {
+            Log::error('Error: on goals updateStatus', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
+        }
+    }
+
 
 }
