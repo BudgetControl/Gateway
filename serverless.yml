@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 service: budgetcontrol-ms-entries
+=======
+service: budgetcontrol-gateway # Replace with your microservice name
+>>>>>>> 96b1583 (develop new version slim of api gateway)
 provider:
   name: aws
   region: eu-west-1
@@ -21,7 +25,10 @@ package:
     - 'node_modules/**'
     - 'tests/**'
     - 'storage/logs/**'
+<<<<<<< HEAD
     - '.env.*'
+=======
+>>>>>>> 96b1583 (develop new version slim of api gateway)
   include:
     - 'public/**'
     - 'vendor/**'
