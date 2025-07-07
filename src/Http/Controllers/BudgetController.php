@@ -9,225 +9,107 @@ use Budgetcontrol\Library\Model\Workspace;
 
 class BudgetController extends Controller
 {
-
-    public function list(Request $request): Response
+    private function getWorkspaceId(array $token): int
     {
-        //get workspace uuid form headers
-        $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid");
-        $data = $response->json();
-
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget list', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return Workspace::where('uuid', $token['current_ws'])->first()->id;
     }
 
-    public function show(Request $request, $uuid): Response
+    public function list(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid/$uuid");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget show', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget list');
     }
 
-    public function create(Request $request): Response
+    public function show(Request $request, Response $response, $uuid): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->post("$basePath/$wsid/budget", $body);
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid/$uuid");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget create', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget show');
     }
 
-    public function update(Request $request, $uuid): Response
+    public function create(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->put("$basePath/$wsid/budget/$uuid", $body);
-        $data = $response->json();
-           
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget update', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->post("{$this->routes['budget']}/$wsid/budget", $body);
 
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget create');
     }
 
-    public function delete(Request $request, $uuid): Response
+    public function update(Request $request, Response $response, $uuid): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->delete("$basePath/$wsid/budget/$uuid");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->put("{$this->routes['budget']}/$wsid/budget/$uuid", $body);
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget delete', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget update');
     }
 
-    public function expired(Request $request, $uuid): Response
+    public function delete(Request $request, Response $response, $uuid): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid/budget/$uuid/expired");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->delete("{$this->routes['budget']}/$wsid/budget/$uuid");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget expired', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget delete');
     }
 
-    public function exceeded(Request $request, $uuid): Response
+    public function expired(Request $request, Response $response, $uuid): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid/budget/$uuid/exceeded");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid/budget/$uuid/expired");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget expired', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget expired');
     }
 
-    public function status(Request $request, $uuid): Response
+    public function exceeded(Request $request, Response $response, $uuid): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid/budget/$uuid/status");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid/budget/$uuid/exceeded");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget status', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget exceeded');
     }
 
-    public function budgetStats(Request $request, $uuid): Response
+    public function status(Request $request, Response $response, $uuid): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid/budget/$uuid/stats");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid/budget/$uuid/status");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget stats', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget status');
     }
 
-    public function budgetsStats(Request $request): Response
+    public function budgetStats(Request $request, Response $response, $uuid): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid/budgets/stats");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid/budget/$uuid/stats");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budget stats', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'budget stats');
     }
 
-    public function entryList(Request $request, $uuid): Response
+    public function budgetsStats(Request $request, Response $response): Response
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['budget'];
-        $response = $this->httpClient()->get("$basePath/$wsid/budget/$uuid/entry-list");
-        $data = $response->json();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid/budgets/stats");
 
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on budgets entry-list', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
+        return $this->handleApiResponse($apiResponse, 'budget budgetsStats');
+    }
 
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    public function entryList(Request $request, Response $response, $uuid): Response
+    {
+        $body = $request->getParsedBody();
+        $wsid = $this->getWorkspaceId($body['token']);
+        $apiResponse = $this->httpClient()->get("{$this->routes['budget']}/$wsid/budget/$uuid/entry-list");
+
+        return $this->handleApiResponse($apiResponse, 'budget entryList');
     }
 }

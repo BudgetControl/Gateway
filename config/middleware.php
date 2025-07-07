@@ -18,12 +18,12 @@ $errorMiddleware->setDefaultErrorHandler(function (\Slim\Http\ServerRequest $req
 
     $statusError = [
         'id' => $procId,
-        'status' => empty($e->getCode()) ? 500 : $e->getCode(),
-        'detail' => $e->getMessage()
+        'status' => empty($e->getCode()) ? 500 : $e->getCode()
     ];
 
     $payload = ['error' => $statusError];
-    if (env("APP_DEBUG") == "true") {
+    if (env("LOG_LEVEL") === "debug") {
+        $payload['error']['message'] = $e->getMessage();
         $payload['error']['trace'] = $e->getTrace();
     }
 

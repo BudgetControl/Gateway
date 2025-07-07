@@ -11,130 +11,59 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class AverangeController extends ChartsController {
 
-    public function averageExpenses(Request $request): Response
-    {
-        //get workspace uuid form headers
-        $body = $request->getParsedBody();
-        $wsid = $body['token']['current_ws'];
-        $basePath = $this->routes['stats'];
-        $response = $this->httpClient()->get("$basePath/$wsid/average-expenses");
-        $data = $response->json();
-        
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on average-expenses', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
 
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    public function averageExpenses(Request $request, Response $response): Response
+    {
+        $wsid = $this->getWorkspaceId($request);
+        $basePath = $this->routes['stats'];
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/average-expenses");
+        
+        return $this->handleApiResponse($apiResponse, 'average-expenses');
     }
 
-    public function averageIncoming(Request $request): Response
+    public function averageIncoming(Request $request, Response $response): Response
     {
-        //get workspace uuid form headers
-        $body = $request->getParsedBody();
-        $wsid = $body['token']['current_ws'];
+        $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['stats'];
-        $response = $this->httpClient()->get("$basePath/$wsid/average-incoming");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/average-incoming");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on average-incoming', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'average-incoming');
     }
 
-    public function averageSavings(Request $request): Response
+    public function averageSavings(Request $request, Response $response): Response
     {
-        //get workspace uuid form headers
-        $body = $request->getParsedBody();
-        $wsid = $body['token']['current_ws'];
+        $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['stats'];
-        $response = $this->httpClient()->get("$basePath/$wsid/average-savings");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/average-savings");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on average-savings', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'average-savings');
     }
 
 
-    public function totalLoanInstallmentsOfCurrentMonth(Request $request): Response
+    public function totalLoanInstallmentsOfCurrentMonth(Request $request, Response $response): Response
     {
-        //get workspace uuid form headers
-        $body = $request->getParsedBody();
-        $wsid = $body['token']['current_ws'];
+        $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['stats'];
-        $response = $this->httpClient()->get("$basePath/$wsid/total-loan-installments");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/total-loan-installments");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on total-loan-installments', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'total-loan-installments');
     }
 
-    public function totalPlannedRemainingOfCurrentMonth(Request $request): Response
+    public function totalPlannedRemainingOfCurrentMonth(Request $request, Response $response): Response
     {
-        //get workspace uuid form headers
-        $body = $request->getParsedBody();
-        $wsid = $body['token']['current_ws'];
+        $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['stats'];
-        $response = $this->httpClient()->get("$basePath/$wsid/total/planned/remaining");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/total/planned/remaining");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on total/planned/remaining', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'total/planned/remaining');
     }
 
-    public function totalPlannedMonthly(Request $request): Response
+    public function totalPlannedMonthly(Request $request, Response $response): Response
     {
-        //get workspace uuid form headers
-        $body = $request->getParsedBody();
-        $wsid = $body['token']['current_ws'];
+        $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['stats'];
-        $response = $this->httpClient()->get("$basePath/$wsid/total/planned/monthly");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/total/planned/monthly");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on total/planned/monthly', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'total/planned/monthly');
     }
 }

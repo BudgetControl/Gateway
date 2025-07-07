@@ -3,13 +3,14 @@
 namespace Budgetcontrol\Gateway\Http\Middleware;
 
 use Budgetcontrol\Gateway\Traits\Cache;
-use Closure;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Illuminate\Support\Facades\Log;
 use Slim\Psr7\Response as SlimResponse;
 
-class CachingMiddleware
+class CachingMiddleware implements MiddlewareInterface
 {
     use Cache;
 
@@ -17,14 +18,17 @@ class CachingMiddleware
 
     public function __construct(?int $ttl = null)
     {
-        $this->ttl = $ttl ?? env('CACHE_TTL', 3600); // Default to 1 hour if not set
+        $this->ttl = $ttl ?? (int)($_ENV['CACHE_TTL'] ?? 3600); // Default to 1 hour if not set
     }
+    
     /**
-     * Handle an incoming request.
+     * Process an incoming server request and return a response.
      *
-     * @param  \Closure(Request): (Response)  $next
+     * @param Request $request
+     * @param RequestHandler $handler
+     * @return Response
      */
-    public function handle(Request $request, Closure $next): Response
+    public function process(Request $request, RequestHandler $handler): Response
     {
         $key = $this->key($request);
         $this->initCache($key);
@@ -34,10 +38,11 @@ class CachingMiddleware
             return $this->createCacheResponse($this->getCache());
         }
 
-        $response = $next($request);
+        $response = $handler->handle($request);
 
         if ($this->isSuccessfulResponse($response)) {
-            $this->setCache($response->getBody()->__toString(), $this->ttl);
+            $responseBody = (string)$response->getBody();
+            $this->setCache($responseBody, $this->ttl);
         }
 
         return $response;

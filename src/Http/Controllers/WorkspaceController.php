@@ -9,169 +9,83 @@ use Illuminate\Support\Facades\Log;
 
 class WorkspaceController extends Controller
 {
-    public function list(Request $request): Response
+    private function getUserId(Request $request): int
     {
-        $userId = $this->userId($request->token['uuid']);
+        return $this->userId($request->getAttribute('token')['uuid']);
+    }
+
+
+    public function list(Request $request, Response $response): Response
+    {
+        $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $response = $this->httpClient()->get("$basePath/$userId/list");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$userId/list");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace list', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode);
+        return $this->handleApiResponse($apiResponse, 'list');
     }
 
-    public function listByUser(Request $request): Response
+    public function listByUser(Request $request, Response $response): Response
     {
-        $userId = $this->userId($request->token['uuid']);
+        $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $response = $this->httpClient()->get("$basePath/$userId/by-user/list");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$userId/by-user/list");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace list by user', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode);
+        return $this->handleApiResponse($apiResponse, 'list by user');
     }
 
-    public function last(Request $request): Response
+    public function last(Request $request, Response $response): Response
     {
-        $userId = $this->userId($request->token['uuid']);
+        $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $response = $this->httpClient()->get("$basePath/$userId/last");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$userId/last");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace last', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode);
+        return $this->handleApiResponse($apiResponse, 'last');
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request, Response $response): Response
     {
-        $userId = $this->userId($request->token['uuid']);
+        $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $response = $this->httpClient()->post("$basePath/$userId/add", $request->getParsedBody());
-        $data = $response->json();
+        $body = $request->getParsedBody();
+        $apiResponse = $this->httpClient()->post("$basePath/$userId/add", $body);
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace create', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode);
+        return $this->handleApiResponse($apiResponse, 'create');
     }
 
-    public function update(Request $request, $id): Response
+    public function update(Request $request, Response $response, $id): Response
     {
-        $userId = $this->userId($request->token['uuid']);
+        $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-
-        $response = $this->httpClient()->put("$basePath/$userId/update/$id", $request->getParsedBody());
-        $data = $response->json();
-
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace update', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode);
-    }
-
-    public function show(Request $request, $id): Response
-    {
-        $userId = $this->userId($request->token['uuid']);
-        $basePath = $this->routes['workspace'];
-        $response = $this->httpClient()->get("$basePath/$userId/$id");
-        $data = $response->json();
+        $body = $request->getParsedBody();
+        $apiResponse = $this->httpClient()->put("$basePath/$userId/update/$id", $body);
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace show', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        // encode response with JWT
-        return new Response($data,$statusCode,[
-            'Content-Type' => 'application/json',
-        ]);
+        return $this->handleApiResponse($apiResponse, 'update');
     }
 
-    public function activate(Request $request, $id): Response
+    public function show(Request $request, Response $response, $id): Response
     {
-        $userId = $this->userId($request->token['uuid']);
+        $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $response = $this->httpClient()->patch("$basePath/$userId/$id/activate");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$userId/$id");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace activate', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode);
+        return $this->handleApiResponse($apiResponse, 'show');
     }
 
-    public function delete(Request $request, $id): Response
+    public function activate(Request $request, Response $response, $id): Response
     {
-        $userId = $this->userId($request->token['uuid']);
+        $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $response = $this->httpClient()->delete("$basePath/$id/delete");
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->patch("$basePath/$userId/$id/activate");
         
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            Log::error('Error: on workspace delete', ['response' => $response->json()]);
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode);
+        return $this->handleApiResponse($apiResponse, 'activate');
     }
 
-    
+    public function delete(Request $request, Response $response, $id): Response
+    {
+        $userId = $this->getUserId($request);
+        $basePath = $this->routes['workspace'];
+        $apiResponse = $this->httpClient()->delete("$basePath/$id/delete");
+        
+        return $this->handleApiResponse($apiResponse, 'delete');
+    }
 }

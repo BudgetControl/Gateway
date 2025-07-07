@@ -2,36 +2,53 @@
 
 namespace Budgetcontrol\Gateway\Http\Middleware;
 
-use Closure;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 
-class ResponseMiddleware
+class ResponseMiddleware implements MiddlewareInterface
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @var LoggerInterface
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-        //get new refresh token form cache
-        Log::debug('Headers: ' . json_encode($request->getHeaders()));
-        Log::debug('Body: ' . json_encode($request->getParsedBody()));
-        
-        // Process the request and get the response
-        $response = $next($request);
+    private $logger;
 
-        // Retrieve the new access token from the request (assuming it's set by the auth middleware)
-        $newAccessToken = $request->attributes->get('new_access_token');
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * Process an incoming server request.
+     *
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        // Log request details
+        $this->logger->debug('Headers: ' . json_encode($request->getHeaders()));
+        $body = $request->getParsedBody();
+        $this->logger->debug('Body: ' . json_encode($body));
+        
+        // Process the request
+        $response = $handler->handle($request);
+
+        // Retrieve the new access token from the request attributes
+        $newAccessToken = $request->getAttribute('new_access_token');
 
         // Add the new access token to the response headers
         if ($newAccessToken) {
-            $response->headers->set('Authorization', 'Bearer ' . $newAccessToken);
+            $response = $response->withHeader('Authorization', 'Bearer ' . $newAccessToken);
         }
 
-        Log::debug('Response: ' . json_encode($response));
+        $this->logger->debug('Response: ' . json_encode([
+            'status' => $response->getStatusCode(),
+            'headers' => $response->getHeaders()
+        ]));
 
         return $response;
     }

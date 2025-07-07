@@ -4,6 +4,7 @@ namespace Budgetcontrol\Gateway\Http\Controllers;
 use Budgetcontrol\Gateway\Facade\AwsCognitoClient as AwsCognito;
 use Carbon\Carbon;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Budgetcontrol\Library\Model\User;
@@ -14,55 +15,65 @@ class AuthController extends Controller
 {
     use Crypt;
 
-    public function check(Request $request)
+    public function check(Request $request, Response $response): Response
     {   
-        //log all request
-        Log::info('Request: ', $request->getParsedBody() ? ['body' => $request->getParsedBody()] : []);
-        Log::info('Request Path: ', ['path' => $request->getUri()->getPath()]);
 
         $token = $this->getBearerToken($request);
         if (!$token) {
-            return response(['message' => 'You are not authenticated'], 401);
+            $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
         $basePath = $this->routes['auth'];
-        // check if is valid token and if not refresh the token
-        $response = $this->httpClient()->withToken($token)->get("$basePath/check");
-        if ($response->status() !== 200) {
-            Log::error('Error: on check', ['response' => $response->json()]);
-            return response(['message' => 'You are not authenticated'], 401);
+        $apiResponse = $this->httpClient()->withToken($token)->get("$basePath/check");
+        
+        if ($apiResponse->getStatusCode() !== 200) {
+            Log::error('Error: on check', ['response' => $apiResponse->getBody()->getContents()]);
+            $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
-        $authToken = $response->header('Authorization');
+        $authToken = $apiResponse->getHeader('Authorization');
         if(empty($authToken)) {
-            return response(['message' => 'You are not authenticated'], 401);
+            $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
-        return response(['message' => 'You are authenticated', 'authToken' => $authToken], 200, ['Authorization' => 'Bearer ' . $authToken]);
+        $response->getBody()->write(json_encode(['message' => 'You are authenticated', 'authToken' => $authToken]));
+        return $response->withStatus(200)
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('Authorization', 'Bearer ' . $authToken);
     }
 
-    public function getUserInfo(Request $request)
+    public function getUserInfo(Request $request, Response $response): Response
     {   
         $token = $this->getBearerToken($request);
         $wsUuid = $request->getHeaderLine('X-WS');
         if (!$token) {
-            return response(['message' => 'You are not authenticated'], 401);
+            $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
         $basePath = $this->routes['auth'];
-        $response = $this->httpClient()->withToken($token)->withHeader('X-WS',$wsUuid)->get("$basePath/user-info");
-        if ($response->status() !== 200) {
-            Log::error('Error: on get user info', ['response' => $response->json()]);
-            return response(['message' => 'Something went wrong, you are not authenticated'], 401);
+        $apiResponse = $this->httpClient()->withToken($token)->withHeader('X-WS',$wsUuid)->get("$basePath/user-info");
+        $dataResponse = $apiResponse->getBody()->getContents();
+
+        if ($apiResponse->getStatusCode() !== 200) {
+            Log::error('Error: on get user info', ['response' => $dataResponse]);
+            $response->getBody()->write(json_encode(['message' => 'Something went wrong, you are not authenticated']));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
-        $decoded = JwtService::encodeToken($response->json());
-        $response = [
+        $decoded = JwtService::encodeToken(json_decode($dataResponse, true));
+        $data = [
             'token' => $decoded,
-            'userInfo' => $response->json()
+            'userInfo' => json_decode($dataResponse, true)
         ];
 
-        return response($response, 200, ['X-BC-Token' => $decoded]);
+        $response->getBody()->write(json_encode($data));
+        return $response->withStatus(200)
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('X-BC-Token', $decoded);
     }
 
     public function logout(Request $request)
@@ -78,8 +89,9 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = $this->httpClient()->post("$basePath/sign-up", $request->getParsedBody());
-        if ($response->status() !== 201) {
-            Log::error('Error: on sign up', ['response' => $response->json()]);
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 201) {
+            Log::error('Error: on sign up', ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
@@ -90,8 +102,9 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = $this->httpClient()->get("$basePath/confirm/$token");
-        if ($response->status() !== 200) {
-            Log::error('Error: confirm token', ['response' => $response->json()]);
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: confirm token', ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
@@ -102,15 +115,15 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = $this->httpClient()->post("$basePath/authenticate", $request->getParsedBody());
-
-        if ($response->status() !== 200) {
-            Log::error('Error: on authenticate', ['response' => $response->json()]);
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: on authenticate', ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
         // get refresh token from body response
-        $refreshToken = $response->json()['refresh_token'];
-        $accessToken = $response->json()['token'];
+        $refreshToken = $jsonData['refresh_token'];
+        $accessToken = $jsonData['token'];
 
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
@@ -118,7 +131,7 @@ class AuthController extends Controller
         Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
 
         //remove the refresh token from the body of the response
-        unset($response->json()['refresh_token']);
+        unset($jsonData['refresh_token']);
 
         return $response;
     }
@@ -127,8 +140,9 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = $this->httpClient()->put("$basePath/reset-password/$token", $request->getParsedBody());
-        if ($response->status() !== 200) {
-            Log::error('Error: reset password', ['response' => $response->json()]);
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: reset password', ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
@@ -139,8 +153,9 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = $this->httpClient()->post("$basePath/verify-email", $request->getParsedBody());
-        if ($response->status() !== 200) {
-            Log::error('Error: on send verify email', ['response' => $response->json()]);
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: on send verify email', ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
@@ -164,8 +179,9 @@ class AuthController extends Controller
         }
 
         $response = $this->httpClient()->get("$basePath/authenticate/$provider$queryParam");
-        if ($response->status() !== 200) {
-            Log::error('Error: on authenticate provider '.$provider, ['response' => $response->json()]);
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: on authenticate provider '.$provider, ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
@@ -201,14 +217,16 @@ class AuthController extends Controller
 
         $queryString = http_build_query($newQueryParams);
         $response = $this->httpClient()->get("$basePath/authenticate/token/$provider?$queryString");
-        if ($response->status() !== 200) {
-            Log::error('Error: on provider token '.$provider, ['response' => $response->json()]);
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: on provider token '.$provider, ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
         // get refresh token from body response
-        $refreshToken = $response->json()['refresh_token'];
-        $accessToken = $response->json()['token'];
+        $refreshToken = $jsonData['refresh_token'];
+        $accessToken = $jsonData['token'];
 
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
 
@@ -216,7 +234,7 @@ class AuthController extends Controller
         Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
 
         //remove the refresh token from the body of the response
-        unset($response->json()['refresh_token']);
+        unset($jsonData['refresh_token']);
 
         return $response;
     }
@@ -225,8 +243,10 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = $this->httpClient()->post("$basePath/reset-password", $request->getParsedBody());
-        if ($response->status() !== 200) {
-            Log::error('Error: on send reset password mail', ['response' => $response->json()]);
+        $jsonData = $response->getBody()->getContents();
+
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: on send reset password mail', ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
@@ -237,9 +257,10 @@ class AuthController extends Controller
     {
         $basePath = $this->routes['auth'];
         $response = $this->httpClient()->get("$basePath/user-info/by-email/$uuid");
-        if ($response->status() !== 200) {
-            Log::error('Error: on get user info by email ', ['response' => $response->json()]);
-            return response(['message' => 'An error occurred'], $response->status());
+        $jsonData = json_decode($response->getBody()->getContents(), true);
+        if ($response->getStatusCode() !== 200) {
+            Log::error('Error: on get user info by email ', ['response' => $jsonData]);
+            return response(['message' => 'An error occurred']);
         }
 
         return $response;
@@ -252,51 +273,58 @@ class AuthController extends Controller
      * @param string $userUuid The UUID of the user.
      * @return \Illuminate\Http\Response The HTTP response.
      */
-    public function finalizeSignUp(Request $request, string $userUuid) { 
+    public function finalizeSignUp(Request $request, Response $response, string $userUuid): Response { 
 
         $token = $this->getBearerToken($request);
         $userId = $this->userId($userUuid);
 
         if($this->checkIfUserIsLogged($userId, $token) === false) {
-            return response(['message' => 'You are not authenticated'], 401);
+            $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
         $payLoad = $request->getParsedBody();
         //first create the workspace
         $basePathWorkspace = $this->routes['workspace'];
         $workspaceResponse = $this->httpClient()->post("$basePathWorkspace/$userId/add", $payLoad['workspace']);
-        $data = $workspaceResponse->json();
+        $data = $workspaceResponse->getBody()->getContents();
         $workspaceUuid = $data['workspace']['uuid'];
         $workspaceID = $data['workspace']['id'];
 
-        if($workspaceResponse->status() !== 201) {
-            Log::error('Error: on workspace create', ['response' => $workspaceResponse->json()]);
-            return response(['message' => 'An error occurred'], $workspaceResponse->status());
+        if($workspaceResponse->getStatusCode() !== 201) {
+            Log::error('Error: on workspace create', ['response' => $data]);
+            $response->getBody()->write(json_encode(['message' => 'An error occurred']));
+            return $response->withStatus($workspaceResponse->getStatusCode())->withHeader('Content-Type', 'application/json');
         }
 
         //then create the user wallet
         $basePathWallet = $this->routes['wallet'];
         $walletResponse = $this->httpClient()->post("$basePathWallet/$workspaceID/create", $payLoad['wallet']);
-        $data = $walletResponse->json();
+        $data = $walletResponse->getBody()->getContents();
 
         //return the user info
         $basePathAuth = $this->routes['auth'];
-        $response = $this->httpClient()->withToken($token)->withHeader('X-WS',$workspaceUuid)
-        ->get("$basePathAuth/user-info");
+        $apiResponse = $this->httpClient()->withToken($token)->withHeader('X-WS',$workspaceUuid)
+            ->get("$basePathAuth/user-info");
 
-        if ($response->status() !== 200) {
-            Log::error('Error: on get user info on finalize sign up', ['response' => $response->json()]);
-            return response(['message' => 'Something went wrong, you are not authenticated'], 401);
+        if ($apiResponse->getStatusCode() !== 200) {
+            Log::error('Error: on get user info on finalize sign up', ['response' => $apiResponse->getBody()->getContents()]);
+            $response->getBody()->write(json_encode(['message' => 'Something went wrong, you are not authenticated']));
+            return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
-        $decoded = JwtService::encodeToken($response->json());
-        $response = [
+        $jsonData = json_decode($apiResponse->getBody()->getContents(), true);
+
+        $decoded = JwtService::encodeToken($jsonData);
+        $responseData = [
             'token' => $decoded,
-            'userInfo' => $response->json()
+            'userInfo' => $jsonData
         ];
 
-        return response($response, 200, ['X-BC-Token' => $decoded]);
-
+        $response->getBody()->write(json_encode($responseData));
+        return $response->withStatus(200)
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('X-BC-Token', $decoded);
     }
 
     /**

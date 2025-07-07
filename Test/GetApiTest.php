@@ -15,7 +15,7 @@ class GetApiTest extends \PHPUnit\Framework\TestCase
         $response = $this->createMock(ResponseInterface::class);
 
         $controller = new PaymentTypesController();
-        $result = $controller->index($request, $response);
+        $result = $controller->index($request);
         $contentArray = json_decode((string) $result->getBody());
 
         $this->assertEquals(200, $result->getStatusCode());

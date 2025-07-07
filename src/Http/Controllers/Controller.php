@@ -13,6 +13,7 @@ use Budgetcontrol\Library\Model\Model;
 use Budgetcontrol\Gateway\Entities\QueryString;
 use Budgetcontrol\Library\Model\User;
 use Budgetcontrol\Gateway\Facade\Routes;
+use Budgetcontrol\Gateway\Service\ClientService;
 
 abstract class Controller
 {
@@ -38,9 +39,11 @@ abstract class Controller
      * Monitor the request and return a response.
      *
      * @param Request $request The incoming request.
+     * @param Response $response The response object.
+     * @param string $ms The microservice to monitor.
      * @return Response The response to the request.
      */
-    public function monitor(Request $request, $ms): Response
+    public function monitor(Request $request, Response $response, $ms): Response
     {
         $client = new Client();
         $path = $this->routes[$ms];
@@ -49,10 +52,11 @@ abstract class Controller
             $client->request('GET', $path . "/monitor");
         } catch (\Exception $e) {
             Log::error('Error while calling the API', ['error' => $e->getMessage()]);
-            return response(['message' => 'Something went wrong '. $e->getCode()], 500);
+            $response->getBody()->write(json_encode(['message' => 'Something went wrong '. $e->getCode()]));
+            return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
         }
         
-        return response([], 200, ['Content-Type' => 'application/json']);
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 
     /**
@@ -160,12 +164,9 @@ abstract class Controller
     /**
      * Get HTTP client configured for microservices with API secret header
      */
-    protected function httpClient()
+    protected function httpClient(): ClientService
     {
-        $secret = env('API_SECRET', 'default-secret');
-        return Http::withHeaders([
-            'X-API-SECRET' => $secret,
-        ]);
+        return new ClientService();
     }
 
     /**
@@ -182,5 +183,28 @@ abstract class Controller
         }
         return null;
     }
+    
+    /**
+     * Handle the API response and return a formatted Slim response.
+     *
+     * @param $apiResponse The response from the API.
+     * @param string $context The context for logging.
+     * @param Response $response The Slim response object.
+     * @return Response The formatted response.
+     */
+    protected function handleApiResponse($apiResponse, string $context): Response
+    {
+        $data = json_decode($apiResponse->getBody()->getContents(), true);
+        $statusCode = $apiResponse->getStatusCode();
+
+        if (!$apiResponse->successful()) {
+            Log::error("Error: on $context", ['response' => $data]);
+            return response(["message" => "An error occurred"], $statusCode);
+        }
+
+        return response($data, $statusCode);
+    }
+
+    
 
 }

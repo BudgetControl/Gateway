@@ -11,149 +11,68 @@ use Illuminate\Support\Facades\Log;
 
 class LabelController extends Controller {
 
-    public function list(Request $request): Response
+    private function getWorkspaceId(Request $request): int
     {
         $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+        return Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+    }
+
+    public function list(Request $request, Response $response): Response
+    {
+        $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['label'];
         $queryParams = $request->getQueryParams();
-        $response = $this->httpClient()->get("$basePath/$wsid/list?".http_build_query($queryParams));
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on labels list', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/list?".http_build_query($queryParams));
+        
+        return $this->handleApiResponse($apiResponse, 'list');
     }
 
-    public function update(Request $request, string $label_id): Response
+    public function update(Request $request, Response $response, string $label_id): Response
+    {
+        $wsid = $this->getWorkspaceId($request);
+        $basePath = $this->routes['label'];
+        $body = $request->getParsedBody();
+        $apiResponse = $this->httpClient()->put("$basePath/$wsid/$label_id", $body);
+        
+        return $this->handleApiResponse($apiResponse, 'update');
+    }
+
+    public function insert(Request $request, Response $response, string $label_id): Response
     {
         $body = $request->getParsedBody();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['label'];
-        $response = $this->httpClient()->put("$basePath/$wsid/$label_id", $body);
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->post("$basePath/$wsid/$label_id", $body);
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on labels update', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'insert');
     }
 
-    public function insert(Request $request, string $label_id): Response
+    public function show(Request $request, Response $response, string $label_id): Response
     {
         $body = $request->getParsedBody();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['label'];
-        $response = $this->httpClient()->post("$basePath/$wsid/$label_id", $body);
-        $data = $response->json();
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/$label_id");
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on labels insert', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        return $this->handleApiResponse($apiResponse, 'show');
     }
 
-    public function show(Request $request, string $label_id): Response
+    public function patch(Request $request, Response $response, string $label_id): Response
     {
         $body = $request->getParsedBody();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['label'];
-        $response = $this->httpClient()->get("$basePath/$wsid/$label_id");
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on labels show', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        $apiResponse = $this->httpClient()->patch("$basePath/$wsid/$label_id", $body);
+        
+        return $this->handleApiResponse($apiResponse, 'patch');
     }
 
-    public function patch(Request $request, string $label_id): Response
+    public function delete(Request $request, Response $response, string $label_id): Response
     {
-        $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+        $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['label'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/$label_id", $body);
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on labels patch', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+        $apiResponse = $this->httpClient()->delete("$basePath/$wsid/$label_id");
+        
+        return $this->handleApiResponse($apiResponse, 'delete');
     }
-
-    public function delete(Request $request, string $label_id): Response
-    {
-        $body = $request->getParsedBody();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['label'];
-        $response = $this->httpClient()->delete("$basePath/$wsid/$label_id");
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on labels delete', ['response' => $response->json()]);
-            return response(["message" => "An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
-    }
-
 }

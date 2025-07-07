@@ -2,22 +2,25 @@
 
 namespace Budgetcontrol\Gateway\Http\Middleware;
 
-use Closure;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Illuminate\Support\Facades\Log;
 use Budgetcontrol\Gateway\Service\JwtService;
 use Budgetcontrol\Gateway\Facade\AwsCognitoClient as AwsCognito;
 use Slim\Psr7\Response as SlimResponse;
 
-class AuthMiddleware
+class AuthMiddleware implements MiddlewareInterface
 {
     /**
-     * Handle an incoming request.
+     * Process an incoming server request.
      *
-     * @param  \Closure(Request): (Response)  $next
+     * @param Request $request
+     * @param RequestHandler $handler
+     * @return Response
      */
-    public function handle(Request $request, Closure $next): Response
+    public function process(Request $request, RequestHandler $handler): Response
     {
         $uri = $request->getUri();
         $headers = $request->getHeaders();
@@ -41,8 +44,11 @@ class AuthMiddleware
 
         // Add decoded token to request attributes
         $request = $request->withAttribute('token', $validationResult['decoded']);
-
-        $response = $next($request);
+        
+        // Process the request and get response
+        $response = $handler->handle($request);
+        
+        // Add authorization header to response
         return $response->withHeader('Authorization', 'Bearer ' . $validationResult['validToken']);
     }
 
@@ -95,8 +101,8 @@ class AuthMiddleware
 
     private function createUnauthorizedResponse(array $data): Response
     {
-        $response = new SlimResponse();
+        $response = new SlimResponse(401);
         $response->getBody()->write(json_encode($data));
-        return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }
