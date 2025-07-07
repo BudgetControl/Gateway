@@ -1,37 +1,27 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\EntryController;
-use App\Entities\QueryString;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
-class SavingController extends EntryController {
+class SearchEngine extends Controller
+{
 
-    protected string $entryType = "/saving";
-
-    public function listAll(Request $request, $goalUuid): Response
+    public function find(Request $request): Response
     {
         //get workspace uuid form headers
         $body = $request->all();
-
-        $queryString = new QueryString();
-        $this->getQueryParams($request, $queryString);
-        $httpBuildQuery = $queryString->__toString();
-
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['entry'];
-
-        $response = $this->httpClient()->get("$basePath/$wsid/$goalUuid".$this->entryType.$httpBuildQuery);
+        $basePath = $this->routes['searchengine'];
+        $response = $this->httpClient()->post("$basePath/find/$wsid", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
-            Log::error('Error: on entry list', ['response' => $response->json()]);
+            Log::error('Error: on search enging find method', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -40,7 +30,8 @@ class SavingController extends EntryController {
         } else {
             // Handle the error
             $statusCode = $response->status();
-            // Handle the error based on the status code
+            Log::error('Error: on search enging find method', ['response' => $response->json()]);
+            return response("Ops an error occurred", $statusCode, ['Content-Type' => 'application/json']);
         }
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);

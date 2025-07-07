@@ -1,25 +1,49 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class WalletController extends Controller {
+class StatsController extends Controller {
 
-    public function list(Request $request): Response
+    public function incoming(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $queryParams = $request->query();
-        $response = $this->httpClient()->get("$basePath/$wsid/list?".http_build_query($queryParams));
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/incoming?".$request->getQueryString());
         $data = $response->json();
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on incoming', ['response' => $response->json()]);
+            return response(["An error occurred"], $response->status(), ['Content-Type' => 'application/json']);
+        }
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();  
+        } else {
+            // Handle the error
+            $statusCode = $response->status();
+            // Handle the error based on the status code
+        }
 
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet list', ['response' => $response->json()]);
+        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
+
+    public function expenses(Request $request): Response
+    {
+        //get workspace uuid form headers
+        $body = $request->all();
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/expenses?".$request->getQueryString());
+        $data = $response->json();
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on expenses', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -34,16 +58,17 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function show(Request $request, $uuid): Response
+    public function debits(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->get("$basePath/$wsid/show/$uuid");
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/debits?".$request->getQueryString());
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet show', ['response' => $response->json()]);
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on debits', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -58,16 +83,17 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function create(Request $request): Response
+    public function debitsTotalNegative(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->post("$basePath/$wsid/create", $body);
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/debits/total-negative");
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet create', ['response' => $response->json()]);
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on debits total negative', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -82,16 +108,17 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function update(Request $request, $uuid): Response
+    public function debitsTotalPositive(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->put("$basePath/$wsid/update/$uuid", $body);
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/debits/total-positive");
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on debits total positive', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -106,16 +133,17 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function delete(Request $request, $uuid): Response
+    public function total(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->delete("$basePath/$wsid/$uuid");
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/total?".$request->getQueryString());
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on total', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -130,16 +158,17 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function restore(Request $request, $uuid): Response
+    public function wallets(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/restore/$uuid", $body);
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/wallets");
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on wallets', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -154,40 +183,17 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function sorting(Request $request, $uuid): Response
+    public function health(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/sorting/$uuid", $body);
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/health");
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
-            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
-    }
-    
-    public function archive(Request $request, $uuid): Response
-    {
-        $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/archive/$uuid", $body);
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet archive', ['response' => $response->json()]);
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on health', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -202,16 +208,17 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function balance(Request $request, $uuid): Response
+    public function totalPlanned(Request $request): Response
     {
+        //get workspace uuid form headers
         $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/balance/$uuid", $body);
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->get("$basePath/$wsid/planned?".$request->getQueryString());
         $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet balance', ['response' => $response->json()]);
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on total planned', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -225,4 +232,30 @@ class WalletController extends Controller {
 
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
+
+    public function entries(Request $request): Response
+    {
+        //get workspace uuid form headers
+        $body = $request->all();
+        $wsid = $body['token']['current_ws'];
+        $basePath = $this->routes['stats'];
+        $response = $this->httpClient()->post("$basePath/$wsid/stats/entries", $request->all());
+        $data = $response->json();
+        
+        if(json_encode($data) === null) {
+            Log::error('Error: on stats entries', ['response' => $response->json()]);
+            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
+        }
+        // Process the response
+        if ($response->successful()) {
+            $statusCode = $response->status();
+        } else {
+            // Handle the error
+            $statusCode = $response->status();
+            // Handle the error based on the status code
+        }
+
+        return response($data, $statusCode, ['Content-Type' => 'application/json']);
+    }
+
 }

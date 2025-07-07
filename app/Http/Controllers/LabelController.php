@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Workspace;
@@ -7,19 +9,19 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class WalletController extends Controller {
+class LabelController extends Controller {
 
     public function list(Request $request): Response
     {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
+        $basePath = $this->routes['label'];
         $queryParams = $request->query();
         $response = $this->httpClient()->get("$basePath/$wsid/list?".http_build_query($queryParams));
         $data = $response->json();
 
         if (json_encode($data) === null) {
-            Log::error('Error: on wallet list', ['response' => $response->json()]);
+            Log::error('Error: on labels list', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -34,16 +36,16 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function show(Request $request, $uuid): Response
+    public function update(Request $request, string $label_id): Response
     {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->get("$basePath/$wsid/show/$uuid");
+        $basePath = $this->routes['label'];
+        $response = $this->httpClient()->put("$basePath/$wsid/$label_id", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
-            Log::error('Error: on wallet show', ['response' => $response->json()]);
+            Log::error('Error: on labels update', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -58,16 +60,16 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function create(Request $request): Response
+    public function insert(Request $request, string $label_id): Response
     {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->post("$basePath/$wsid/create", $body);
+        $basePath = $this->routes['label'];
+        $response = $this->httpClient()->post("$basePath/$wsid/$label_id", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
-            Log::error('Error: on wallet create', ['response' => $response->json()]);
+            Log::error('Error: on labels insert', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -82,16 +84,16 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function update(Request $request, $uuid): Response
+    public function show(Request $request, string $label_id): Response
     {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->put("$basePath/$wsid/update/$uuid", $body);
+        $basePath = $this->routes['label'];
+        $response = $this->httpClient()->get("$basePath/$wsid/$label_id");
         $data = $response->json();
 
         if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
+            Log::error('Error: on labels show', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -106,16 +108,16 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function delete(Request $request, $uuid): Response
+    public function patch(Request $request, string $label_id): Response
     {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->delete("$basePath/$wsid/$uuid");
+        $basePath = $this->routes['label'];
+        $response = $this->httpClient()->patch("$basePath/$wsid/$label_id", $body);
         $data = $response->json();
 
         if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
+            Log::error('Error: on labels patch', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -130,16 +132,16 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function restore(Request $request, $uuid): Response
+    public function delete(Request $request, string $label_id): Response
     {
         $body = $request->all();
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/restore/$uuid", $body);
+        $basePath = $this->routes['label'];
+        $response = $this->httpClient()->delete("$basePath/$wsid/$label_id");
         $data = $response->json();
 
         if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
+            Log::error('Error: on labels delete', ['response' => $response->json()]);
             return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
         }
         // Process the response
@@ -154,75 +156,4 @@ class WalletController extends Controller {
         return response($data, $statusCode, ['Content-Type' => 'application/json']);
     }
 
-    public function sorting(Request $request, $uuid): Response
-    {
-        $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/sorting/$uuid", $body);
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet update', ['response' => $response->json()]);
-            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
-    }
-    
-    public function archive(Request $request, $uuid): Response
-    {
-        $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/archive/$uuid", $body);
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet archive', ['response' => $response->json()]);
-            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
-    }
-
-    public function balance(Request $request, $uuid): Response
-    {
-        $body = $request->all();
-        $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-        $basePath = $this->routes['wallet'];
-        $response = $this->httpClient()->patch("$basePath/$wsid/balance/$uuid", $body);
-        $data = $response->json();
-
-        if (json_encode($data) === null) {
-            Log::error('Error: on wallet balance', ['response' => $response->json()]);
-            return response("An error occurred", $response->status(), ['Content-Type' => 'application/json']);
-        }
-        // Process the response
-        if ($response->successful()) {
-            $statusCode = $response->status();
-        } else {
-            // Handle the error
-            $statusCode = $response->status();
-            // Handle the error based on the status code
-        }
-
-        return response($data, $statusCode, ['Content-Type' => 'application/json']);
-    }
 }
