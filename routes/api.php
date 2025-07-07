@@ -9,6 +9,14 @@ $app->get('/',function () {
     ]);
 });
 
+$app->get('/api',function () {
+    return response([
+        'status' => 'ok',
+        'message' => 'BudgetControl Gateway API is running',
+        'environment' => env('APP_ENV', 'production'),
+    ]);
+});
+
 require_once __DIR__ . '/microservice/authtentication.php';
 require_once __DIR__ . '/microservice/stats.php';
 require_once __DIR__ . '/microservice/workspace.php';

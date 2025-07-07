@@ -24,4 +24,4 @@ $awsCognitoClient->setUserPoolId($config['user_pool_id']);
 $awsCognitoClient->setAppName(env('APP_NAME'));
 $awsCognitoClient->setAppRedirectUri($config['redirect_uri']);
 
-$awsCognitoClient;
+$awsCognitoClient = new \Budgetcontrol\Gateway\Service\AuthCognitoService($awsCognitoClient);

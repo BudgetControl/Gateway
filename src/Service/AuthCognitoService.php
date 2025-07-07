@@ -13,22 +13,9 @@ class AuthCognitoService
 
     private readonly CognitoClient $cognitoClient;
     
-    public function __construct(array $config)
+    public function __construct(CognitoClient $cognito)
     {
-
-        $aws = new \Aws\Sdk($config);
-        $cognitoClient = $aws->createCognitoIdentityProvider();
-        
-        $awsCognitoClient = new CognitoClient($cognitoClient);
-        $awsCognitoClient->setAppClientId($config['app_client_id']);
-        $awsCognitoClient->setAppClientSecret($config['app_client_secret']);
-        $awsCognitoClient->setRegion($config['region']);
-        $awsCognitoClient->setUserPoolId($config['user_pool_id']);
-        $awsCognitoClient->setAppName(env('APP_NAME'));
-        $awsCognitoClient->setAppRedirectUri($config['redirect_uri']);
-        
-        $this->cognitoClient = $awsCognitoClient;
-        
+        $this->cognitoClient = $cognito;
     }
 
     /**

@@ -84,7 +84,6 @@ class ClientService
             Log::debug("Invoking $method request to $uri with options: " . json_encode($options));
             Log::debug("Headers: " . json_encode($this->httpClient->getConfig('headers')));
             Log::debug("Base URI: " . $this->httpClient->getConfig('base_uri'));
-            Log::debug("Debug options: " . json_encode($options['debug']));
         }
 
         return $this->httpClient->request($method, $uri, $options);
