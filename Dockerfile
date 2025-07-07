@@ -1,20 +1,24 @@
-FROM mlabfactory/php8-apache:v1.3
-
-# Copy the application files
-COPY . /var/www/workdir
-COPY ./bin/apache/default.conf /etc/apache2/sites-available/budgetcontrol.cloud.conf
+FROM node:18-alpine
 
 # Set the working directory
-WORKDIR /var/www/workdir
+WORKDIR /app
 
-# Install the dependencies
-RUN composer install --no-dev --optimize-autoloader
-RUN mkdir -p storage/logs
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy the application files
+COPY . .
+
+# Create necessary directories and files
+RUN mkdir -p logs
 RUN touch .env
 
 # Expose the port
-EXPOSE 80
+EXPOSE 3000
 
 # Start the server
-CMD ["apache2-foreground"]
+CMD ["npm", "start"]
 # End of Dockerfile
