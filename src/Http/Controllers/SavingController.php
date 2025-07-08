@@ -14,13 +14,7 @@ class SavingController extends EntryController {
 
     protected string $entryType = "/saving";
 
-    protected function getWorkspaceId(Request $request): int
-    {
-        $body = $request->getParsedBody();
-        return Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-    }
-
-    public function listAll(Request $request, Response $response, $goalUuid): Response
+    public function listAll(Request $request, Response $response, $arg): Response
     {
         $queryString = new QueryString();
         $this->getQueryParams($request, $queryString);
@@ -28,6 +22,7 @@ class SavingController extends EntryController {
 
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['entry'];
+        $goalUuid = $arg['uuid'];
 
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/$goalUuid".$this->entryType.$httpBuildQuery);
         

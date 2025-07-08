@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Budgetcontrol\Gateway\Service\JwtService;
 use Budgetcontrol\Gateway\Facade\AwsCognitoClient as AwsCognito;
 use Slim\Psr7\Response as SlimResponse;
+use Slim\Psr7\Factory\StreamFactory;
 
 class AuthMiddleware implements MiddlewareInterface
 {
@@ -42,8 +43,12 @@ class AuthMiddleware implements MiddlewareInterface
             return $this->createUnauthorizedResponse(['error' => 'Unauthorized']);
         }
 
-        // Add decoded token to request attributes
-        $request = $request->withAttribute('token', $validationResult['decoded']);
+        // Modifica il body della request per includere il token
+        $parsedBody = is_array($body) ? $body : [];
+        $parsedBody['token'] = $validationResult['decoded'];
+        
+        // Crea una nuova request con il body modificato
+        $request = $request->withParsedBody($parsedBody);
         
         // Process the request and get response
         $response = $handler->handle($request);

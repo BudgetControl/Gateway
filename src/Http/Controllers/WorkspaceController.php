@@ -1,8 +1,6 @@
 <?php
 namespace Budgetcontrol\Gateway\Http\Controllers;
 
-use App\Service\JwtService;
-use Illuminate\Support\Facades\Http;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Illuminate\Support\Facades\Log;
@@ -10,8 +8,16 @@ use Illuminate\Support\Facades\Log;
 class WorkspaceController extends Controller
 {
     private function getUserId(Request $request): int
-    {
-        return $this->userId($request->getAttribute('token')['uuid']);
+    {   
+        $body = $request->getParsedBody();
+        $userUUID = $body['token']['uuid'];
+
+        if (empty($userUUID)) {
+            Log::error('User UUID is empty in request body', ['request' => $request]);
+            throw new \InvalidArgumentException('User UUID is required');
+        }
+
+        return $this->userId($userUUID);
     }
 
 
@@ -52,39 +58,43 @@ class WorkspaceController extends Controller
         return $this->handleApiResponse($apiResponse, 'create');
     }
 
-    public function update(Request $request, Response $response, $id): Response
+    public function update(Request $request, Response $response, $arg): Response
     {
         $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
         $body = $request->getParsedBody();
+        $id = $arg['id'] ?? null;
         $apiResponse = $this->httpClient()->put("$basePath/$userId/update/$id", $body);
         
         return $this->handleApiResponse($apiResponse, 'update');
     }
 
-    public function show(Request $request, Response $response, $id): Response
+    public function show(Request $request, Response $response, $arg): Response
     {
         $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
+        $id = $arg['id'] ?? null;
         $apiResponse = $this->httpClient()->get("$basePath/$userId/$id");
         
         return $this->handleApiResponse($apiResponse, 'show');
     }
 
-    public function activate(Request $request, Response $response, $id): Response
+    public function activate(Request $request, Response $response, $arg): Response
     {
         $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $apiResponse = $this->httpClient()->patch("$basePath/$userId/$id/activate");
+        $id = $arg['id'] ?? null;
+        $apiResponse = $this->httpClient()->patch("$basePath/$userId/$id/activate", $request->getParsedBody());
         
         return $this->handleApiResponse($apiResponse, 'activate');
     }
 
-    public function delete(Request $request, Response $response, $id): Response
+    public function delete(Request $request, Response $response, $arg): Response
     {
         $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
-        $apiResponse = $this->httpClient()->delete("$basePath/$id/delete");
+        $id = $arg['id'] ?? null;
+        $apiResponse = $this->httpClient()->delete("$basePath/$userId/$id/delete");
         
         return $this->handleApiResponse($apiResponse, 'delete');
     }

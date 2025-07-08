@@ -14,12 +14,6 @@ class EntryController extends Controller {
 
     protected string $entryType = "";
 
-    protected function getWorkspaceId(Request $request): int
-    {
-        $body = $request->getParsedBody();
-        return Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-    }
-
     public function list(Request $request, Response $response): Response
     {
         $queryString = new QueryString();
@@ -34,10 +28,11 @@ class EntryController extends Controller {
         return $this->handleApiResponse($apiResponse, 'entry list');
     }
 
-    public function show(Request $request, Response $response, $uuid): Response
+    public function show(Request $request, Response $response, $arg): Response
     {
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['entry'];
+        $uuid = $arg['uuid'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid".$this->entryType."/$uuid");
         
         return $this->handleApiResponse($apiResponse, 'entry show');
@@ -53,20 +48,22 @@ class EntryController extends Controller {
         return $this->handleApiResponse($apiResponse, 'entry create');
     }
 
-    public function update(Request $request, Response $response, $uuid): Response
+    public function update(Request $request, Response $response, $arg): Response
     {
         $body = $request->getParsedBody();
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['entry'];
+        $uuid = $arg['uuid'];
         $apiResponse = $this->httpClient()->put("$basePath/$wsid".$this->entryType."/$uuid", $body);
         
         return $this->handleApiResponse($apiResponse, 'entry update');
     }
 
-    public function delete(Request $request, Response $response, $uuid): Response
+    public function delete(Request $request, Response $response, $arg): Response
     {
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['entry'];
+        $uuid = $arg['uuid'];
         $apiResponse = $this->httpClient()->delete("$basePath/$wsid".$this->entryType."/$uuid");
         
         return $this->handleApiResponse($apiResponse, 'entry delete');

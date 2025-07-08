@@ -8,13 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class DebtController extends Controller {
 
-    private function getWorkspaceId(Request $request): int
-    {
-        $body = $request->getParsedBody();
-        return Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-    }
-
-
     public function payeeList(Request $request, Response $response): Response
     {
         $wsid = $this->getWorkspaceId($request);
@@ -25,10 +18,11 @@ class DebtController extends Controller {
         return $this->handleApiResponse($apiResponse, 'payees list');
     }
 
-    public function deleteDebt(Request $request, Response $response, $uuid): Response
+    public function deleteDebt(Request $request, Response $response, $arg): Response
     {
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['debt'];
+        $uuid = $arg['uuid'];
         $apiResponse = $this->httpClient()->delete("$basePath/$wsid/debt/$uuid");
         
         return $this->handleApiResponse($apiResponse, 'debt delete');

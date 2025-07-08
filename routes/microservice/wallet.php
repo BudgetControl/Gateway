@@ -2,7 +2,6 @@
 $app->group('/api', function ($group) {
 
     //# ########### STATS WalletS ###########
-    $group->get('/wallet/list', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'list']);
     $group->get('/wallet/show/{uuid}', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'show']);
     $group->post('/wallet/create', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'create']);
     $group->put('/wallet/update/{uuid}', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'update']);
@@ -13,3 +12,7 @@ $app->group('/api', function ($group) {
     $group->patch('/wallet/balance/{uuid}', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'balance']);
 
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class);
+
+$app->group('/api', function ($group) {
+    $group->get('/wallet/list', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'list']);
+})->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(15));

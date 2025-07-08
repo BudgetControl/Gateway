@@ -10,12 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class SearchEngine extends Controller
 {
-    private function getWorkspaceId(Request $request): int
-    {
-        $body = $request->getParsedBody();
-        return Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-    }
-
+    
     public function find(Request $request, Response $response): Response
     {
         $wsid = $this->getWorkspaceId($request);

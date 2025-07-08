@@ -14,7 +14,7 @@ class AverangeController extends ChartsController {
 
     public function averageExpenses(Request $request, Response $response): Response
     {
-        $wsid = $this->getWorkspaceId($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/average-expenses");
         
@@ -23,7 +23,7 @@ class AverangeController extends ChartsController {
 
     public function averageIncoming(Request $request, Response $response): Response
     {
-        $wsid = $this->getWorkspaceId($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/average-incoming");
         
@@ -32,7 +32,7 @@ class AverangeController extends ChartsController {
 
     public function averageSavings(Request $request, Response $response): Response
     {
-        $wsid = $this->getWorkspaceId($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/average-savings");
         
@@ -42,7 +42,7 @@ class AverangeController extends ChartsController {
 
     public function totalLoanInstallmentsOfCurrentMonth(Request $request, Response $response): Response
     {
-        $wsid = $this->getWorkspaceId($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/total-loan-installments");
         
@@ -51,7 +51,7 @@ class AverangeController extends ChartsController {
 
     public function totalPlannedRemainingOfCurrentMonth(Request $request, Response $response): Response
     {
-        $wsid = $this->getWorkspaceId($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/total/planned/remaining");
         
@@ -60,7 +60,7 @@ class AverangeController extends ChartsController {
 
     public function totalPlannedMonthly(Request $request, Response $response): Response
     {
-        $wsid = $this->getWorkspaceId($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/total/planned/monthly");
         

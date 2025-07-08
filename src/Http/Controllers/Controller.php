@@ -4,16 +4,17 @@ namespace Budgetcontrol\Gateway\Http\Controllers;
 
 use GuzzleHttp\Client;
 use App\Entities\Param;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
 use InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
-use Budgetcontrol\Library\Model\Model;
-use Budgetcontrol\Gateway\Entities\QueryString;
 use Budgetcontrol\Library\Model\User;
+use Budgetcontrol\Library\Model\Model;
 use Budgetcontrol\Gateway\Facade\Routes;
+use Budgetcontrol\Library\Model\Workspace;
+use Budgetcontrol\Gateway\Entities\QueryString;
 use Budgetcontrol\Gateway\Service\ClientService;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 abstract class Controller
 {
@@ -197,13 +198,30 @@ abstract class Controller
         $data = json_decode($apiResponse->getBody()->getContents(), true);
         $statusCode = $apiResponse->getStatusCode();
 
-        if (!$apiResponse->successful()) {
+        if (!$statusCode || $statusCode < 200 || $statusCode >= 300) {
             Log::error("Error: on $context", ['response' => $data]);
             return response(["message" => "An error occurred"], $statusCode);
         }
 
         return response($data, $statusCode);
     }
+
+    /**
+     * @deprecated This method is deprecated and will be removed in future versions.
+     * Use getWorkspaceUuid instead.
+     */
+    protected function getWorkspaceId(Request $request): int
+    {
+        $body = $request->getParsedBody();
+        return Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
+    }
+
+    protected function getWorkspaceUuid(Request $request): string
+    {
+        $body = $request->getParsedBody();
+        return $body['token']['current_ws'];
+    }
+
 
     
 

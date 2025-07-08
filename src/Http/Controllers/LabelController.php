@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class LabelController extends Controller {
 
-    private function getWorkspaceId(Request $request): int
-    {
-        $body = $request->getParsedBody();
-        return Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
-    }
 
     public function list(Request $request, Response $response): Response
     {

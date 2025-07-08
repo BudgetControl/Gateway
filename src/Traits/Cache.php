@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace Budgetcontrol\Gateway\Traits;
 
-use Illuminate\Support\Facades\Facade;
 use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Support\Facades\Cache as Caching;
 
 trait Cache {
 
-    protected string $cacheKey;
-    protected Repository $cacheManager;
+    protected string $cacheKey = '';
 
     /**
      * Initialize the cache with the given key.
@@ -20,8 +19,6 @@ trait Cache {
     public function initCache(string $key): self
     {
         $this->cacheKey = md5($key);
-        $cache = Facade::getFacadeApplication()->make('cache');
-        $this->cacheManager = $cache->store(env('CACHE_DRIVER', 'file'));
 
         return $this;
     }
@@ -33,7 +30,7 @@ trait Cache {
      */
     public function getCache(): mixed
     {
-        return $this->cacheManager->get($this->cacheKey);
+        return Caching::get($this->cacheKey);
     }
 
     /**
@@ -45,7 +42,7 @@ trait Cache {
      */
     public function setCache(mixed $data, int $minutes = 60): void
     {
-        $this->cacheManager->put($this->cacheKey, $data, $minutes * 60);
+        Caching::put($this->cacheKey, $data, $minutes * 60);
     }
 
     /**
@@ -57,7 +54,7 @@ trait Cache {
      */
     public function forgetCache(): void
     {
-        $this->cacheManager->forget($this->cacheKey);
+        Caching::forget($this->cacheKey);
     }
 
     /**
@@ -67,7 +64,7 @@ trait Cache {
      */
     public function hasCache(): bool
     {
-        return $this->cacheManager->has($this->cacheKey);
+        return Caching::has($this->cacheKey);
     }
 
     /**
@@ -79,7 +76,7 @@ trait Cache {
      */
     public function rememberCache(int $minutes, callable $callback): mixed
     {
-        return $this->cacheManager->remember($this->cacheKey, $minutes, $callback);
+        return Caching::remember($this->cacheKey, $minutes, $callback);
     }
 
     /**
@@ -90,7 +87,7 @@ trait Cache {
      */
     public function rememberForeverCache(callable $callback): mixed
     {
-        return $this->cacheManager->rememberForever($this->cacheKey, $callback);
+        return Caching::rememberForever($this->cacheKey, $callback);
     }
 
     /**

@@ -11,12 +11,6 @@ class ChartsController extends StatsController
 {
     use BuildQuery;
 
-    private function getWsIdFromRequest(Request $request): string
-    {
-        $body = $request->getParsedBody();
-        return $body['token']['current_ws'] ?? '';
-    }
-
     private function buildResponse(Response $response, $apiResponse, string $logContext): Response
     {
         return $this->handleApiResponse($apiResponse, $logContext);
@@ -24,7 +18,7 @@ class ChartsController extends StatsController
 
     public function incomingExpensesLineByDate(Request $request, Response $response): Response
     {
-        $wsid = $this->getWsIdFromRequest($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $query = $this->queryParams($request);
 
@@ -35,7 +29,7 @@ class ChartsController extends StatsController
 
     public function expensesCategoryBarByDate(Request $request, Response $response): Response
     {
-        $wsid = $this->getWsIdFromRequest($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $query = http_build_query($request->getQueryParams());
 
@@ -46,7 +40,7 @@ class ChartsController extends StatsController
 
     public function expensesCategoryTableByDate(Request $request, Response $response): Response
     {
-        $wsid = $this->getWsIdFromRequest($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $query = http_build_query($request->getQueryParams());
 
@@ -57,7 +51,7 @@ class ChartsController extends StatsController
 
     public function expensesLabelBarByDate(Request $request, Response $response): Response
     {
-        $wsid = $this->getWsIdFromRequest($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $query = http_build_query($request->getQueryParams());
 
@@ -68,7 +62,7 @@ class ChartsController extends StatsController
 
     public function incomingCategoryBarByDate(Request $request, Response $response): Response
     {
-        $wsid = $this->getWsIdFromRequest($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $query = http_build_query($request->getQueryParams());
 
@@ -79,7 +73,7 @@ class ChartsController extends StatsController
 
     public function incomingCategoryTableByDate(Request $request, Response $response): Response
     {
-        $wsid = $this->getWsIdFromRequest($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $query = http_build_query($request->getQueryParams());
 
@@ -90,7 +84,7 @@ class ChartsController extends StatsController
 
     public function expensesLabelApplePieByDate(Request $request, Response $response): Response
     {
-        $wsid = $this->getWsIdFromRequest($request);
+        $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
         $query = http_build_query($request->getQueryParams());
 
