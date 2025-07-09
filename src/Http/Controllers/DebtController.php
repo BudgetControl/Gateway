@@ -1,6 +1,7 @@
 <?php
 namespace Budgetcontrol\Gateway\Http\Controllers;
 
+use Budgetcontrol\Gateway\Traits\BuildQuery;
 use Budgetcontrol\Library\Model\Workspace;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -8,12 +9,14 @@ use Illuminate\Support\Facades\Log;
 
 class DebtController extends Controller {
 
+    use BuildQuery;
+
     public function payeeList(Request $request, Response $response): Response
     {
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['debt'];
-        $queryParams = $request->getQueryParams();
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/payees?".http_build_query($queryParams));
+        $queryParams = $this->queryParams($request);
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/payees", $queryParams);
         
         return $this->handleApiResponse($apiResponse, 'payees list');
     }

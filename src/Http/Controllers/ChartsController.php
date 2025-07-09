@@ -22,7 +22,7 @@ class ChartsController extends StatsController
         $basePath = $this->routes['stats'];
         $query = $this->queryParams($request);
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/line/incoming-expenses$query");
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/line/incoming-expenses", $query);
 
         return $this->handleApiResponse($apiResponse, 'incoming expenses line by date', $response);
     }
@@ -31,9 +31,9 @@ class ChartsController extends StatsController
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $query = http_build_query($request->getQueryParams());
+        $query = $this->queryParams($request);
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/bar/expenses/category?$query");
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/bar/expenses/category", $query);
 
         return $this->handleApiResponse($apiResponse, 'expenses category bar by date', $response);
     }
@@ -42,9 +42,9 @@ class ChartsController extends StatsController
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $query = http_build_query($request->getQueryParams());
+        $query = $this->queryParams($request);
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/table/expenses/category?$query");
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/table/expenses/category", $query);
 
         return $this->buildResponse($response, $apiResponse, 'expenses category table by date');
     }
@@ -53,9 +53,9 @@ class ChartsController extends StatsController
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $query = http_build_query($request->getQueryParams());
+        $query = $this->queryParams($request);
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/bar/expenses/label?$query");
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/bar/expenses/label", $query);
 
         return $this->buildResponse($response, $apiResponse, 'expenses label bar by date');
     }
@@ -64,9 +64,9 @@ class ChartsController extends StatsController
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $query = http_build_query($request->getQueryParams());
+        $query = $this->queryParams($request);
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/bar/incoming/category?$query");
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/bar/incoming/category", $query);
 
         return $this->buildResponse($response, $apiResponse, 'incoming category bar by date');
     }
@@ -75,9 +75,9 @@ class ChartsController extends StatsController
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $query = http_build_query($request->getQueryParams());
+        $query = $this->queryParams($request);
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/table/incoming/category?$query");
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/table/incoming/category", $query);
 
         return $this->buildResponse($response, $apiResponse, 'incoming category table by date');
     }
@@ -86,9 +86,9 @@ class ChartsController extends StatsController
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $query = http_build_query($request->getQueryParams());
+        $query = $this->queryParams($request);
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/apple-pie/expenses/label?$query");
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/chart/apple-pie/expenses/label", $query);
 
         return $this->buildResponse($response, $apiResponse, 'expenses label apple pie by date');
     }

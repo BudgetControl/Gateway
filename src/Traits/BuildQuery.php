@@ -11,10 +11,11 @@ trait BuildQuery {
 
     abstract protected function getQueryParams(Request $request, QueryString &$queryString, string $index = null): void;
 
-    public function queryParams(Request $request): string
+    public function queryParams(Request $request): array
     {
         $queryString = new QueryString();
         $this->getQueryParams($request, $queryString);
-        return $queryString->__toString();
+        return $queryString->getParams();
     }
+
 }

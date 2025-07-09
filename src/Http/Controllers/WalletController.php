@@ -1,6 +1,7 @@
 <?php
 namespace Budgetcontrol\Gateway\Http\Controllers;
 
+use Budgetcontrol\Gateway\Traits\BuildQuery;
 use Budgetcontrol\Library\Model\Workspace;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -8,14 +9,15 @@ use Illuminate\Support\Facades\Log;
 
 class WalletController extends Controller {
 
+    use BuildQuery;
 
     public function list(Request $request, Response $response): Response
     {
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['wallet'];
-        $queryParams = $request->getQueryParams();
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/list?".http_build_query($queryParams));
-        
+        $queryParams = $this->queryParams($request);
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/list", $queryParams);
+
         return $this->handleApiResponse($apiResponse, 'list');
     }
 

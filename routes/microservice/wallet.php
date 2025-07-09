@@ -15,4 +15,6 @@ $app->group('/api', function ($group) {
 
 $app->group('/api', function ($group) {
     $group->get('/wallet/list', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'list']);
-})->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(15));
+})
+->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class)
+->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(15));

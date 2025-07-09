@@ -18,14 +18,14 @@ class SavingController extends EntryController {
     {
         $queryString = new QueryString();
         $this->getQueryParams($request, $queryString);
-        $httpBuildQuery = $queryString->__toString();
+        $httpBuildQuery = $queryString->getParams();
 
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['entry'];
         $goalUuid = $arg['uuid'];
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/$goalUuid".$this->entryType.$httpBuildQuery);
-        
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/$goalUuid".$this->entryType, $httpBuildQuery);
+
         return $this->handleApiResponse($apiResponse, 'saving list', $response);
     }
 }

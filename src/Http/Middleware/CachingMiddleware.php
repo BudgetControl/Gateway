@@ -59,11 +59,12 @@ class CachingMiddleware implements MiddlewareInterface
         $uri = $request->getUri();
         $fullUrl = $uri->__toString();
         $bodyParams = $request->getParsedBody() ?? [];
+        $enviroment = env('APP_ENV', 'production');
         
         $wsHeaders = $request->getHeader('X-WS');
         $wsUuid = !empty($wsHeaders) ? $wsHeaders[0] : '';
 
-        return md5($fullUrl . json_encode($bodyParams) . $wsUuid);
+        return md5($fullUrl . json_encode($bodyParams) . $wsUuid . $enviroment);
     }
 
     /**

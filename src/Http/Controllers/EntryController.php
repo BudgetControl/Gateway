@@ -18,12 +18,12 @@ class EntryController extends Controller {
     {
         $queryString = new QueryString();
         $this->getQueryParams($request, $queryString);
-        $httpBuildQuery = $queryString->__toString();
+        $httpBuildQuery = $queryString->getParams();
 
         $wsid = $this->getWorkspaceId($request);
         $basePath = $this->routes['entry'];
 
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid".$this->entryType.$httpBuildQuery);
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid".$this->entryType, $httpBuildQuery);
         
         return $this->handleApiResponse($apiResponse, 'entry list');
     }

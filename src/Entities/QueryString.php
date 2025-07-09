@@ -40,7 +40,7 @@ class QueryString {
      */
     public function __toString()
     {
-        $queryParams = $this->removeParamsByenv($this->params);           
+        $queryParams = $this->removeParamsByenv($this->params);
         return  "?" . http_build_query($queryParams);
     }
 
@@ -130,6 +130,6 @@ class QueryString {
      */
     public function getParams(): array
     {
-        return $this->params;
+        return $this->removeParamsByenv($this->params);
     }
 }

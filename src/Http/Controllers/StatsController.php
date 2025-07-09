@@ -1,6 +1,7 @@
 <?php
 namespace Budgetcontrol\Gateway\Http\Controllers;
 
+use Budgetcontrol\Gateway\Traits\BuildQuery;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Illuminate\Support\Facades\Http;
@@ -8,11 +9,13 @@ use Illuminate\Support\Facades\Log;
 
 class StatsController extends Controller {
 
+    use BuildQuery;
+    
     public function incoming(Request $request, Response $response): Response
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/incoming?".$request->getQueryParams());
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/incoming", $this->queryParams($request));
         
         return $this->handleApiResponse($apiResponse, 'incoming');
     }
@@ -21,7 +24,7 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/expenses?".$request->getQueryParams());
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/expenses", $this->queryParams($request));
         
         return $this->handleApiResponse($apiResponse, 'expenses');
     }
@@ -30,7 +33,7 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/debits?".$request->getQueryParams());
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/debits", $this->queryParams($request));
         
         return $this->handleApiResponse($apiResponse, 'debits');
     }
@@ -39,8 +42,8 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/debits/total-negative");
-        
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/debits/total-negative", $this->queryParams($request));
+
         return $this->handleApiResponse($apiResponse, 'debits total negative');
     }
 
@@ -48,8 +51,8 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/debits/total-positive");
-        
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/debits/total-positive", $this->queryParams($request));
+
         return $this->handleApiResponse($apiResponse, 'debits total positive');
     }
 
@@ -57,8 +60,8 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/total?".$request->getQueryParams());
-        
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/total", $this->queryParams($request));
+
         return $this->handleApiResponse($apiResponse, 'total');
     }
 
@@ -66,8 +69,8 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/wallets");
-        
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/wallets", $this->queryParams($request));
+
         return $this->handleApiResponse($apiResponse, 'wallets');
     }
 
@@ -75,8 +78,8 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/health");
-        
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/health", $this->queryParams($request));
+
         return $this->handleApiResponse($apiResponse, 'health');
     }
 
@@ -84,8 +87,8 @@ class StatsController extends Controller {
     {
         $wsid = $this->getWorkspaceUuid($request);
         $basePath = $this->routes['stats'];
-        $apiResponse = $this->httpClient()->get("$basePath/$wsid/planned?".$request->getQueryParams());
-        
+        $apiResponse = $this->httpClient()->get("$basePath/$wsid/planned", $this->queryParams($request));
+
         return $this->handleApiResponse($apiResponse, 'total planned');
     }
 

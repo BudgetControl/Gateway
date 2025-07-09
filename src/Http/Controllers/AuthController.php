@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\Log;
 use Budgetcontrol\Library\Model\User;
 use BudgetcontrolLibs\Crypt\Traits\Crypt;
 use Budgetcontrol\Gateway\Service\JwtService;
+use Budgetcontrol\Gateway\Traits\BuildQuery;
 
 class AuthController extends Controller
 {
-    use Crypt;
+    use Crypt, BuildQuery;
 
     public function check(Request $request, Response $response): Response
     {   
@@ -204,7 +205,7 @@ class AuthController extends Controller
             $deviceOnQuery = 'ios';
         }
 
-        $queryParams = $request->getQueryParams();
+        $queryParams = $this->queryParams($request);
         if($queryParams['code'] === null) {
             Log::info('Error: code is required');
             return response(['message' => 'Code is required'], 400);
@@ -215,8 +216,7 @@ class AuthController extends Controller
             'device' => $deviceOnQuery
         ];
 
-        $queryString = http_build_query($newQueryParams);
-        $response = $this->httpClient()->get("$basePath/authenticate/token/$provider?$queryString");
+        $response = $this->httpClient()->get("$basePath/authenticate/token/$provider", $newQueryParams);
         $jsonData = json_decode($response->getBody()->getContents(), true);
 
         if ($response->getStatusCode() !== 200) {
