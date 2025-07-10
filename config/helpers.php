@@ -44,13 +44,14 @@ if(!function_exists('cache_tags_mapping')) {
     function cache_tags_mapping(): array {
         return [
                 'budget' => ['stats', 'entry'],
-                'entry' => ['stats', 'budget', 'wallet'],
+                'entry' => ['stats', 'budget', 'wallet', 'find'],
                 'wallet' => ['stats'],
                 'label' => ['entry','stats'],
                 'goals' => ['stats'],
                 'debt' => ['stats', 'entry', 'wallet'],
                 'payees' => ['stats', 'entry', 'debt', 'wallet'],
                 'workspace' => [],
+                'find' => [],
                 'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace']
             ];
     }
