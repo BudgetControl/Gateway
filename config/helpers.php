@@ -46,10 +46,11 @@ if(!function_exists('cache_tags_mapping')) {
                 'budget' => ['stats', 'entry'],
                 'entry' => ['stats', 'budget', 'wallet'],
                 'wallet' => ['stats'],
-                'label' => ['entry'],
+                'label' => ['entry','stats'],
                 'goals' => ['stats'],
-                'debt' => ['stats', 'entry'],
-                'workspace' => ['budget', 'entry', 'stats'],
+                'debt' => ['stats', 'entry', 'wallet'],
+                'payees' => ['stats', 'entry', 'debt', 'wallet'],
+                'workspace' => [],
                 'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace']
             ];
     }

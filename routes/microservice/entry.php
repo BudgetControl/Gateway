@@ -26,7 +26,7 @@ $app->group('/api', function ($group) {
     $group->get('/entry', [\Budgetcontrol\Gateway\Http\Controllers\EntryController::class, 'list']);
 })
 ->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class)
-->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(5));
+->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(900));
 
 $app->group('/api', function($group) {
 
