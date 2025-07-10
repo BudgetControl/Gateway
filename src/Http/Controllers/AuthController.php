@@ -168,18 +168,19 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
 
         //check if is an mobile phone
-        $queryParam = '';
+        $queryParam = [];
         if($this->isAndroid($request)) {
             Log::debug('Mobile phone detected');
-            $queryParam = '?device=android';
+            $queryParam['device'] = 'android';
         }
 
         if($this->isIos($request)) {
             Log::debug('Mobile phone detected');
-            $queryParam = '?device=ios';
+            $queryParam['device'] = 'ios';
         }
 
-        $response = $this->httpClient()->get("$basePath/authenticate/$provider$queryParam");
+
+        $response = $this->httpClient()->get("$basePath/authenticate/$provider", $queryParam);
         $jsonData = json_decode($response->getBody()->getContents(), true);
         if ($response->getStatusCode() !== 200) {
             Log::error('Error: on authenticate provider '.$provider, ['response' => $jsonData]);
