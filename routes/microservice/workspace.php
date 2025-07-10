@@ -5,7 +5,8 @@ $app->group('/api', function ($group) {
     $group->put('/workspace/update/{id}', [\Budgetcontrol\Gateway\Http\Controllers\WorkspaceController::class, 'update']);
     $group->patch('/workspace/activate/{id}', [\Budgetcontrol\Gateway\Http\Controllers\WorkspaceController::class, 'activate']);
     $group->delete('/workspace/delete/{id}', [\Budgetcontrol\Gateway\Http\Controllers\WorkspaceController::class, 'delete']);
-})->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class);
+})->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class)
+->add(\Budgetcontrol\Gateway\Http\Middleware\CacheInvalidationMiddleware::class);
 
 
 $app->group('/api', function ($group) {

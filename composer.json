@@ -51,7 +51,8 @@
         "firebase/php-jwt": "^6.11",
         "malirobot/aws-cognito": "^1.0",
         "budgetcontrol/cryptable": "^0.1.0",
-        "illuminate/cache": "^11.45"
+        "illuminate/cache": "^11.45",
+        "predis/predis": "^3.0"
     },
     "require-dev": {
         "nikic/php-parser": "^5.0",

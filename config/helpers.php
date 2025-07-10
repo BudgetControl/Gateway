@@ -40,4 +40,17 @@ if(!function_exists('cacheKey_refreshToken')) {
     }
 }
 
-// More functions...
+if(!function_exists('cache_tags_mapping')) {
+    function cache_tags_mapping(): array {
+        return [
+                'budget' => ['stats', 'entry'],
+                'entry' => ['stats', 'budget', 'wallet'],
+                'wallet' => ['stats'],
+                'label' => ['entry'],
+                'goals' => ['stats'],
+                'debt' => ['stats', 'entry'],
+                'workspace' => ['budget', 'entry', 'stats'],
+                'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace']
+            ];
+    }
+}

@@ -20,7 +20,7 @@ class RedisCache implements \Illuminate\Contracts\Redis\Factory
             ],
         ];
 
-        return new Predis\Client([
+        return new \Predis\Client([
             'scheme' => env('CACHE_REDIS_SCHEME', 'tcp'),
             'host'   => env('CACHE_REDIS_HOST', '127.0.0.1'),
             'port'   => env('CACHE_REDIS_PORT', 6379),

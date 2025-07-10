@@ -52,6 +52,11 @@ class AuthMiddleware implements MiddlewareInterface
         
         // Process the request and get response
         $response = $handler->handle($request);
+
+        // Handle preflight OPTIONS requests
+        if ($request->getMethod() === 'OPTIONS') {
+            return $response->withStatus(200);
+        }
         
         // Add authorization header to response
         return $response->withHeader('Authorization', 'Bearer ' . $validationResult['validToken']);

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache as Caching;
 trait Cache {
 
     protected string $cacheKey = '';
+    protected array $cacheTags = ['default'];
 
     /**
      * Initialize the cache with the given key.
@@ -16,10 +17,10 @@ trait Cache {
      * @param string $key The key to initialize the cache with.
      * @return self Returns the instance of the class for method chaining.
      */
-    public function initCache(string $key): self
+    public function initCache(string $key, array $tags = []): self
     {
         $this->cacheKey = md5($key);
-
+        $this->cacheTags = $tags;
         return $this;
     }
 
@@ -30,7 +31,7 @@ trait Cache {
      */
     public function getCache(): mixed
     {
-        return Caching::get($this->cacheKey);
+        return Caching::tags($this->cacheTags)->get($this->cacheKey);
     }
 
     /**
@@ -38,11 +39,11 @@ trait Cache {
      *
      * @param mixed $data The data to be cached.
      * @param int $minutes The duration in minutes for which the data should be cached. Default is 60 minutes.
-     * @return void
+     * @return void 
      */
     public function setCache(mixed $data, int $minutes = 60): void
     {
-        Caching::put($this->cacheKey, $data, $minutes * 60);
+        Caching::tags($this->cacheTags)->put($this->cacheKey, $data, $minutes * 60);
     }
 
     /**
@@ -54,7 +55,7 @@ trait Cache {
      */
     public function forgetCache(): void
     {
-        Caching::forget($this->cacheKey);
+        Caching::tags($this->cacheTags)->forget($this->cacheKey);
     }
 
     /**
@@ -64,7 +65,7 @@ trait Cache {
      */
     public function hasCache(): bool
     {
-        return Caching::has($this->cacheKey);
+        return Caching::tags($this->cacheTags)->has($this->cacheKey);
     }
 
     /**
@@ -76,7 +77,7 @@ trait Cache {
      */
     public function rememberCache(int $minutes, callable $callback): mixed
     {
-        return Caching::remember($this->cacheKey, $minutes, $callback);
+        return Caching::tags($this->cacheTags)->remember($this->cacheKey, $minutes, $callback);
     }
 
     /**
@@ -87,7 +88,7 @@ trait Cache {
      */
     public function rememberForeverCache(callable $callback): mixed
     {
-        return Caching::rememberForever($this->cacheKey, $callback);
+        return Caching::tags($this->cacheTags)->rememberForever($this->cacheKey, $callback);
     }
 
     /**
@@ -98,6 +99,47 @@ trait Cache {
     public function getCacheKey(): string
     {
         return $this->cacheKey;
+    }
+
+    /**
+     * Deletes the cache.
+     * 
+     * This method is responsible for clearing or removing cached data.
+     * 
+     * @return void
+     */
+    public function deleteCache(): void
+    {
+        Caching::tags($this->cacheTags)->delete($this->cacheKey);
+    }
+
+     /**
+     * Clears the cache.
+     * 
+     * This method is responsible for removing all cached data.
+     * 
+     * @return void
+     */
+    public function clearCache(): void
+    {
+        Caching::tags($this->cacheTags)->flush();
+    }
+
+    public function destroyCache(): void
+    {
+        Caching::flush();
+    }
+
+    /**
+     * Sets the cache tags for the current operation.
+     *
+     * @param array $tags The tags to be associated with the cached item
+     * @return self Returns the current instance for method chaining
+     */
+    public function cacheTags(array $tags): self
+    {
+        $this->cacheTags = $tags;
+        return $this;
     }
 
 

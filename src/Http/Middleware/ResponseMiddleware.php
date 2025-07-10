@@ -50,6 +50,7 @@ class ResponseMiddleware implements MiddlewareInterface
             'headers' => $response->getHeaders()
         ]));
 
+
         return $response;
     }
 }
