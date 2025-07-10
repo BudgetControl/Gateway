@@ -15,7 +15,7 @@ class ClientService
     {   
         $secret = env('API_SECRET', 'default-secret');
         $this->httpClient = new Client([
-            'base_uri' => env('API_BASE_URL', 'http://localhost:8000'),
+            'base_uri' => env('API_BASE_URL', ''),
             'headers' => [
                 'X-API-SECRET' => $secret,
                 'X-LOG-LEVEL' => env('LOG_LEVEL', 'info'),
