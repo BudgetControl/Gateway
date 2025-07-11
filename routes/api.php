@@ -46,4 +46,5 @@ require_once __DIR__ . '/microservice/goals.php';
 
 
 $app->get('/api/monitor/{ms}', [\Budgetcontrol\Gateway\Http\Controllers\BaseController::class, 'monitor']);
-$app->get('/webhook/clear-cache/{pattern}', [\Budgetcontrol\Gateway\Http\Controllers\Webhook\CacheController::class, 'invalidateCache']);
+$app->get('/webhook/clear-cache/all', [\Budgetcontrol\Gateway\Http\Controllers\Webhook\CacheController::class, 'invalidateCacheAll']);
+$app->get('/webhook/clear-cache/{workspaceUuid}/{pattern}', [\Budgetcontrol\Gateway\Http\Controllers\Webhook\CacheController::class, 'invalidateCache']);

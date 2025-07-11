@@ -26,6 +26,7 @@ class CacheController extends \Budgetcontrol\Gateway\Http\Controllers\Controller
 
         // Recupera il pattern dalla query string
         $pattern = $arg['pattern'];
+        $workspaceUuid = $arg['workspaceUuid'];
         $cacheTags = cache_tags_mapping();
 
         if(!array_key_exists($pattern, $cacheTags)) {
@@ -34,7 +35,7 @@ class CacheController extends \Budgetcontrol\Gateway\Http\Controllers\Controller
         }
 
         try {
-            $this->cacheTags($cacheTags[$pattern])->clearCache();
+            $this->cacheTags([$workspaceUuid => $cacheTags[$pattern]])->clearCache();
         } catch (\Exception $e) {
             Log::error('Error clearing cache: ' . $e->getMessage());
             return response(['message' => 'Internal Server Error'], 500);
@@ -46,5 +47,32 @@ class CacheController extends \Budgetcontrol\Gateway\Http\Controllers\Controller
             'message' => "Cache cleared for pattern: $pattern"
         ]);
 
+    }
+
+    /**
+     * Invalidates all cached items.
+     *
+     * This method handles the request to invalidate the entire cache system.
+     * It allows for clearing all cached data across the application.
+     *
+     * @param Request $request The HTTP request instance
+     * @param Response $response The HTTP response instance
+     * @return Response Returns the HTTP response after cache invalidation
+     */
+    public function invalidateCacheAll(Request $request, Response $response): Response
+    {
+        // Verifica del token
+        $secret = env('WEBHOOK_SECRET');
+        if($secret && $request->getHeaderLine('X-Webhook-Secret') !== $secret) {
+            Log::warning('Invalid webhook secret');
+            return response(['message' => 'Forbidden'], 403); 
+        }
+
+        $this->destroyCache();
+
+        return response([
+            'status' => 'success',
+            'message' => "Cache cleared for all patterns"
+        ]);
     }
 }

@@ -24,8 +24,6 @@ class CacheInvalidationMiddleware implements MiddlewareInterface
     public function process(Request $request, RequestHandler $handler): Response
     {
 
-        
-
         $method = $request->getMethod();
         
         // Processa prima la richiesta
@@ -38,9 +36,12 @@ class CacheInvalidationMiddleware implements MiddlewareInterface
             
             Log::info('Invalidazione cache per ' . $path . ' dopo richiesta ' . $method);
             
+            $wsHeaders = $request->getHeader('X-WS');
+            $wsUuid = !empty($wsHeaders) ? $wsHeaders[0] : '';
+            
             // Invalida la cache in base al percorso
             try {
-            $this->invalidateCacheForPath($path);
+                $this->invalidateCacheForPath($path, $wsUuid);
             } catch (Throwable $e) {
                 Log::warning("Something went wrong on clear cache " . $e->getMessage());
             }
@@ -55,7 +56,7 @@ class CacheInvalidationMiddleware implements MiddlewareInterface
      * 
      * @param string $path
      */
-    protected function invalidateCacheForPath(string $path): void
+    protected function invalidateCacheForPath(string $path, string $workspaceUuid): void
     {
         // Estrai la risorsa dal percorso
         $segments = explode('/', trim($path, '/'));
@@ -73,7 +74,7 @@ class CacheInvalidationMiddleware implements MiddlewareInterface
                 }
             }
 
-            $this->cacheTags($cacheTags)->clearCache();
+            $this->cacheTags([$workspaceUuid => $cacheTags])->clearCache();
         }
     }
 }

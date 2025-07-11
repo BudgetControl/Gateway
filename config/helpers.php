@@ -52,7 +52,9 @@ if(!function_exists('cache_tags_mapping')) {
                 'payees' => ['stats', 'entry', 'debt', 'wallet'],
                 'workspace' => [],
                 'find' => [],
-                'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace']
+                'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace'],
+                'all' => ['stats', 'budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace', 'find'],
+                'auth' => ['stats', 'workspace', 'find'],
             ];
     }
 }

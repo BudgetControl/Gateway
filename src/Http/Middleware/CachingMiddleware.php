@@ -49,6 +49,12 @@ class CachingMiddleware implements MiddlewareInterface
 
         try {
 
+            $wsHeaders = $request->getHeader('X-WS');
+            $wsUuid = !empty($wsHeaders) ? $wsHeaders[0] : '';
+            $cacheTags = [
+                $wsUuid => $cacheTags,
+            ];
+
             $this->initCache($key, $cacheTags ?? ['default']);
 
             if ($this->hasCache()) {
