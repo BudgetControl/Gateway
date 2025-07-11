@@ -21,6 +21,11 @@ trait Cache {
     {
         $this->cacheKey = md5($key);
         $this->cacheTags = $tags;
+
+        if(env('CACHE_DRIVER', null) === null) {
+            throw new \Exception('Cache driver is not set in the environment configuration.');
+        }
+
         return $this;
     }
 

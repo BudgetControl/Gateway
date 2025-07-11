@@ -5,10 +5,10 @@
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Headers', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
-        ->withHeader('Access-Control-Allow-Credentials', 'true');
+        ->withHeader('Access-Control-Allow-Origin', env('CORS_ALLOW_ORIGIN', '*'))
+        ->withHeader('Access-Control-Allow-Headers', env('CORS_ALLOW_HEADERS', '*'))
+        ->withHeader('Access-Control-Allow-Methods', env('CORS_ALLOW_METHODS', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'))
+        ->withHeader('Access-Control-Allow-Credentials', env('CORS_ALLOW_CREDENTIALS', 'true'));
 });
 
 // Handle OPTIONS requests
@@ -46,3 +46,4 @@ require_once __DIR__ . '/microservice/goals.php';
 
 
 $app->get('/api/monitor/{ms}','\Budgetcontrol\Gateway\Http\Controllers\BaseController@monitor');
+$app->get('/webhook/clear-cache/{pattern}', '\Budgetcontrol\Gateway\Http\Controllers\Webhook\CacheController@invalidateCache');

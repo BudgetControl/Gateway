@@ -38,31 +38,32 @@ class CachingMiddleware implements MiddlewareInterface
 
         // Mappa delle dipendenze tra risorse
         $dependencies = cache_tags_mapping();
-        
+
         // Invalida anche le cache correlate
         if (isset($dependencies[$resource])) {
             foreach ($dependencies[$resource] as $dependent) {
                 $cacheTags[] = $dependent;
             }
         }
-
-        $this->initCache($key, $cacheTags ?? ['default']);
-
-        if ($this->hasCache()) {
-            Log::debug('From cache: ' . $this->getCacheKey());
-            return $this->createCacheResponse($this->getCache());
-        }
-
         $response = $handler->handle($request);
 
-        if ($this->isSuccessfulResponse($response)) {
-            $responseBody = (string)$response->getBody();
+        try {
 
-            try {
-                $this->setCache($responseBody, $this->ttl);
-            } catch (Throwable $e) {
-                Log::warning("Something went wrong on saving cache " . $e->getMessage());
+            $this->initCache($key, $cacheTags ?? ['default']);
+
+            if ($this->hasCache()) {
+                Log::debug('From cache: ' . $this->getCacheKey());
+                return $this->createCacheResponse($this->getCache());
             }
+
+
+            if ($this->isSuccessfulResponse($response)) {
+                $responseBody = (string)$response->getBody();
+
+                $this->setCache($responseBody, $this->ttl);
+            }
+        } catch (Throwable $e) {
+            Log::warning("Something went wrong on saving cache " . $e->getMessage());
         }
 
         return $response;
