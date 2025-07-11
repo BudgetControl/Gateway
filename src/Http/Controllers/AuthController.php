@@ -99,9 +99,16 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function confirmToken(Request $request, $token)
+    public function confirmToken(Request $request, Response $response, $arg)
     {
         $basePath = $this->routes['auth'];
+        $token = $arg['token'];
+
+        if (!$token) {
+            Log::error('Error: confirm token is required');
+            return response(['message' => 'Token is required'], 400);
+        }
+
         $response = $this->httpClient()->get("$basePath/confirm/$token");
         $jsonData = json_decode($response->getBody()->getContents(), true);
         if ($response->getStatusCode() !== 200) {
@@ -137,9 +144,15 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function resetPassword(Request $request, $token)
+    public function resetPassword(Request $request, Response $response, $arg)
     {
         $basePath = $this->routes['auth'];
+        $token = $arg['token'];
+        if (!$token) {
+            Log::error('Error: reset password token is required');
+            return response(['message' => 'Token is required'], 400);
+        }
+
         $response = $this->httpClient()->put("$basePath/reset-password/$token", $request->getParsedBody());
         $jsonData = json_decode($response->getBody()->getContents(), true);
         if ($response->getStatusCode() !== 200) {
@@ -163,10 +176,10 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function authenticateProvider(Request $request, $provider)
+    public function authenticateProvider(Request $request, Response $response, $arg)
     {
         $basePath = $this->routes['auth'];
-
+        $provider = $arg['provider'];
         //check if is an mobile phone
         $queryParam = [];
         if($this->isAndroid($request)) {
@@ -190,9 +203,10 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function providerToken(Request $request, $provider)
+    public function providerToken(Request $request, Response $response, $arg)
     {
         $basePath = $this->routes['auth'];
+        $provider = $arg['provider'];
 
         //check if is an mobile phone
         $deviceOnQuery = '';
@@ -254,10 +268,10 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function getUserInfoByEmail(Request $request, $uuid)
+    public function getUserInfoByEmail(Request $request, Response $response, $arg)
     {
         $basePath = $this->routes['auth'];
-        $response = $this->httpClient()->get("$basePath/user-info/by-email/$uuid");
+        $response = $this->httpClient()->get("$basePath/user-info/by-email/{$arg['uuid']}");
         $jsonData = json_decode($response->getBody()->getContents(), true);
         if ($response->getStatusCode() !== 200) {
             Log::error('Error: on get user info by email ', ['response' => $jsonData]);
@@ -274,9 +288,10 @@ class AuthController extends Controller
      * @param string $userUuid The UUID of the user.
      * @return \Illuminate\Http\Response The HTTP response.
      */
-    public function finalizeSignUp(Request $request, Response $response, string $userUuid): Response { 
+    public function finalizeSignUp(Request $request, Response $response, string $arg): Response { 
 
         $token = $this->getBearerToken($request);
+        $userUuid = $arg['userUuid'];
         $userId = $this->userId($userUuid);
 
         if($this->checkIfUserIsLogged($userId, $token) === false) {
@@ -338,9 +353,11 @@ class AuthController extends Controller
      * @return bool Returns true if the user is logged in, false otherwise.
      */
 
-    protected function checkIfUserIsLogged(int $userId, string $bearerToken): bool 
+    protected function checkIfUserIsLogged(int $userId, Response $response, string $arg): bool 
     {
         $this->key = env('APP_KEY', null);
+        $bearerToken = $arg['bearerToken'];
+
         try {
             $user = User::findOrFail($userId);
             $validToken = AwsCognito::validateAuthToken($bearerToken, $user->sub);
