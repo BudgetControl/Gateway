@@ -44,9 +44,10 @@ abstract class Controller
      * @param string $ms The microservice to monitor.
      * @return Response The response to the request.
      */
-    public function monitor(Request $request, Response $response, $ms): Response
+    public function monitor(Request $request, Response $response, $arg): Response
     {
         $client = new Client();
+        $ms = $arg['ms'];
         $path = $this->routes[$ms];
 
         try {
