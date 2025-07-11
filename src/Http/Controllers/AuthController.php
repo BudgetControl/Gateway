@@ -353,11 +353,9 @@ class AuthController extends Controller
      * @return bool Returns true if the user is logged in, false otherwise.
      */
 
-    protected function checkIfUserIsLogged(int $userId, Response $response, string $arg): bool 
+    protected function checkIfUserIsLogged(int $userId, string $bearerToken): bool 
     {
         $this->key = env('APP_KEY', null);
-        $bearerToken = $arg['bearerToken'];
-
         try {
             $user = User::findOrFail($userId);
             $validToken = AwsCognito::validateAuthToken($bearerToken, $user->sub);
