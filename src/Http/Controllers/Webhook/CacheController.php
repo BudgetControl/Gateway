@@ -28,7 +28,7 @@ class CacheController extends \Budgetcontrol\Gateway\Http\Controllers\Controller
         $pattern = $arg['pattern'];
         $cacheTags = cache_tags_mapping();
 
-        if(!in_array($pattern, $cacheTags)) {
+        if(!array_key_exists($pattern, $cacheTags)) {
             Log::warning("Invalid cache pattern: $pattern");
             return response(['message' => 'Invalid cache pattern'], 400);
         }
