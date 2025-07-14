@@ -288,7 +288,7 @@ class AuthController extends Controller
      * @param string $userUuid The UUID of the user.
      * @return \Illuminate\Http\Response The HTTP response.
      */
-    public function finalizeSignUp(Request $request, Response $response, string $arg): Response { 
+    public function finalizeSignUp(Request $request, Response $response, array $arg): Response { 
 
         $token = $this->getBearerToken($request);
         $userUuid = $arg['userUuid'];
