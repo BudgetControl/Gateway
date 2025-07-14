@@ -303,7 +303,7 @@ class AuthController extends Controller
         //first create the workspace
         $basePathWorkspace = $this->routes['workspace'];
         $workspaceResponse = $this->httpClient()->post("$basePathWorkspace/$userId/add", $payLoad['workspace']);
-        $data = $workspaceResponse->getBody()->getContents();
+        $data = json_decode($workspaceResponse->getBody()->getContents(), true);
         $workspaceUuid = $data['workspace']['uuid'];
         $workspaceID = $data['workspace']['id'];
 
@@ -316,7 +316,7 @@ class AuthController extends Controller
         //then create the user wallet
         $basePathWallet = $this->routes['wallet'];
         $walletResponse = $this->httpClient()->post("$basePathWallet/$workspaceID/create", $payLoad['wallet']);
-        $data = $walletResponse->getBody()->getContents();
+        $data = json_decode($walletResponse->getBody()->getContents(), true);
 
         //return the user info
         $basePathAuth = $this->routes['auth'];
