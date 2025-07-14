@@ -43,18 +43,18 @@ if(!function_exists('cacheKey_refreshToken')) {
 if(!function_exists('cache_tags_mapping')) {
     function cache_tags_mapping(): array {
         return [
-                'budget' => ['stats', 'entry'],
-                'entry' => ['stats', 'budget', 'wallet', 'find'],
-                'wallet' => ['stats'],
-                'label' => ['entry','stats'],
-                'goals' => ['stats'],
-                'debt' => ['stats', 'entry', 'wallet'],
-                'payees' => ['stats', 'entry', 'debt', 'wallet'],
-                'workspace' => [],
-                'find' => [],
-                'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace'],
+                'budget' => ['stats', 'entry', 'budget'],
+                'entry' => ['stats', 'budget', 'wallet', 'find', 'entry'],
+                'wallet' => ['stats', 'wallet'],
+                'label' => ['entry','stats', 'label'],
+                'goals' => ['stats', 'goals'],
+                'debt' => ['stats', 'entry', 'wallet', 'debt'],
+                'payees' => ['stats', 'entry', 'debt', 'wallet', 'payees'],
+                'workspace' => ['workspace'],
+                'find' => ['find'],
+                'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace','stats', 'find'],
                 'all' => ['stats', 'budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace', 'find'],
-                'auth' => ['stats', 'workspace', 'find'],
+                'auth' => ['stats', 'workspace', 'find', 'auth'],
             ];
     }
 }
