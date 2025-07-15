@@ -43,6 +43,7 @@ require_once __DIR__ . '/microservice/debt.php';
 require_once __DIR__ . '/microservice/label.php';
 require_once __DIR__ . '/microservice/core.php';
 require_once __DIR__ . '/microservice/goals.php';
+require_once __DIR__ . '/microservice/notification.php';
 
 
 $app->get('/api/monitor/{ms}', [\Budgetcontrol\Gateway\Http\Controllers\BaseController::class, 'monitor']);
