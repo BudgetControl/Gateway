@@ -2,10 +2,10 @@
 
 $app->group('/api', function ($group) {
 
-    $group->post('/notify/email/contact', ['\BudgetControl\Notifications\Http\Controller\NotificationController', 'sendEmail']);
-    $group->post('/notify/email/auth/recovery-password', ['\BudgetControl\Notifications\Http\Controller\NotificationController', 'recoveryPassword']);
-    $group->post('/notify/email/auth/sign-up', ['\BudgetControl\Notifications\Http\Controller\NotificationController', 'signUp']);
-    $group->post('/notify/email/budget/exceeded', ['\BudgetControl\Notifications\Http\Controller\NotificationController', 'budgetExceeded']);
-    $group->post('/notify/email/workspace/share', ['\BudgetControl\Notifications\Http\Controller\NotificationController', 'workspaceShare']);
+    $group->post('/notify/email/contact', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'sendEmail']);
+    $group->post('/notify/email/auth/recovery-password', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'recoveryPassword']);
+    $group->post('/notify/email/auth/sign-up', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'signUp']);
+    $group->post('/notify/email/budget/exceeded', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'budgetExceeded']);
+    $group->post('/notify/email/workspace/share', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'workspaceShare']);
 
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class);
