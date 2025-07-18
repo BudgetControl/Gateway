@@ -313,11 +313,6 @@ class AuthController extends Controller
             return $response->withStatus($workspaceResponse->getStatusCode())->withHeader('Content-Type', 'application/json');
         }
 
-        //then create the user wallet
-        $basePathWallet = $this->routes['wallet'];
-        $walletResponse = $this->httpClient()->post("$basePathWallet/$workspaceID/create", $payLoad['wallet']);
-        $data = json_decode($walletResponse->getBody()->getContents(), true);
-
         //return the user info
         $basePathAuth = $this->routes['auth'];
         $apiResponse = $this->httpClient()->withToken($token)->withHeader('X-WS',$workspaceUuid)
