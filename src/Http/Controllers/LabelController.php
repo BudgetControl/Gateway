@@ -24,9 +24,10 @@ class LabelController extends Controller {
         return $this->handleApiResponse($apiResponse, 'list');
     }
 
-    public function update(Request $request, Response $response, string $label_id): Response
+    public function update(Request $request, Response $response, $arg): Response
     {
         $wsid = $this->getWorkspaceId($request);
+        $label_id = $arg['label_id'];
         $basePath = $this->routes['label'];
         $body = $request->getParsedBody();
         $apiResponse = $this->httpClient()->put("$basePath/$wsid/$label_id", $body);
@@ -34,9 +35,10 @@ class LabelController extends Controller {
         return $this->handleApiResponse($apiResponse, 'update');
     }
 
-    public function insert(Request $request, Response $response, string $label_id): Response
+    public function insert(Request $request, Response $response, $arg): Response
     {
         $body = $request->getParsedBody();
+        $label_id = $arg['label_id'];
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['label'];
         $apiResponse = $this->httpClient()->post("$basePath/$wsid/$label_id", $body);
@@ -44,9 +46,10 @@ class LabelController extends Controller {
         return $this->handleApiResponse($apiResponse, 'insert');
     }
 
-    public function show(Request $request, Response $response, string $label_id): Response
+    public function show(Request $request, Response $response, $arg): Response
     {
         $body = $request->getParsedBody();
+        $label_id = $arg['label_id'];
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['label'];
         $apiResponse = $this->httpClient()->get("$basePath/$wsid/$label_id");
@@ -54,9 +57,10 @@ class LabelController extends Controller {
         return $this->handleApiResponse($apiResponse, 'show');
     }
 
-    public function patch(Request $request, Response $response, string $label_id): Response
+    public function patch(Request $request, Response $response, $arg): Response
     {
         $body = $request->getParsedBody();
+        $label_id = $arg['label_id'];
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['label'];
         $apiResponse = $this->httpClient()->patch("$basePath/$wsid/$label_id", $body);
@@ -64,9 +68,10 @@ class LabelController extends Controller {
         return $this->handleApiResponse($apiResponse, 'patch');
     }
 
-    public function delete(Request $request, Response $response, string $label_id): Response
+    public function delete(Request $request, Response $response, $arg): Response
     {
         $wsid = $this->getWorkspaceId($request);
+        $label_id = $arg['label_id'];
         $basePath = $this->routes['label'];
         $apiResponse = $this->httpClient()->delete("$basePath/$wsid/$label_id");
         
