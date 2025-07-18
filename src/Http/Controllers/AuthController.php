@@ -302,7 +302,7 @@ class AuthController extends Controller
         $payLoad = $request->getParsedBody();
         //first create the workspace
         $basePathWorkspace = $this->routes['workspace'];
-        $workspaceResponse = $this->httpClient()->post("$basePathWorkspace/$userId/add", $payLoad['workspace']);
+        $workspaceResponse = $this->httpClient()->post("$basePathWorkspace/$userId/add", $payLoad);
         $data = json_decode($workspaceResponse->getBody()->getContents(), true);
         $workspaceUuid = $data['workspace']['uuid'];
         $workspaceID = $data['workspace']['id'];
