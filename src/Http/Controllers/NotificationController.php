@@ -97,10 +97,8 @@ class NotificationController extends Controller {
     public function lastMessage(Request $request, Response $response): Response
     {
         try {
-            $data = $request->getParsedBody();
             
-            $httpResponse = $this->httpClient()->post($this->notificationServiceUrl . '/notify/message/last', $data);
-            
+            $httpResponse = $this->httpClient()->get($this->notificationServiceUrl . '/notify/message/last');
             return $this->handleApiResponse($httpResponse, 'lastMessage notification');
                 
         } catch (\Exception $e) {
