@@ -8,4 +8,7 @@ $app->group('/api', function ($group) {
     $group->post('/notify/email/budget/exceeded', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'budgetExceeded']);
     $group->post('/notify/email/workspace/share', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'workspaceShare']);
 
+    $group->post('/notify/message/last', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'lastMessage']);
+
+
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class);

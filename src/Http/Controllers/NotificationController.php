@@ -93,4 +93,19 @@ class NotificationController extends Controller {
             return response(['error' => 'Internal server error'], 500);
         }
     }
+
+    public function lastMessage(Request $request, Response $response): Response
+    {
+        try {
+            $data = $request->getParsedBody();
+            
+            $httpResponse = $this->httpClient()->post($this->notificationServiceUrl . '/notify/message/last', $data);
+            
+            return $this->handleApiResponse($httpResponse, 'lastMessage notification');
+                
+        } catch (\Exception $e) {
+            Log::error('Error retrieving last message notification', ['error' => $e->getMessage()]);
+            return response(['error' => 'Internal server error'], 500);
+        }
+    }
 }
