@@ -8,7 +8,6 @@ $app->group('/api', function ($group) {
     $group->post('/notify/email/budget/exceeded', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'budgetExceeded']);
     $group->post('/notify/email/workspace/share', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'workspaceShare']);
 
-    $group->get('/notify/message/last', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'lastMessage'])->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(3600));
-
+    $group->post('/notify/save/token', ['\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class', 'saveToken']);
 
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class);

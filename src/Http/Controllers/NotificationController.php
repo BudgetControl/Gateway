@@ -94,15 +94,21 @@ class NotificationController extends Controller {
         }
     }
 
-    public function lastMessage(Request $request, Response $response): Response
+    public function saveToken(Request $request, Response $response): Response
     {
         try {
-            
-            $httpResponse = $this->httpClient()->get($this->notificationServiceUrl . '/notify/message/last');
-            return $this->handleApiResponse($httpResponse, 'lastMessage notification');
-                
+            $data = $request->getParsedBody();
+            $data['user_uuid'] = $this->getUserUuid($request);
+            $data['user_agent'] = $request->getHeaderLine('User-Agent');
+
+            if(empty($data['token']) || empty($data['user_uuid'])) {
+                return response(['error' => 'Token and user UUID are required'], 400);
+            }
+
+            $httpResponse = $this->httpClient()->post($this->notificationServiceUrl . '/notify/save/token', $data);
+            return $this->handleApiResponse($httpResponse, 'saveToken');
         } catch (\Exception $e) {
-            Log::error('Error retrieving last message notification', ['error' => $e->getMessage()]);
+            Log::error('Error saving token', ['error' => $e->getMessage()]);
             return response(['error' => 'Internal server error'], 500);
         }
     }
