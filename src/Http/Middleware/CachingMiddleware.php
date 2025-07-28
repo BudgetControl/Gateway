@@ -39,6 +39,7 @@ class CachingMiddleware implements MiddlewareInterface
         // Mappa delle dipendenze tra risorse
         $dependencies = cache_tags_mapping();
 
+        $cacheTags = [];
         // Invalida anche le cache correlate
         if (isset($dependencies[$resource])) {
             foreach ($dependencies[$resource] as $dependent) {
