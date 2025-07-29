@@ -14,6 +14,7 @@ use Slim\Psr7\Factory\StreamFactory;
 
 class AuthMiddleware implements MiddlewareInterface
 {
+    const RESERVED_PARAMS = ['token'];
     /**
      * Process an incoming server request.
      *
@@ -26,6 +27,8 @@ class AuthMiddleware implements MiddlewareInterface
         $uri = $request->getUri();
         $headers = $request->getHeaders();
         $body = $request->getParsedBody();
+
+        $this->validation($body);
         
         Log::debug('Request: ' . $uri->__toString());
         Log::debug('Headers: ' . json_encode($headers));
@@ -114,5 +117,19 @@ class AuthMiddleware implements MiddlewareInterface
         $response = new SlimResponse(401);
         $response->getBody()->write(json_encode($data));
         return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * Validates the provided request body.
+     *
+     * @param array $body The request body to validate.
+     * @throws ValidationException If the validation fails.
+     */
+    private function validation(array $body): void {
+        foreach ($body as $key => $value) {
+            if (in_array($key, self::RESERVED_PARAMS)) {
+                throw new \InvalidArgumentException("The parameter '$key' is reserved and cannot be used.");
+            }
+        }
     }
 }
