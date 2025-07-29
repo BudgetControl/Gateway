@@ -98,14 +98,16 @@ class NotificationController extends Controller {
     {
         try {
             $data = $request->getParsedBody();
-            $data['user_uuid'] = $this->getUserUuid($request);
-            $data['user_agent'] = $request->getHeaderLine('User-Agent');
 
             if(empty($data['token']) || empty($data['user_uuid'])) {
                 return response(['error' => 'Token and user UUID are required'], 400);
             }
 
-            $httpResponse = $this->httpClient()->post($this->notificationServiceUrl . '/notify/save/token', $data);
+            $payload['token'] = $data['token'];
+            $payload['user_uuid'] = $this->getUserUuid($request);
+            $payload['user_agent'] = $request->getHeaderLine('User-Agent');
+
+            $httpResponse = $this->httpClient()->post($this->notificationServiceUrl . '/notify/save/token', $payload);
             return $this->handleApiResponse($httpResponse, 'saveToken');
         } catch (\Exception $e) {
             Log::error('Error saving token', ['error' => $e->getMessage()]);
