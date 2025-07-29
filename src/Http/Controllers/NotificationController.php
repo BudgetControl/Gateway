@@ -99,8 +99,8 @@ class NotificationController extends Controller {
         try {
             $data = $request->getParsedBody();
 
-            if(empty($data['firebase_token']) || empty($data['user_uuid'])) {
-                return response(['error' => 'Token and user UUID are required'], 400);
+            if(empty($data['firebase_token'])) {
+                return response(['error' => 'Token is required'], 400);
             }
 
             $payload['token'] = $data['firebase_token'];
