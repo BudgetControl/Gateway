@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller {
 
-    private string $notificationServiceUrl;
+    protected string $notificationServiceUrl;
 
     public function __construct()
     {
@@ -94,15 +94,23 @@ class NotificationController extends Controller {
         }
     }
 
-    public function lastMessage(Request $request, Response $response): Response
+    public function saveToken(Request $request, Response $response): Response
     {
         try {
-            
-            $httpResponse = $this->httpClient()->get($this->notificationServiceUrl . '/notify/message/last');
-            return $this->handleApiResponse($httpResponse, 'lastMessage notification');
-                
+            $data = $request->getParsedBody();
+
+            if(empty($data['firebase_token'])) {
+                return response(['error' => 'Token is required'], 400);
+            }
+
+            $payload['token'] = $data['firebase_token'];
+            $payload['user_uuid'] = $this->getUserUuid($request);
+            $payload['user_agent'] = $request->getHeaderLine('User-Agent');
+
+            $httpResponse = $this->httpClient()->post($this->notificationServiceUrl . '/notify/save/token', $payload);
+            return $this->handleApiResponse($httpResponse, 'saveToken');
         } catch (\Exception $e) {
-            Log::error('Error retrieving last message notification', ['error' => $e->getMessage()]);
+            Log::error('Error saving token', ['error' => $e->getMessage()]);
             return response(['error' => 'Internal server error'], 500);
         }
     }

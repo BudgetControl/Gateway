@@ -223,6 +223,12 @@ abstract class Controller
         return $body['token']['current_ws'];
     }
 
+    protected function getUserUuid(Request $request): string
+    {
+        $body = $request->getParsedBody();
+        return $body['token']['uuid'];
+    }
+
 
     
 
