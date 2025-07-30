@@ -125,7 +125,7 @@ class AuthMiddleware implements MiddlewareInterface
      * @param array $body The request body to validate.
      * @throws ValidationException If the validation fails.
      */
-    private function validation(array $body): void {
+    private function validation(?array $body = null): void {
         if ($body !== null) {
             foreach ($body as $key => $value) {
                 if (in_array($key, self::RESERVED_PARAMS)) {
