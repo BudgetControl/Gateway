@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller {
 
-    private string $notificationServiceUrl;
+    protected string $notificationServiceUrl;
 
     public function __construct()
     {

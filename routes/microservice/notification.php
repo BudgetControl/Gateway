@@ -11,3 +11,10 @@ $app->group('/api', function ($group) {
     $group->post('/notify/save/token', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'saveToken']);
 
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class);
+
+$app->group('/api/bo', function ($group) {
+
+    $group->post('/notify/push/send', [\Budgetcontrol\Gateway\Http\Controllers\Bo\NotificationOfficeController::class, 'snedPush']);
+    $group->post('/notify/email/send', [\Budgetcontrol\Gateway\Http\Controllers\Bo\NotificationOfficeController::class, 'sendEmailAdmin']);
+
+})->add(\Budgetcontrol\Gateway\Http\Middleware\AuthAdminMiddleware::class);
