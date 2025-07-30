@@ -126,9 +126,11 @@ class AuthMiddleware implements MiddlewareInterface
      * @throws ValidationException If the validation fails.
      */
     private function validation(array $body): void {
-        foreach ($body as $key => $value) {
-            if (in_array($key, self::RESERVED_PARAMS)) {
-                throw new \InvalidArgumentException("The parameter '$key' is reserved and cannot be used.");
+        if ($body !== null) {
+            foreach ($body as $key => $value) {
+                if (in_array($key, self::RESERVED_PARAMS)) {
+                    throw new \InvalidArgumentException("The parameter '$key' is reserved and cannot be used.");
+                }
             }
         }
     }
