@@ -98,4 +98,44 @@ class WorkspaceController extends Controller
         
         return $this->handleApiResponse($apiResponse, 'delete');
     }
+
+    public function unshare(Request $request, Response $response, $arg): Response
+    {
+        $userId = $this->getUserId($request);
+        $basePath = $this->routes['workspace'];
+        $wsId = $arg['wsId'] ?? null;
+        $userUuid = $arg['userUuid'] ?? null;
+
+        if (empty($wsId) || empty($userUuid)) {
+            Log::error('Workspace ID or User UUID is missing', ['wsId' => $wsId, 'userUuid' => $userUuid]);
+            throw new \InvalidArgumentException('Workspace ID and User UUID are required');
+        }
+
+        $apiResponse = $this->httpClient()->delete("$basePath/$userId/$wsId/unshare/$userUuid");
+        
+        return $this->handleApiResponse($apiResponse, 'unshare');
+    }
+
+    public function share(Request $request, Response $response, $arg): Response
+    {
+        $userId = $this->getUserId($request);
+        $basePath = $this->routes['workspace'];
+        $wsId = $arg['wsId'] ?? null;
+
+        $body = $request->getParsedBody();
+        if (empty($body['user_to_share'])) {
+            Log::error('User to share is missing in request body', ['request' => $request]);
+            throw new \InvalidArgumentException('User UUID is required');
+        }
+
+        if (empty($wsId)) {
+            Log::error('Workspace ID is missing', ['wsId' => $wsId]);
+            throw new \InvalidArgumentException('Workspace ID is required');
+        }
+
+        $body = $request->getParsedBody();
+        $apiResponse = $this->httpClient()->post("$basePath/$userId/$wsId/share", $body);
+        
+        return $this->handleApiResponse($apiResponse, 'share');
+    }
 }
