@@ -27,10 +27,6 @@ class AuthCognitoService
      */
     public function validateAuthToken(string $token, string $subId): string|bool
     {
-        $cacheKey = cacheKey_refreshToken($subId);
-        $refreshToken = Cache::get($cacheKey);
-        Log::debug('Current refresh token: ' . $refreshToken);
-
         try {
             Log::debug('Validating token ' . $token);
             $this->cognitoClient->verifyAccessToken($token);
@@ -38,6 +34,8 @@ class AuthCognitoService
 
             Log::debug("Getting user name ". $subId);
             $cacheKey = cacheKey_refreshToken($subId);
+            Log::debug('Getting refresh token in cache with key: ' . $cacheKey);
+
             $refreshToken = Cache::get($cacheKey);
             if (!$refreshToken) {
                 Log::warning('Refresh token not found in cache');
