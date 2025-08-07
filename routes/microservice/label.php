@@ -11,7 +11,7 @@ $app->group('/api', function ($group) {
 
 $app->group('/api', function($group) {
     $group->put('/label/{label_id}', [\Budgetcontrol\Gateway\Http\Controllers\LabelController::class, 'update']);
-    $group->post('/label/{label_id}', [\Budgetcontrol\Gateway\Http\Controllers\LabelController::class, 'insert']);
+    $group->post('/label', [\Budgetcontrol\Gateway\Http\Controllers\LabelController::class, 'insert']);
     $group->patch('/label/{label_id}', [\Budgetcontrol\Gateway\Http\Controllers\LabelController::class, 'patch']);
     $group->delete('/label/{label_id}', [\Budgetcontrol\Gateway\Http\Controllers\LabelController::class, 'delete']);
 })
