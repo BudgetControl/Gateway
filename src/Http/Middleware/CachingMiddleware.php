@@ -43,18 +43,7 @@ class CachingMiddleware implements MiddlewareInterface
         $segments = explode('/', trim($request->getUri()->getPath(), '/'));
         $resource = $segments[1]; // es. 'budget', 'entry', ecc.
 
-        // Mappa delle dipendenze tra risorse
-        $dependencies = cache_tags_mapping();
-
-        $cacheTags = [];
-        // Invalida anche le cache correlate
-        if (isset($dependencies[$resource])) {
-            foreach ($dependencies[$resource] as $dependent) {
-                $cacheTags[] = $dependent;
-            }
-        }
         $response = $handler->handle($request);
-
         if($response->getStatusCode() >= 400) {
             return $response;
         }
@@ -63,9 +52,9 @@ class CachingMiddleware implements MiddlewareInterface
 
             $wsHeaders = $request->getHeader('X-WS');
             $wsUuid = !empty($wsHeaders) ? $wsHeaders[0] : uniqid('ws_');
-            $cacheTags = array_merge($cacheTags, [$resource, $wsUuid]);
-
-            $this->initCache($key, $cacheTags ?? ['default']);
+            // Mappa delle dipendenze tra risorse
+            $cacheTags = cache_tags_mapping($wsUuid, $resource);
+            $this->initCache($key, $cacheTags);
 
             if ($this->hasCache()) {
                 Log::debug('From cache: ' . $this->getCacheKey());

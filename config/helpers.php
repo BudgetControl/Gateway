@@ -47,9 +47,9 @@ if (!function_exists('cacheKey_refreshToken')) {
 }
 
 if (!function_exists('cache_tags_mapping')) {
-    function cache_tags_mapping(): array
+    function cache_tags_mapping(string $uuid, string $tagRef): array
     {
-        return [
+        $tags = [
             'budget' => ['stats', 'entry', 'budget'],
             'budgets' => ['stats', 'entry', 'budget'],
             'entry' => ['stats', 'budget', 'wallet', 'find', 'entry'],
@@ -64,6 +64,11 @@ if (!function_exists('cache_tags_mapping')) {
             'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace', 'stats', 'find'],
             'all' => ['stats', 'budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace', 'find'],
             'auth' => ['stats', 'workspace', 'find', 'auth'],
+        ];
+
+        $tag = $tags[$tagRef] ?? [];
+        return [
+            $uuid => $tag,
         ];
     }
 }

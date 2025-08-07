@@ -27,7 +27,7 @@ class CacheController extends \Budgetcontrol\Gateway\Http\Controllers\Controller
         // Recupera il pattern dalla query string
         $pattern = $arg['pattern'];
         $workspaceUuid = $arg['workspaceUuid'];
-        $cacheTags = cache_tags_mapping();
+        $cacheTags = cache_tags_mapping($arg['workspaceUuid'], $pattern);
 
         if(!array_key_exists($pattern, $cacheTags)) {
             Log::warning("Invalid cache pattern: $pattern");
@@ -35,7 +35,7 @@ class CacheController extends \Budgetcontrol\Gateway\Http\Controllers\Controller
         }
 
         try {
-            $this->cacheTags([$workspaceUuid => $cacheTags[$pattern]])->clearCache();
+            $this->cacheTags($cacheTags)->clearCache();
         } catch (\Exception $e) {
             Log::error('Error clearing cache: ' . $e->getMessage());
             return response(['message' => 'Internal Server Error'], 500);

@@ -64,22 +64,12 @@ class CacheInvalidationMiddleware implements MiddlewareInterface
             $resource = $segments[1]; // es. 'budget', 'entry', ecc.
 
             // Mappa delle dipendenze tra risorse
-            $dependencies = cache_tags_mapping();
-
-            // Invalida anche le cache correlate
-            if (isset($dependencies[$resource])) {
-                foreach ($dependencies[$resource] as $dependent) {
-                    $cacheTags[] = $dependent;
-                }
-            }
-
             try {
-                $cacheTags = array_merge($cacheTags, [$resource, $workspaceUuid]);
+                $cacheTags = cache_tags_mapping($workspaceUuid, $resource);
                 $this->cacheTags($cacheTags)->clearCache();
             } catch (Throwable $e) {
                 Log::warning("Something went wrong on clear cache " . $e->getMessage());
             }
-            
         }
     }
 }
