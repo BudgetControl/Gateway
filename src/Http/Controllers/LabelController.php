@@ -41,7 +41,7 @@ class LabelController extends Controller {
         $label_id = $arg['label_id'];
         $wsid = Workspace::where('uuid', $body['token']['current_ws'])->first()->id;
         $basePath = $this->routes['label'];
-        $apiResponse = $this->httpClient()->post("$basePath/$wsid/$label_id", $body);
+        $apiResponse = $this->httpClient()->post("$basePath/$wsid/insert", $body);
 
         return $this->handleApiResponse($apiResponse, 'insert');
     }
