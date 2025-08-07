@@ -46,12 +46,12 @@ abstract class Controller
      */
     public function monitor(Request $request, Response $response, $arg): Response
     {
-        $client = new Client();
         $ms = $arg['ms'];
         $path = $this->routes[$ms];
 
         try {
-            $client->request('GET', $path . "/monitor");
+            $apiResponse = $this->httpClient()->get("$path/monitor");
+            return $this->handleApiResponse($response, 'monitoring ' . $ms, $apiResponse);
         } catch (\Exception $e) {
             Log::error('Error while calling the API', ['error' => $e->getMessage()]);
             $response->getBody()->write(json_encode(['message' => 'Something went wrong '. $e->getCode()]));
