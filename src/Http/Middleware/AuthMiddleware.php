@@ -43,7 +43,7 @@ class AuthMiddleware implements MiddlewareInterface
         // Validate request
         $validationResult = $this->validateRequest($token, $authToken);
         if ($validationResult['error']) {
-            return $this->createUnauthorizedResponse(['error' => 'Unauthorized']);
+            return $this->createUnauthorizedResponse(['error' => 'Unauthorized on gateway']);
         }
 
         // Modifica il body della request per includere il token
@@ -116,6 +116,7 @@ class AuthMiddleware implements MiddlewareInterface
     {
         $response = new SlimResponse(401);
         $response->getBody()->write(json_encode($data));
+        Log::info('Unauthorized request', ['data' => $data]);
         return $response->withHeader('Content-Type', 'application/json');
     }
 
