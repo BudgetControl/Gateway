@@ -33,6 +33,13 @@ class CachingMiddleware implements MiddlewareInterface
     {
 
         $key = $this->key($request);
+        
+        // Se non c'è un workspace ID valido, procedi senza cache
+        if ($key === null) {
+            Log::warning('No valid workspace ID found, proceeding without cache');
+            return $handler->handle($request);
+        }
+        
         $segments = explode('/', trim($request->getUri()->getPath(), '/'));
         $resource = $segments[1]; // es. 'budget', 'entry', ecc.
 
@@ -48,13 +55,15 @@ class CachingMiddleware implements MiddlewareInterface
         }
         $response = $handler->handle($request);
 
+        if($response->getStatusCode() >= 400) {
+            return $response;
+        }
+
         try {
 
             $wsHeaders = $request->getHeader('X-WS');
             $wsUuid = !empty($wsHeaders) ? $wsHeaders[0] : uniqid('ws_');
-            $cacheTags = [
-                $wsUuid => $cacheTags,
-            ];
+            $cacheTags = array_merge($cacheTags, [$resource, $wsUuid]);
 
             $this->initCache($key, $cacheTags ?? ['default']);
 
@@ -80,17 +89,23 @@ class CachingMiddleware implements MiddlewareInterface
      * Generate a unique cache key based on the given request.
      *
      * @param Request $request The HTTP request object.
-     * @return string The generated cache key.
+     * @return string|null The generated cache key or null if workspace is missing.
      */
-    private function key(Request $request): string
+    private function key(Request $request): ?string
     {
+        $wsHeaders = $request->getHeader('X-WS');
+        
+        // Se non c'è workspace ID, restituisci null per non usare la cache
+        if (empty($wsHeaders)) {
+            Log::warning('X-WS header not found, skipping cache');
+            return null;
+        }
+        
+        $wsUuid = $wsHeaders[0];
         $uri = $request->getUri();
         $fullUrl = $uri->__toString();
         $bodyParams = $request->getParsedBody() ?? [];
         $enviroment = env('APP_ENV', 'production');
-
-        $wsHeaders = $request->getHeader('X-WS');
-        $wsUuid = !empty($wsHeaders) ? $wsHeaders[0] : '';
 
         return md5($fullUrl . json_encode($bodyParams) . $wsUuid . $enviroment);
     }

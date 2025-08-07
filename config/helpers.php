@@ -51,6 +51,7 @@ if (!function_exists('cache_tags_mapping')) {
     {
         return [
             'budget' => ['stats', 'entry', 'budget'],
+            'budgets' => ['stats', 'entry', 'budget'],
             'entry' => ['stats', 'budget', 'wallet', 'find', 'entry'],
             'wallet' => ['stats', 'wallet'],
             'label' => ['entry', 'stats', 'label'],

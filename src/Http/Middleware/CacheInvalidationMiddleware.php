@@ -74,7 +74,8 @@ class CacheInvalidationMiddleware implements MiddlewareInterface
             }
 
             try {
-                $this->cacheTags([$workspaceUuid => $cacheTags])->clearCache();
+                $cacheTags = array_merge($cacheTags, [$resource, $workspaceUuid]);
+                $this->cacheTags($cacheTags)->clearCache();
             } catch (Throwable $e) {
                 Log::warning("Something went wrong on clear cache " . $e->getMessage());
             }
