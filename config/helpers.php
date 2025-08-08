@@ -66,9 +66,7 @@ if (!function_exists('cache_tags_mapping')) {
             'auth' => ['stats', 'workspace', 'find', 'auth'],
         ];
 
-        $tag = $tags[$tagRef] ?? [];
-        return [
-            $uuid => $tag,
-        ];
+        return array_key_exists($tagRef, $tags) ? array_map(fn($tag) => "$uuid:$tag", $tags[$tagRef]) : [];
+
     }
 }
