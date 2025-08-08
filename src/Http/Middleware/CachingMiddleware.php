@@ -14,7 +14,7 @@ use Throwable;
 class CachingMiddleware implements MiddlewareInterface
 {
     use Cache;
-    private int $ttl;
+    private ?int $ttl;
 
     public function __construct(?int $ttl = null)
     {
