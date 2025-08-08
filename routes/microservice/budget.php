@@ -13,7 +13,7 @@ $group->get('/budget/{uuid}/entry-list', [\Budgetcontrol\Gateway\Http\Controller
 
 })
 ->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class)
-->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(900));
+->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware());
 
 
 $app->group('/api', function($group) {

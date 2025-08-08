@@ -50,20 +50,20 @@ if (!function_exists('cache_tags_mapping')) {
     function cache_tags_mapping(string $uuid, string $tagRef): array
     {
         $tags = [
-            'budget' => ['stats', 'entry', 'budget'],
-            'budgets' => ['stats', 'entry', 'budget'],
-            'entry' => ['stats', 'budget', 'wallet', 'find', 'entry'],
+            'budget' => ['stats', 'entry', 'budget', 'budgets'],
+            'budgets' => ['stats', 'entry', 'budget', 'budgets'],
+            'entry' => ['stats', 'budget', 'wallet', 'find', 'entry','budgets','payees'],
             'wallet' => ['stats', 'wallet'],
             'label' => ['entry', 'stats', 'label'],
             'goals' => ['stats', 'goals'],
-            'debt' => ['stats', 'entry', 'wallet', 'debt', 'debts'],
-            'debts' => ['stats', 'entry', 'wallet', 'debt', 'debts'],
-            'payees' => ['stats', 'entry', 'debt', 'wallet', 'payees'],
+            'debt' => ['stats', 'entry', 'wallet', 'debt', 'debits','payees'],
+            'debits' => ['stats', 'entry', 'wallet', 'debt', 'debits','payees'],
+            'payees' => ['stats', 'entry', 'debt', 'wallet', 'payees','debits'],
             'workspace' => ['workspace'],
             'find' => ['find'],
-            'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace', 'stats', 'find'],
-            'all' => ['stats', 'budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace', 'find'],
-            'auth' => ['stats', 'workspace', 'find', 'auth'],
+            'stats' => ['budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'stats', 'find', 'debits', 'payees'],
+            'all' => ['stats', 'budget', 'entry', 'wallet', 'label', 'goals', 'debt', 'workspace', 'find', 'debits', 'payees','budgets', 'auth'],
+            'auth' => ['auth'],
         ];
 
         return array_key_exists($tagRef, $tags) ? array_map(fn($tag) => "$uuid:$tag", $tags[$tagRef]) : [];

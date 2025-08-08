@@ -36,6 +36,6 @@ $app->group('/api', function ($group) {
     $group->get('/stats/debits/total-positive', [\Budgetcontrol\Gateway\Http\Controllers\StatsController::class, 'debitsTotalPositive']);
 })
 ->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class)
-->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(350));
+->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware());
 
 

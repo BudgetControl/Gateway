@@ -6,7 +6,7 @@ $app->group('/api', function ($group) {
     $group->get('/label/{label_id}', [\Budgetcontrol\Gateway\Http\Controllers\LabelController::class, 'show']);
 
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class)
-->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(900));
+->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware());
 
 
 $app->group('/api', function($group) {

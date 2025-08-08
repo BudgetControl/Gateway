@@ -14,12 +14,11 @@ use Throwable;
 class CachingMiddleware implements MiddlewareInterface
 {
     use Cache;
-
     private int $ttl;
 
     public function __construct(?int $ttl = null)
     {
-        $this->ttl = $ttl ?? (int)($_ENV['CACHE_TTL'] ?? 3600); // Default to 1 hour if not set
+        $this->ttl = $ttl;
     }
 
     /**

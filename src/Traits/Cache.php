@@ -43,12 +43,12 @@ trait Cache {
      * Set the cache with the given data for a specified duration.
      *
      * @param mixed $data The data to be cached.
-     * @param int $minutes The duration in minutes for which the data should be cached. Default is 60 minutes.
-     * @return void 
+     * @param ?int $seconds The duration in seconds for which the data should be cached. Default is 60 seconds.
+     * @return void
      */
-    public function setCache(mixed $data, int $minutes = 60): void
+    public function setCache(mixed $data, ?int $seconds = NULL): void
     {
-        Caching::tags($this->cacheTags)->put($this->cacheKey, $data, $minutes * 60);
+        Caching::tags($this->cacheTags)->put($this->cacheKey, $data, $seconds);
     }
 
     /**

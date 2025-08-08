@@ -18,4 +18,4 @@ $app->group('/api', function ($group) {
     $group->get('/wallet/list', [\Budgetcontrol\Gateway\Http\Controllers\WalletController::class, 'list']);
 })
 ->add(\Budgetcontrol\Gateway\Http\Middleware\AuthMiddleware::class)
-->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware(3600));
+->add(new \Budgetcontrol\Gateway\Http\Middleware\CachingMiddleware());
