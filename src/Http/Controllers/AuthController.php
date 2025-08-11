@@ -130,7 +130,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        $response = $this->storeTokenInCahce($jsonData);
+        $this->storeTokenInCahce($jsonData);
 
         return $response;
     }
