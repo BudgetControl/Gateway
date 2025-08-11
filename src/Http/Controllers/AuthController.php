@@ -361,6 +361,7 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['username']);
         Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
+        Log::debug('Storing refresh token in cache with key: ' . $cacheKey);
 
         //remove the refresh token from the body of the response
         unset($payload['refresh_token']);
