@@ -96,7 +96,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $this->handleApiResponse($response, 'sign up');
+        return $response;
     }
 
     public function confirmToken(Request $request, Response $response, $arg)
@@ -116,7 +116,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $this->handleApiResponse($response, 'sign up');
+        return $response;
     }
 
     public function authenticate(Request $request)
@@ -131,7 +131,7 @@ class AuthController extends Controller
 
         $response = $this->storeTokenInCahce($jsonData);
 
-        return $this->handleApiResponse($response, 'authenticate');
+        return $response;
     }
 
     public function resetPassword(Request $request, Response $response, $arg)
@@ -150,7 +150,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $this->handleApiResponse($response, 'reset password');
+        return $response;
     }
 
     public function sendVerifyEmail(Request $request)
@@ -163,7 +163,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $this->handleApiResponse($response, 'verify email');
+        return $response;
     }
 
     public function authenticateProvider(Request $request, Response $response, $arg)
@@ -191,7 +191,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $this->handleApiResponse($response, 'sign up');
+        return $response;
     }
 
     public function providerToken(Request $request, Response $response, $arg)
@@ -232,7 +232,7 @@ class AuthController extends Controller
 
         $response = $this->storeTokenInCahce($jsonData);
 
-        return $this->handleApiResponse($response, 'sign up');
+        return $response;
     }
 
     public function sendResetPasswordMail(Request $request)
@@ -246,7 +246,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $this->handleApiResponse($response, 'reset password');
+        return $response;
     }
 
     public function getUserInfoByEmail(Request $request, Response $response, $arg)
@@ -259,7 +259,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred']);
         }
 
-        return $this->handleApiResponse($response, 'get user info by email');
+        return $response;
     }
 
     /**
@@ -361,7 +361,6 @@ class AuthController extends Controller
         $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
         $cacheKey = cacheKey_refreshToken($decodedAccessToken['username']);
         Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
-        Log::debug('Storing refresh token in cache with key: ' . $cacheKey);
 
         //remove the refresh token from the body of the response
         unset($payload['refresh_token']);
