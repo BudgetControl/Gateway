@@ -25,10 +25,11 @@ class ClientService
         ]);
     }
 
-    public function post(string $uri, array $data): ResponseInterface
+    public function post(string $uri, array $data, array $queryParams = []): ResponseInterface
     {
         return $this->invoke($uri, 'POST', [
-            'json' => $data
+            'json' => $data,
+            'query' => $queryParams
         ]);
     }
 
