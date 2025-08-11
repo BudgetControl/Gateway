@@ -96,7 +96,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $response;
+        return $this->handleApiResponse($response, 'sign up');
     }
 
     public function confirmToken(Request $request, Response $response, $arg)
@@ -116,7 +116,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $response;
+        return $this->handleApiResponse($response, 'sign up');
     }
 
     public function authenticate(Request $request)
@@ -129,20 +129,9 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        // get refresh token from body response
-        $refreshToken = $jsonData['refresh_token'];
-        $accessToken = $jsonData['token'];
+        $response = $this->storeTokenInCahce($jsonData);
 
-        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
-
-        $cacheKey = cacheKey_refreshToken($decodedAccessToken['username']);
-        Log::debug('Setting refresh token in cache with key: ' . $cacheKey);
-        Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
-
-        //remove the refresh token from the body of the response
-        unset($jsonData['refresh_token']);
-
-        return $response;
+        return $this->handleApiResponse($response, 'authenticate');
     }
 
     public function resetPassword(Request $request, Response $response, $arg)
@@ -161,7 +150,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $response;
+        return $this->handleApiResponse($response, 'reset password');
     }
 
     public function sendVerifyEmail(Request $request)
@@ -174,7 +163,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $response;
+        return $this->handleApiResponse($response, 'verify email');
     }
 
     public function authenticateProvider(Request $request, Response $response, $arg)
@@ -193,15 +182,18 @@ class AuthController extends Controller
             $queryParam['device'] = 'ios';
         }
 
-
         $response = $this->httpClient()->get("$basePath/authenticate/$provider", $queryParam);
         $jsonData = json_decode($response->getBody()->getContents(), true);
+
+        
         if ($response->getStatusCode() !== 200) {
             Log::error('Error: on authenticate provider '.$provider, ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $response;
+        $response = $this->storeTokenInCahce($jsonData);
+
+        return $this->handleApiResponse($response, 'sign up');
     }
 
     public function providerToken(Request $request, Response $response, $arg)
@@ -240,19 +232,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        // get refresh token from body response
-        $refreshToken = $jsonData['refresh_token'];
-        $accessToken = $jsonData['token'];
-
-        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
-
-        $cacheKey = cacheKey_refreshToken($decodedAccessToken['username']);
-        Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
-
-        //remove the refresh token from the body of the response
-        unset($jsonData['refresh_token']);
-
-        return $response;
+        return $this->handleApiResponse($response, 'sign up');
     }
 
     public function sendResetPasswordMail(Request $request)
@@ -266,7 +246,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        return $response;
+        return $this->handleApiResponse($response, 'reset password');
     }
 
     public function getUserInfoByEmail(Request $request, Response $response, $arg)
@@ -279,7 +259,7 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred']);
         }
 
-        return $response;
+        return $this->handleApiResponse($response, 'get user info by email');
     }
 
     /**
@@ -363,5 +343,29 @@ class AuthController extends Controller
             Log::error("Token expired or not valid:" . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Stores the provided token payload in the cache.
+     *
+     * @param array $payload The token data to be cached.
+     * @return array The result of the cache storage operation.
+     */
+    private function storeTokenInCahce(array $payload): array
+    {
+
+        // get refresh token from body response
+        $refreshToken = $payload['refresh_token'];
+        $accessToken = $payload['token'];
+
+        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
+        $cacheKey = cacheKey_refreshToken($decodedAccessToken['username']);
+        Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
+
+        //remove the refresh token from the body of the response
+        unset($payload['refresh_token']);
+
+        return $payload;
+
     }
 }
