@@ -191,8 +191,6 @@ class AuthController extends Controller
             return response(['message' => 'An error occurred'], 401);
         }
 
-        $response = $this->storeTokenInCahce($jsonData);
-
         return $this->handleApiResponse($response, 'sign up');
     }
 
@@ -231,6 +229,8 @@ class AuthController extends Controller
             Log::error('Error: on provider token '.$provider, ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
+
+        $response = $this->storeTokenInCahce($jsonData);
 
         return $this->handleApiResponse($response, 'sign up');
     }
