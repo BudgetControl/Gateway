@@ -1,4 +1,5 @@
 <?php
+
 namespace Budgetcontrol\Gateway\Http\Controllers;
 
 use Budgetcontrol\Gateway\Facade\AwsCognitoClient as AwsCognito;
@@ -17,7 +18,7 @@ class AuthController extends Controller
     use Crypt, BuildQuery;
 
     public function check(Request $request, Response $response): Response
-    {   
+    {
 
         $token = $this->getBearerToken($request);
         if (!$token) {
@@ -27,7 +28,7 @@ class AuthController extends Controller
 
         $basePath = $this->routes['auth'];
         $apiResponse = $this->httpClient()->withToken($token)->get("$basePath/check");
-        
+
         if ($apiResponse->getStatusCode() !== 200) {
             Log::error('Error: on check', ['response' => $apiResponse->getBody()->getContents()]);
             $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
@@ -35,7 +36,7 @@ class AuthController extends Controller
         }
 
         $authToken = $apiResponse->getHeader('Authorization');
-        if(empty($authToken)) {
+        if (empty($authToken)) {
             $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
@@ -47,7 +48,7 @@ class AuthController extends Controller
     }
 
     public function getUserInfo(Request $request, Response $response): Response
-    {   
+    {
         $token = $this->getBearerToken($request);
         $wsUuid = $request->getHeaderLine('X-WS');
         if (!$token) {
@@ -56,7 +57,7 @@ class AuthController extends Controller
         }
 
         $basePath = $this->routes['auth'];
-        $apiResponse = $this->httpClient()->withToken($token)->withHeader('X-WS',$wsUuid)->get("$basePath/user-info");
+        $apiResponse = $this->httpClient()->withToken($token)->withHeader('X-WS', $wsUuid)->get("$basePath/user-info");
         $dataResponse = $apiResponse->getBody()->getContents();
 
         if ($apiResponse->getStatusCode() !== 200) {
@@ -78,7 +79,7 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request)
-    {   
+    {
         $basePath = $this->routes['auth'];
         $this->httpClient()->get("$basePath/logout");
 
@@ -172,12 +173,12 @@ class AuthController extends Controller
         $provider = $arg['provider'];
         //check if is an mobile phone
         $queryParam = [];
-        if($this->isAndroid($request)) {
+        if ($this->isAndroid($request)) {
             Log::debug('Mobile phone detected');
             $queryParam['device'] = 'android';
         }
 
-        if($this->isIos($request)) {
+        if ($this->isIos($request)) {
             Log::debug('Mobile phone detected');
             $queryParam['device'] = 'ios';
         }
@@ -185,9 +186,9 @@ class AuthController extends Controller
         $response = $this->httpClient()->get("$basePath/authenticate/$provider", $queryParam);
         $jsonData = json_decode($response->getBody()->getContents(), true);
 
-        
+
         if ($response->getStatusCode() !== 200) {
-            Log::error('Error: on authenticate provider '.$provider, ['response' => $jsonData]);
+            Log::error('Error: on authenticate provider ' . $provider, ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
@@ -201,18 +202,18 @@ class AuthController extends Controller
 
         //check if is an mobile phone
         $deviceOnQuery = '';
-        if($this->isAndroid($request)) {
+        if ($this->isAndroid($request)) {
             Log::debug('Mobile phone detected');
             $deviceOnQuery = 'android';
         }
 
-        if($this->isIos($request)) {
+        if ($this->isIos($request)) {
             Log::debug('Mobile phone detected');
             $deviceOnQuery = 'ios';
         }
 
         $queryParams = $this->queryParams($request);
-        if($queryParams['code'] === null) {
+        if ($queryParams['code'] === null) {
             Log::info('Error: code is required');
             return response(['message' => 'Code is required'], 400);
         }
@@ -226,11 +227,11 @@ class AuthController extends Controller
         $jsonData = json_decode($response->getBody()->getContents(), true);
 
         if ($response->getStatusCode() !== 200) {
-            Log::error('Error: on provider token '.$provider, ['response' => $jsonData]);
+            Log::error('Error: on provider token ' . $provider, ['response' => $jsonData]);
             return response(['message' => 'An error occurred'], 401);
         }
 
-        $response = $this->storeTokenInCahce($jsonData);
+        $this->storeTokenInCahce($jsonData);
 
         return $response;
     }
@@ -269,13 +270,14 @@ class AuthController extends Controller
      * @param string $userUuid The UUID of the user.
      * @return \Illuminate\Http\Response The HTTP response.
      */
-    public function finalizeSignUp(Request $request, Response $response, array $arg): Response { 
+    public function finalizeSignUp(Request $request, Response $response, array $arg): Response
+    {
 
         $token = $this->getBearerToken($request);
         $userUuid = $arg['userUuid'];
         $userId = $this->userId($userUuid);
 
-        if($this->checkIfUserIsLogged($userId, $token) === false) {
+        if ($this->checkIfUserIsLogged($userId, $token) === false) {
             $response->getBody()->write(json_encode(['message' => 'You are not authenticated']));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
@@ -288,7 +290,7 @@ class AuthController extends Controller
         $workspaceUuid = $data['workspace']['uuid'];
         $workspaceID = $data['workspace']['id'];
 
-        if($workspaceResponse->getStatusCode() !== 201) {
+        if ($workspaceResponse->getStatusCode() !== 201) {
             Log::error('Error: on workspace create', ['response' => $data]);
             $response->getBody()->write(json_encode(['message' => 'An error occurred']));
             return $response->withStatus($workspaceResponse->getStatusCode())->withHeader('Content-Type', 'application/json');
@@ -296,7 +298,7 @@ class AuthController extends Controller
 
         //return the user info
         $basePathAuth = $this->routes['auth'];
-        $apiResponse = $this->httpClient()->withToken($token)->withHeader('X-WS',$workspaceUuid)
+        $apiResponse = $this->httpClient()->withToken($token)->withHeader('X-WS', $workspaceUuid)
             ->get("$basePathAuth/user-info");
 
         if ($apiResponse->getStatusCode() !== 200) {
@@ -329,7 +331,7 @@ class AuthController extends Controller
      * @return bool Returns true if the user is logged in, false otherwise.
      */
 
-    protected function checkIfUserIsLogged(int $userId, string $bearerToken): bool 
+    protected function checkIfUserIsLogged(int $userId, string $bearerToken): bool
     {
         $this->key = env('APP_KEY', null);
         try {
@@ -354,18 +356,22 @@ class AuthController extends Controller
     private function storeTokenInCahce(array $payload): array
     {
 
-        // get refresh token from body response
-        $refreshToken = $payload['refresh_token'];
-        $accessToken = $payload['token'];
+        try {
+            // get refresh token from body response
+            $refreshToken = $payload['refresh_token'];
+            $accessToken = $payload['token'];
 
-        $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
-        $cacheKey = cacheKey_refreshToken($decodedAccessToken['username']);
-        Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
+            $decodedAccessToken = AwsCognito::decodeAccessToken($accessToken);
+            $cacheKey = cacheKey_refreshToken($decodedAccessToken['username']);
+            Cache::put($cacheKey, $refreshToken, Carbon::now()->addDays(30));
 
-        //remove the refresh token from the body of the response
-        unset($payload['refresh_token']);
+            //remove the refresh token from the body of the response
+            unset($payload['refresh_token']);
+        } catch (\Throwable $e) {
+            Log::error("Error storing token in cache: " . $e->getMessage());
+        }
+
 
         return $payload;
-
     }
 }
