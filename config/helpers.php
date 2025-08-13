@@ -41,8 +41,10 @@ if (!function_exists('response')) {
  */
 if (!function_exists('cacheKey_refreshToken')) {
     function cacheKey_refreshToken(string $username): string
-    {
-        return md5($username . 'refresh_token');
+    {   
+        $cacheKey = md5($username . 'refresh_token');
+        \Illuminate\Support\Facades\Log::debug("Cache key: $cacheKey");
+        return $cacheKey;
     }
 }
 
