@@ -94,6 +94,22 @@ class NotificationController extends Controller {
         }
     }
 
+    public function workspaceUnShare(Request $request, Response $response): Response
+    {
+        try {
+            $data = $request->getParsedBody();
+
+            $httpResponse = $this->httpClient()->post($this->notificationServiceUrl . '/notify/email/workspace/un-share', $data);
+
+            return $this->handleApiResponse($httpResponse, 'workspaceUnShare notification');
+
+        } catch (\Exception $e) {
+            Log::error('Error sending workspace unshare notification', ['error' => $e->getMessage()]);
+            return response(['error' => 'Internal server error'], 500);
+        }
+    }
+            
+
     public function saveToken(Request $request, Response $response): Response
     {
         try {
