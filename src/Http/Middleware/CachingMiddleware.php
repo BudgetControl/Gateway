@@ -16,9 +16,12 @@ class CachingMiddleware implements MiddlewareInterface
     use Cache;
     private ?int $ttl;
 
+    /**
+     * @deprecated $ttl is deprecated and will be removed in future versions.
+     */
     public function __construct(?int $ttl = null)
     {
-        $this->ttl = $ttl;
+        $this->ttl = null;
     }
 
     /**
