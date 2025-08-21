@@ -45,11 +45,6 @@ class CachingMiddleware implements MiddlewareInterface
         $segments = explode('/', trim($request->getUri()->getPath(), '/'));
         $resource = $segments[1]; // es. 'budget', 'entry', ecc.
 
-        $response = $handler->handle($request);
-        if($response->getStatusCode() >= 400) {
-            return $response;
-        }
-
         try {
 
             $wsHeaders = $request->getHeader('X-WS');
@@ -63,6 +58,11 @@ class CachingMiddleware implements MiddlewareInterface
                 return $this->createCacheResponse($this->getCache());
             }
 
+            //with no cache
+            $response = $handler->handle($request);
+            if($response->getStatusCode() >= 400) {
+                return $response;
+            }
 
             if ($this->isSuccessfulResponse($response)) {
                 $responseBody = (string)$response->getBody();
