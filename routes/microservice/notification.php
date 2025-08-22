@@ -1,8 +1,8 @@
 <?php
-$group->post('/notify/email/contact', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'sendEmail']);
 
 $app->group('/api', function ($group) {
 
+    $group->post('/notify/email/contact', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'sendEmail']);
     $group->post('/notify/email/auth/recovery-password', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'recoveryPassword']);
     $group->post('/notify/email/auth/sign-up', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'signUp']);
     $group->post('/notify/email/budget/exceeded', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'budgetExceeded']);
@@ -19,3 +19,6 @@ $app->group('/api/bo', function ($group) {
     $group->post('/notify/email/send', [\Budgetcontrol\Gateway\Http\Controllers\Bo\NotificationOfficeController::class, 'sendEmailAdmin']);
 
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthAdminMiddleware::class);
+
+$app->post('/notify/external/email/contact', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'sendEmail'])
+->add(\Budgetcontrol\Gateway\Http\Middleware\AuthAdminMiddleware::class);
