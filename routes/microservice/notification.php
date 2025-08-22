@@ -20,5 +20,5 @@ $app->group('/api/bo', function ($group) {
 
 })->add(\Budgetcontrol\Gateway\Http\Middleware\AuthAdminMiddleware::class);
 
-$app->post('/notify/external/email/contact', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'sendEmail'])
+$app->post('/api/notify/external/email/contact', [\Budgetcontrol\Gateway\Http\Controllers\NotificationController::class, 'sendEmail'])
 ->add(\Budgetcontrol\Gateway\Http\Middleware\AuthAdminMiddleware::class);
