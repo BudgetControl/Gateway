@@ -83,7 +83,7 @@ class AuthController extends Controller
         $basePath = $this->routes['auth'];
         $this->httpClient()->get("$basePath/logout");
 
-        return response([], 200);
+        return response(dataResponse: [], statusCode: 200);
     }
 
 

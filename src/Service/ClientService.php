@@ -3,24 +3,28 @@ declare(strict_types=1);
 
 namespace Budgetcontrol\Gateway\Service;
 
+use Budgetcontrol\Gateway\Traits\GetDataInCache;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Illuminate\Support\Facades\Log;
 
 class ClientService
 {
+    use GetDataInCache;
     private Client $httpClient;
 
-    public function __construct()
+    public function __construct(string $userToken)
     {   
         $secret = env('API_SECRET', 'default-secret');
         $this->httpClient = new Client([
             'base_uri' => env('API_BASE_URL', ''),
             'headers' => [
+                'environment' => env('APP_ENV', 'production'),
                 'X-API-SECRET' => $secret,
                 'X-LOG-LEVEL' => env('LOG_LEVEL', 'info'),
                 'Content-Type' => 'application/json',
-                'User-Agent' => 'BudgetControl-Gateway/1.0'
+                'User-Agent' => 'BudgetControl-Gateway/1.0',
+                'x-encrypt-key' => $this->getEncryptionKeyFromCache($userToken)
             ]
         ]);
     }
