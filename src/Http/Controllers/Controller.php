@@ -166,9 +166,10 @@ abstract class Controller
     /**
      * Get HTTP client configured for microservices with API secret header
      */
-    protected function httpClient(): ClientService
-    {
-        return new ClientService();
+    protected function httpClient(?Request $request = null): ClientService
+    {   
+        $token = $request ? $request->getHeaderLine('x-BC-Token') : '';
+        return new ClientService($token);
     }
 
     /**
