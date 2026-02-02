@@ -94,7 +94,7 @@ class WorkspaceController extends Controller
         $userId = $this->getUserId($request);
         $basePath = $this->routes['workspace'];
         $id = $arg['id'] ?? null;
-        $apiResponse = $this->httpClient()->delete("$basePath/$userId/$id/delete");
+        $apiResponse = $this->httpClient()->delete("$basePath/$userId/$id");
         
         return $this->handleApiResponse($apiResponse, 'delete');
     }
