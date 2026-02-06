@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use malirobot\AwsCognito\CognitoClient;
 use malirobot\AwsCognito\Exception\TokenExpiryException;
+use Carbon\Carbon;
 
 class AuthCognitoService
 {
@@ -51,6 +52,13 @@ class AuthCognitoService
 
             Log::debug('New tokens: ' . $newTokens['AccessToken']);
             $token = $newTokens['AccessToken'];
+            
+            // If Cognito returns a new refresh token (rotation enabled), update it in cache
+            if (isset($newTokens['RefreshToken'])) {
+                Log::debug('Updating refresh token in cache for user: ' . $subId);
+                // Use 30-day TTL to match initial token storage behavior (same as in AuthController)
+                Cache::put($cacheKey, $newTokens['RefreshToken'], Carbon::now()->addDays(30));
+            }
 
         } catch( \Exception $e) {
             Log::warning($e->getMessage());
