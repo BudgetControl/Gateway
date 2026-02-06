@@ -56,7 +56,7 @@ class AuthCognitoService
             // If Cognito returns a new refresh token (rotation enabled), update it in cache
             if (isset($newTokens['RefreshToken'])) {
                 Log::debug('Updating refresh token in cache for user: ' . $subId);
-                // Use 30-day TTL to match initial token storage in AuthController::storeTokenInCahce
+                // Use 30-day TTL to match initial token storage behavior (same as in AuthController)
                 Cache::put($cacheKey, $newTokens['RefreshToken'], Carbon::now()->addDays(30));
             }
 
