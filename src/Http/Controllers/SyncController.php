@@ -6,10 +6,13 @@ use Budgetcontrol\Library\Model\Workspace;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Budgetcontrol\Gateway\Traits\Cache;
 
 /** Exposes the internal Sync service using the existing authenticated API. */
 final class SyncController extends Controller
 {
+    use Cache;
+
     public function forward(Request $request, Response $response, array $args): Response
     {
         $action = $args['action'] ?? '';
@@ -36,6 +39,16 @@ final class SyncController extends Controller
             return response(is_array($data) ? $data : ['error' => 'Invalid response from Sync'], $result->getStatusCode());
         } catch (\Throwable $e) {
             return response(['error' => 'Sync service unavailable'], 503);
+        } finally {
+            // Sync may import entries before an error; clear stale views in both cases.
+            if ($action === 'sync') {
+                try {
+                    $this->cacheTags(cache_tags_mapping($workspace->uuid, 'entry'))->clearCache();
+                    $this->cacheTags(cache_tags_mapping($workspace->uuid, 'label'))->clearCache();
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning('Unable to invalidate sync cache');
+                }
+            }
         }
     }
 }
