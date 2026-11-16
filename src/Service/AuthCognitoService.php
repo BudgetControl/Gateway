@@ -13,7 +13,7 @@ class AuthCognitoService
 {
 
     private readonly CognitoClient $cognitoClient;
-    
+
     public function __construct(CognitoClient $cognito)
     {
         $this->cognitoClient = $cognito;
@@ -29,7 +29,7 @@ class AuthCognitoService
     public function validateAuthToken(string $token, string $subId): string|bool
     {
         try {
-            Log::debug('Validating token ' . $token);
+            Log::debug('Validating access token');
             $this->cognitoClient->verifyAccessToken($token);
         } catch( TokenExpiryException $e) {
 
@@ -43,16 +43,16 @@ class AuthCognitoService
                 return false;
             }
 
-            Log::debug('Refresh token with [' . $subId . '] ' . $refreshToken);  
+            Log::debug('Refreshing access token');
             $newTokens = $this->cognitoClient->refreshAuthentication($subId, $refreshToken);
             if (!$newTokens) {
                 Log::error('Failed to refresh tokens');
                 return false;
             }
 
-            Log::debug('New tokens: ' . $newTokens['AccessToken']);
+            Log::debug('Access token refreshed');
             $token = $newTokens['AccessToken'];
-            
+
             // If Cognito returns a new refresh token (rotation enabled), update it in cache
             if (isset($newTokens['RefreshToken'])) {
                 Log::debug('Updating refresh token in cache for user: ' . $subId);

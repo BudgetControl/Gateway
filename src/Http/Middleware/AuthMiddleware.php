@@ -31,8 +31,7 @@ class AuthMiddleware implements MiddlewareInterface
         $this->validation($body);
         
         Log::debug('Request: ' . $uri->__toString());
-        Log::debug('Headers: ' . json_encode($headers));
-        Log::debug('Body: ' . json_encode($body));
+        // Headers and bodies can contain credentials and authorization codes.
 
         $tokenHeaders = $request->getHeader('X-BC-Token');
         $authHeaders = $request->getHeader('Authorization');
@@ -51,7 +50,7 @@ class AuthMiddleware implements MiddlewareInterface
         $parsedBody['token'] = $validationResult['decoded'];
         
         // Crea una nuova request con il body modificato
-        $request = $request->withParsedBody($parsedBody);
+        $request = $request->withParsedBody($parsedBody)->withAttribute('verified_access_token', $validationResult['validToken']);
         
         // Process the request and get response
         $response = $handler->handle($request);
